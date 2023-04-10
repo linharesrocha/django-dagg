@@ -39,4 +39,3 @@ def gerar_planilha_produtos_sem_venda(request):
     response['Content-Disposition'] = f'attachment; filename={nome_planilha}'
     return response
     
-    
