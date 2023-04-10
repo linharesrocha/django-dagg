@@ -3,6 +3,7 @@ import pyodbc
 import warnings
 import pandas as pd
 from datetime import timedelta, datetime
+import numpy as np
 
 def main(data_inicial_principal, data_final_principal, data_inicial_comparativo, data_final_comparativo):
     # Mantendo o formato do banco de dados
@@ -44,6 +45,9 @@ def main(data_inicial_principal, data_final_principal, data_inicial_comparativo,
             row1 = pd.Series([1, sku, origem, data_venda], index=data_h.columns)
             data_h = data_h._append(row1, ignore_index=True)
     
+    # Renomeando coluna QUANT para VENDAS
+    data_h.rename(columns={'QUANT':'VENDAS'}, inplace=True)
+    
     # Filtrando a data do usuário e fazendo group by
     df_principal = data_h[(data_h['DATA'] >= data_inicial_principal) & (data_h['DATA'] <= data_final_principal)]
     df_principal_groupby = df_principal.groupby(['SKU','ORIGEM_ID']).count().reset_index().drop(['DATA'], axis=1)
@@ -51,4 +55,7 @@ def main(data_inicial_principal, data_final_principal, data_inicial_comparativo,
     df_comparativo = data_h[(data_h['DATA'] >= data_inicial_comparativo) & (data_h['DATA'] <= data_final_comparativo)]
     df_comparativo_groupby = df_comparativo.groupby(['SKU','ORIGEM_ID']).count().reset_index().drop(['DATA'], axis=1)
 
-    
+    vendas_comparacao = df_principal_groupby.merge(df_comparativo_groupby, on=['SKU', 'ORIGEM_ID'], suffixes=('_PRINCIPAL', '_COMPARATIVO'))
+    vendas_comparacao['DIFERENCA_VENDAS'] = vendas_comparacao['VENDAS_PRINCIPAL'] - vendas_comparacao['VENDAS_COMPARATIVO']
+    vendas_comparacao['RESULTADO'] = np.where(vendas_comparacao['DIFERENCA_VENDAS'] > 0, 'AUMENTOU', np.where(vendas_comparacao['DIFERENCA_VENDAS'] == 0, 'MANTEVE', 'DIMINUIU'))
+    vendas_comparacao['PORCENTAGEM'] = round((vendas_comparacao['DIFERENCA_VENDAS'] / vendas_comparacao['VENDAS_PRINCIPAL']) * 100, 2)
