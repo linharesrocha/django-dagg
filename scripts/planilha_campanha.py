@@ -292,7 +292,6 @@ def main_gerar_excel():
                     "PWD=" + PWD + ";")
 
     conexao = pyodbc.connect(dados_conexao)
-    cursor = conexao.cursor()
 
     # Horário
     today = date.today()
@@ -302,10 +301,6 @@ def main_gerar_excel():
     date_14 = datetime_midnight - timedelta(14)
     date_30 = datetime_midnight - timedelta(30)
     date_90 = datetime_midnight - timedelta(90)
-    dia_atual = str(today.strftime("%Y-%m-%d"))
-    agora_hora = datetime.now()
-    hora_atual = str(agora_hora.strftime("%H:%M:%S")).replace(':','-')
-    print(f'Planilha Campanha - {dia_atual} - {hora_atual}')
 
     #print('\n7 Dias: ' + str(date_7.strftime("%d-%m-%Y")))
     #print('14 Dias: ' + str(date_14.strftime("%d-%m-%Y")))
