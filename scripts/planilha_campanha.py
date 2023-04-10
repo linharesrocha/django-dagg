@@ -274,7 +274,7 @@ def gerar_excel(data):
     bytes_data = excel_bytes.getvalue()
     return bytes_data
 
-def main_gerar_excel():
+def main():
     load_dotenv()
 
     # Filtrando Warnings
@@ -285,20 +285,12 @@ def main_gerar_excel():
     cursor = conexao.cursor()
 
     # Horário
-    today = date.today()
     dt = date.today()
     datetime_midnight = datetime.combine(dt, datetime.min.time())
     date_7 = datetime_midnight - timedelta(7)
     date_14 = datetime_midnight - timedelta(14)
     date_30 = datetime_midnight - timedelta(30)
     date_90 = datetime_midnight - timedelta(90)
-
-    #print('\n7 Dias: ' + str(date_7.strftime("%d-%m-%Y")))
-    #print('14 Dias: ' + str(date_14.strftime("%d-%m-%Y")))
-    #print('30 Dias: ' + str(date_30.strftime("%d-%m-%Y")))
-    #print('90 Dias: ' + str(date_90.strftime("%d-%m-%Y")))
-
-    #print('\nCarregando...')
 
     data = carrega_tabela_produtos(conexao)
     data_h = carrega_tabela_pedidos(conexao)
@@ -312,6 +304,6 @@ def main_gerar_excel():
     data_completo = groupby_vendas_marketplace(data_h, data_completo, date_7, date_14, date_30, date_90)
     data_completo = adiciona_horario(data_completo)
     data = filtra_colunas(data_completo)
-    #obtem_colunas_filtradas(data_completo, data)
+
     bytes_data = gerar_excel(data)
     return bytes_data
