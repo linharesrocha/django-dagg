@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from .scripts.planilha_campanha import gerar_excel
+from scripts.planilha_campanha import gerar_excel
 
 def index(request):
     return render(request, 'dashboard/index.html')
