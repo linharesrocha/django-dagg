@@ -66,9 +66,15 @@ def gerar_planilha_comparativo_vendas_netshoes(request):
         if data_inicial_comparativo > data_final_comparativo:
             return HttpResponse('<script>alert("Data comparativa inicial maior que a data comparativa final!"); window.history.back();</script>')
         
+        # Nome planilha
+        nome_planilha = f'relatorio_comparativo_netshoes.xlsx'
         
         # Chama função de relatório
-        comparativo_vendas_netshoes.main(data_inicial_principal=data_inicial_principal,
+        arquivo_excel = comparativo_vendas_netshoes.main(data_inicial_principal=data_inicial_principal,
                                          data_final_principal=data_final_principal,
                                          data_inicial_comparativo=data_inicial_comparativo,
                                          data_final_comparativo=data_final_comparativo)
+        
+        response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = f'attachment; filename={nome_planilha}'
+        return response

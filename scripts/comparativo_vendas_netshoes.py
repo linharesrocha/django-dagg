@@ -4,6 +4,7 @@ import warnings
 import pandas as pd
 from datetime import timedelta, datetime
 import numpy as np
+from io import BytesIO
 
 def main(data_inicial_principal, data_final_principal, data_inicial_comparativo, data_final_comparativo):
     # Mantendo o formato do banco de dados
@@ -59,3 +60,14 @@ def main(data_inicial_principal, data_final_principal, data_inicial_comparativo,
     vendas_comparacao['DIFERENCA_VENDAS'] = vendas_comparacao['VENDAS_PRINCIPAL'] - vendas_comparacao['VENDAS_COMPARATIVO']
     vendas_comparacao['RESULTADO'] = np.where(vendas_comparacao['DIFERENCA_VENDAS'] > 0, 'AUMENTOU', np.where(vendas_comparacao['DIFERENCA_VENDAS'] == 0, 'MANTEVE', 'DIMINUIU'))
     vendas_comparacao['PORCENTAGEM'] = round((vendas_comparacao['DIFERENCA_VENDAS'] / vendas_comparacao['VENDAS_PRINCIPAL']) * 100, 2)
+    
+    # Alterando nomes da origem
+    mapeamento = {2: 'MADZ', 3: 'LEAL', 4: 'PISSTE'}
+    vendas_comparacao['ORIGEM_ID'] = vendas_comparacao['ORIGEM_ID'].replace(mapeamento)
+    
+    excel_bytes = BytesIO()
+    vendas_comparacao.to_excel(excel_bytes, index=False)
+    excel_bytes.seek(0)
+    bytes_data = excel_bytes.getvalue()
+    
+    return bytes_data
