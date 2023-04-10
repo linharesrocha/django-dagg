@@ -31,7 +31,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Planilha de Campanha</h5>
                         <form action="/excel_planilha_campanha/" method="post">
-                            <button id="btn-planilha-campanha" type="submit" value="Gerar Excel"
+                            <button onclick="mostrarAlertaAssincrono()" id="btn-planilha-campanha" type="submit" value="Gerar Excel"
                                 class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
@@ -44,6 +44,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+
+    <script>
+        function mostrarAlertaAssincrono() {
+            setTimeout(function() {
+                alert("Aguarde o carregamento do dados, o arquivo será gerado!");
+            }, 1000); // Atraso de 1000 milissegundos (1 segundo)
+        }
+    </script>
 </body>
 
 </html>
