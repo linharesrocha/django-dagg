@@ -6,6 +6,7 @@ import warnings
 from datetime import datetime, date, timedelta
 from io import BytesIO
 from dotenv import load_dotenv
+from scripts.connect_to_database import get_connection
 
 
 def carrega_tabela_produtos(conexao):
@@ -279,19 +280,9 @@ def main_gerar_excel():
     # Filtrando Warnings
     warnings.filterwarnings('ignore')
 
-    # Banco de Dados
-    env_path = Path('.') / '.env'
-    load_dotenv(dotenv_path=env_path)
-    DATABASE = os.environ['DATABASE']
-    UID = os.environ['UID']
-    PWD = os.environ['PWD']
-    dados_conexao = ("Driver={SQL Server};"
-                    "Server=erp.ambarxcall.com.br;"
-                    "Database=" + DATABASE + ";"
-                    "UID=" + UID + ";"
-                    "PWD=" + PWD + ";")
-
-    conexao = pyodbc.connect(dados_conexao)
+    connection = get_connection()
+    conexao = pyodbc.connect(connection)
+    cursor = conexao.cursor()
 
     # Horário
     today = date.today()
