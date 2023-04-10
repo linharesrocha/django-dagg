@@ -38,4 +38,30 @@ def gerar_planilha_produtos_sem_venda(request):
     response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = f'attachment; filename={nome_planilha}'
     return response
+
+def gerar_planilha_comparativo_vendas_netshoes(request):
     
+    hoje = date.today()
+    hoje_formatado = hoje.strftime("%Y-%m-%d")
+    
+    if request.method == 'POST':
+        data_inicial_principal = request.POST['data_inicial_principal']
+        data_final_principal = request.POST['data_final_principal']
+        data_inicial_comparativo = request.POST['data_inicial_comparativo']
+        data_final_comparativo = request.POST['data_final_comparativo']
+        
+        # Verifica se todas estão com data
+        if data_inicial_principal == '' or data_final_principal == '' or data_inicial_comparativo == '' or data_inicial_comparativo == '':
+            return HttpResponse('<script>alert("Preencha todas as datas!"); window.history.back();</script>')
+        
+        # Valida se a data é até hoje
+        if data_final_principal > hoje_formatado:
+            return HttpResponse('<script>alert("Data final principal maior do que hoje!"); window.history.back();</script>')
+        
+        # Valida data principal 
+        if data_inicial_principal > data_final_principal:
+            return HttpResponse('<script>alert("Data principal inicial maior que a data principal final!"); window.history.back();</script>')
+        
+        # Valida data comparativa
+        if data_inicial_comparativo > data_final_comparativo:
+            return HttpResponse('<script>alert("Data comparativa inicial maior que a data comparativa final!"); window.history.back();</script>')
