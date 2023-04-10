@@ -31,8 +31,24 @@
                     <div class="card-body">
                         <h5 class="card-title">Planilha de Campanha</h5>
                         <form action="/excel_planilha_campanha/" method="post">
-                            <button onclick="mostrarAlertaAssincrono()" id="btn-planilha-campanha" type="submit" value="Gerar Excel"
-                                class="btn btn-secondary">Download</button>
+                            <button onclick="alertaAguardaPlanilha()" id="btn-planilha-campanha" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            <div class="col text-center">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Planilha Produtos Sem Venda</h5>
+                        <p class="card-text">Obtém os produtos ativos, com estoque zerado, que não foram vendidos desde o
+                            dia 1 do mês passado até hoje.</p>
+                        <form action="/excel_planilha_produtos_sem_venda/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" id="btn-planilha-campanha" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
@@ -46,8 +62,8 @@
         crossorigin="anonymous"></script>
 
     <script>
-        function mostrarAlertaAssincrono() {
-            setTimeout(function() {
+        function alertaAguardaPlanilha() {
+            setTimeout(function () {
                 alert("Aguarde o carregamento do dados, o arquivo será gerado!");
             }, 1000); // Atraso de 1000 milissegundos (1 segundo)
         }
