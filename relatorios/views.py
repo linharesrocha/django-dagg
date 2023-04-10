@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from scripts import planilha_campanha, produtos_sem_venda
+from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes
 from datetime import datetime, date
 
 def index(request):
@@ -65,3 +65,10 @@ def gerar_planilha_comparativo_vendas_netshoes(request):
         # Valida data comparativa
         if data_inicial_comparativo > data_final_comparativo:
             return HttpResponse('<script>alert("Data comparativa inicial maior que a data comparativa final!"); window.history.back();</script>')
+        
+        
+        # Chama função de relatório
+        comparativo_vendas_netshoes.main(data_inicial_principal=data_inicial_principal,
+                                         data_final_principal=data_final_principal,
+                                         data_inicial_comparativo=data_inicial_comparativo,
+                                         data_final_comparativo=data_final_comparativo)
