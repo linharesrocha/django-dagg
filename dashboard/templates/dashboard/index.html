@@ -25,12 +25,12 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col text-center">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
                         <h5 class="card-title">Planilha de Campanha</h5>
-                        <form action="/gerar_excel/" method="post">
-                            <button id="planilha-campanha" type="submit" value="Gerar Excel"
+                        <form action="/excel_planilha_campanha/" method="post">
+                            <button id="btn-planilha-campanha" type="submit" value="Gerar Excel"
                                 class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>

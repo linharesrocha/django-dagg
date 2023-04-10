@@ -8,6 +8,7 @@ h1, h2, h3, h4, h5, p, span {
 
 #header {
     background-color: #E84545;
+    margin-bottom: 50px;
 }
 
 #header-titulo {
@@ -18,10 +19,10 @@ h1, h2, h3, h4, h5, p, span {
 }
 
 .btn {
-    background-color: #E84545;
+    background-color: #E84545!important;
     border: none;
 }
 
 .btn:hover {
-    background-color: #E84545
+    background-color: #E84545!important;
 }
