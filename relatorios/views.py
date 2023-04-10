@@ -5,7 +5,7 @@ from scripts import planilha_campanha, produtos_sem_venda
 from datetime import datetime, date
 
 def index(request):
-    return render(request, 'dashboard/index.html')
+    return render(request, 'relatorios/index.html')
 
 def gerar_planilha_campanha(request):
     

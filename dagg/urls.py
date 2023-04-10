@@ -18,5 +18,5 @@ Including another URLconf
 from django.urls import path, include
 
 urlpatterns = [
-    path('relatorios/', include('dashboard.urls')),
+    path('relatorios/', include('relatorios.urls')),
 ]
