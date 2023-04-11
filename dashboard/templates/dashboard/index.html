@@ -42,7 +42,7 @@
                         <h5 class="card-title">Categorias Duplicadas</h5>
                         <span class="card-text">Quantidade: </span>
                         <span style="font-weight: bold;" id="quantidade-duplicadas">{{ num_linhas_duplicadas }}</span>
-                        <form style="margin-top: 10px;" action="" method="post">
+                        <form style="margin-top: 10px;" action="excel_planilha_categorias_duplicadas/" method="post">
                             <button onclick="alertaAguardaPlanilha()" id="btn-categorias-duplicadas" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}

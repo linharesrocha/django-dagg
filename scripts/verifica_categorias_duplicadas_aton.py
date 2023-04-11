@@ -4,6 +4,7 @@ import pyodbc
 import pandas as pd
 import warnings
 from dotenv import load_dotenv
+from io import BytesIO
 from scripts.connect_to_database import get_connection
 
 
@@ -31,4 +32,8 @@ def main(download):
         return num_linhas_duplicadas
     else:
         # Código para retornar o dataframe e o num_linhas_duplicadas
-        pass
+        excel_bytes = BytesIO()
+        df_linhas_duplicadas.to_excel(excel_bytes, index=False)
+        excel_bytes.seek(0)
+        bytes_data = excel_bytes.getvalue()
+        return bytes_data
