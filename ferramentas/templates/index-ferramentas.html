@@ -1,0 +1,78 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'styles-ferramentas.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
+
+
+    <title>Aton Ferramentas</title>
+</head>
+<div class="container">
+    <div id="header" class="row">
+        <div class="col">
+            <h1 id="header-titulo">Aton Ferramentas</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Fotos</h5>
+                    <form action="baixar_fotos/" method="post">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">CODID</span>
+                                    <input type="number" name="input-codid" id="input-codid" min="0" step="1" class="form-control"
+                                        aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button style="background-color: green!important;" id="btn-baixar-fotos" type="submit"
+                                    value="Gerar Excel" class="btn btn-secondary">Baixar</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+
+                    <form style="margin-top: 10px;" action="remover_fotos/" method="post">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">CODID</span>
+                                    <input type="number" name="input-codid" id="input-codid" min="0" step="1" class="form-control"
+                                       aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button id="btn-remover-fotos" type="submit" value="Gerar Excel"
+                                    class="btn btn-secondary">Remover</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<body>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+</html>

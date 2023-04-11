@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'relatorios',
-    'dashboard'
+    'dashboard',
+    'ferramentas'
 ]
 
 MIDDLEWARE = [
