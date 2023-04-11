@@ -46,7 +46,7 @@
                         {% csrf_token %}
                     </form>
 
-                    <form style="margin-top: 10px;" action="remover_fotos/" method="post">
+                    <form style="margin-top: 10px;" action="remover_fotos/" id="formulario-postagem" method="post">
                         <div class="row">
                             <div class="col-8">
                                 <div class="input-group input-group-sm mb-3">
@@ -74,5 +74,14 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+
+<script>
+    document.getElementById('formulario-postagem').addEventListener('submit', function(event) {
+        var confirmacao = confirm("Você deseja excluir TODAS as fotos desse CODID?"); // Exibe o prompt
+        if (!confirmacao) {
+            event.preventDefault(); // Cancela o envio do formulário se o usuário clicar em "Cancelar"
+        }
+    });
+</script>
 
 </html>
