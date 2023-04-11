@@ -56,22 +56,35 @@ def main(data_inicial_principal, data_final_principal, data_inicial_comparativo,
     df_comparativo = data_h[(data_h['DATA'] >= data_inicial_comparativo) & (data_h['DATA'] <= data_final_comparativo)]
     df_comparativo_groupby = df_comparativo.groupby(['SKU','ORIGEM_ID']).count().reset_index().drop(['DATA'], axis=1)
 
-    vendas_comparacao = df_principal_groupby.merge(df_comparativo_groupby, on=['SKU', 'ORIGEM_ID'], how='outer',suffixes=('_PRINCIPAL', '_COMPARATIVO'))
-    vendas_comparacao['VENDAS_PRINCIPAL'].fillna(0, inplace=True)
-    vendas_comparacao['VENDAS_COMPARATIVO'].fillna(0, inplace=True)
-    vendas_comparacao = vendas_comparacao.sort_values(by='VENDAS_PRINCIPAL', ascending=False)
-    vendas_comparacao['DIFERENCA_VENDAS'] = vendas_comparacao['VENDAS_PRINCIPAL'] - vendas_comparacao['VENDAS_COMPARATIVO']
-    vendas_comparacao['RESULTADO'] = np.where(vendas_comparacao['DIFERENCA_VENDAS'] > 0, 'AUMENTOU', np.where(vendas_comparacao['DIFERENCA_VENDAS'] == 0, 'MANTEVE', 'DIMINUIU'))
-    vendas_comparacao['PORCENTAGEM'] = round((vendas_comparacao['DIFERENCA_VENDAS'] / vendas_comparacao['VENDAS_PRINCIPAL']) * 100, 2)
-    vendas_comparacao.replace(-np.inf, float('nan'), inplace=True)
+    df_vendas_comparacao = df_principal_groupby.merge(df_comparativo_groupby, on=['SKU', 'ORIGEM_ID'], how='outer',suffixes=('_PRINCIPAL', '_COMPARATIVO'))
+    df_vendas_comparacao['VENDAS_PRINCIPAL'].fillna(0, inplace=True)
+    df_vendas_comparacao['VENDAS_COMPARATIVO'].fillna(0, inplace=True)
+    df_vendas_comparacao = df_vendas_comparacao.sort_values(by='VENDAS_PRINCIPAL', ascending=False)
+    df_vendas_comparacao['DIFERENCA_VENDAS'] = df_vendas_comparacao['VENDAS_PRINCIPAL'] - df_vendas_comparacao['VENDAS_COMPARATIVO']
+    df_vendas_comparacao['RESULTADO'] = np.where(df_vendas_comparacao['DIFERENCA_VENDAS'] > 0, 'AUMENTOU', np.where(df_vendas_comparacao['DIFERENCA_VENDAS'] == 0, 'MANTEVE', 'DIMINUIU'))
+    df_vendas_comparacao['PORCENTAGEM'] = round((df_vendas_comparacao['DIFERENCA_VENDAS'] / df_vendas_comparacao['VENDAS_PRINCIPAL']) * 100, 2)
+    df_vendas_comparacao.replace(-np.inf, float('nan'), inplace=True)
 
-    
+    # Adicionando descrição do Aton
+    comando = '''
+    SELECT A.DESCRICAO, B.SKU, B.ORIGEM_ID
+    FROM MATERIAIS A
+    LEFT JOIN ECOM_SKU B ON A.CODID = B.MATERIAL_ID
+    WHERE B.ORIGEM_ID IN('2','3','4')
+    '''
+    df_aton_descricao = pd.read_sql(comando, conexao)
+    df_vendas_comparacao = df_vendas_comparacao.merge(df_aton_descricao[['SKU', 'DESCRICAO', 'ORIGEM_ID']], on=['ORIGEM_ID', 'SKU'], how='left')
+     
     # Alterando nomes da origem
     mapeamento = {2: 'MADZ', 3: 'LEAL', 4: 'PISSTE'}
-    vendas_comparacao['ORIGEM_ID'] = vendas_comparacao['ORIGEM_ID'].replace(mapeamento)
+    df_vendas_comparacao['ORIGEM_ID'] = df_vendas_comparacao['ORIGEM_ID'].replace(mapeamento)
+    
+    # Reordedando colunas
+    nova_ordem = ['DESCRICAO', 'SKU', 'ORIGEM_ID', 'VENDAS_PRINCIPAL', 'VENDAS_COMPARATIVO', 'DIFERENCA_VENDAS', 'RESULTADO', 'PORCENTAGEM']
+    df_vendas_comparacao = df_vendas_comparacao[nova_ordem]
     
     excel_bytes = BytesIO()
-    vendas_comparacao.to_excel(excel_bytes, index=False)
+    df_vendas_comparacao.to_excel(excel_bytes, index=False)
     excel_bytes.seek(0)
     bytes_data = excel_bytes.getvalue()
     
