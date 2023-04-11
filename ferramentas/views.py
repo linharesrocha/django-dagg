@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from scripts import baixar_fotos_codid
+from scripts import baixar_fotos_codid, remover_fotos_codid
 import tempfile
 import requests
 import zipfile
@@ -40,3 +40,12 @@ def baixar_fotos(request):
     response['Content-Disposition'] = 'attachment; filename="fotos.zip"'
 
     return response
+
+def remover_fotos(request):
+    codid = request.POST['input-codid']
+    
+    status = remover_fotos_codid.main(codid)
+    if status:
+        return HttpResponse('<script>alert("FOTOS DELETADAS COM SUCESSO!"); window.history.back();</script>')
+    else:
+        return HttpResponse('<script>alert("O PRODUTO ESTÁ SEM FOTO!"); window.history.back();</script>')
