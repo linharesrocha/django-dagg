@@ -23,14 +23,14 @@
     <div class="container">
         <div id="header" class="row">
             <div class="col">
-                <h1 id="header-titulo">PAINEL</h1>
+                <h1 id="header-titulo">RELATÓRIOS</h1>
             </div>
         </div>
         <div class="row">
             <div class="col text-center">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Planilha Produtos Sem Venda</h5>
+                        <h5 class="card-title">Produtos Sem Venda</h5>
                         <p class="card-text">Obtém os produtos ativos, com estoque zerado, que não foram vendidos desde
                             o
                             dia 1 do mês passado até hoje.</p>
@@ -43,9 +43,22 @@
                 </div>
             </div>
             <div class="col text-center">
+                <div class="card" style="width: 18rem; height:13.44rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Dados Campanha</h5>
+                        <p class="card-text">Realiza a coleta de dados de múltiplas tabelas no aton</p>
+                        <form action="excel_planilha_campanha/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" id="btn-planilha-campanha" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
                 <div class="card" style="width: 30rem; height: 20rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Relátorio Comparativo Netshoes</h5>
+                        <h5 class="card-title">Vendas Comparativa Netshoes</h5>
                         <p class="card-text">Compara vendas em duas datas distintas</p>
                         <form method="post" action="excel_planilha_comparativo_vendas_netshoes/">
                             {% csrf_token %}
@@ -80,18 +93,6 @@
             </div>
         </div>
         <div class="row" style="margin-top: 10px;">
-            <div class="col text-center">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">Planilha de Campanha</h5>
-                        <form action="excel_planilha_campanha/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" id="btn-planilha-campanha" type="submit"
-                                value="Gerar Excel" class="btn btn-secondary">Download</button>
-                            {% csrf_token %}
-                        </form>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
