@@ -1,3 +1,5 @@
+import os
+
 """
 Django settings for dagg project.
 
@@ -27,7 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '192.168.18.13',
-    '127.0.0.1'
+    '127.0.0.1',
+    'self',
+    'localhost'
 ]
 
 
@@ -128,3 +132,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
