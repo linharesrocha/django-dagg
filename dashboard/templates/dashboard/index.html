@@ -29,8 +29,8 @@
         <div class="row">
             <div class="col text-center">
                 <form style="margin-top: 10px;" action="atualiza_relatorio/" method="post">
-                    <button onclick="aguardeInformacoes()" id="btn-atualizar-informacoes" type="submit" value="Gerar Excel"
-                        class="btn btn-secondary">Atualizar</button>
+                    <button onclick="aguardeInformacoes()" id="btn-atualizar-informacoes" type="submit"
+                        value="Gerar Excel" class="btn btn-primary">Atualizar</button>
                     {% csrf_token %}
                 </form>
             </div>
@@ -74,21 +74,22 @@
     </script>
 
     <script>
-        window.onload = function() {
-        // Obtém a URL atual
-        var urlAtual = window.location.href;
-        
-        // Define a URL alvo
-        var urlAlvo = 'http://192.168.18.13:8000/dashboard/atualiza_relatorio/';
-        
-        // Obtém o botão pelo ID
-        var btnAtualizarInformacoes = document.getElementById('btn-atualizar-informacoes');
-        
-        // Verifica se a URL atual é igual à URL alvo
-        if (urlAtual === urlAlvo) {
-            // Desabilita o botão
-            btnAtualizarInformacoes.disabled = true;
-        }
+        window.onload = function () {
+            var urlAtual = window.location.href;
+            var urlAlvoRelatorio = 'http://192.168.18.13:8000/dashboard/atualiza_relatorio/';
+            var urlAlvoIndex = 'http://192.168.18.13:8000/dashboard/';
+            var btnAtualizarInformacoes = document.getElementById('btn-atualizar-informacoes');
+            var botoesDownload = document.getElementsByClassName('btn-secondary')
+            if (urlAtual === urlAlvoRelatorio) {
+                // Desabilita o botão
+                btnAtualizarInformacoes.disabled = true;
+            }
+            if (urlAtual === urlAlvoIndex) {
+                for (var i = 0; i < botoesDownload.length; i++) {
+                    botoesDownload[i].disabled = true;
+                }
+            }
+
         };
     </script>
 </body>
