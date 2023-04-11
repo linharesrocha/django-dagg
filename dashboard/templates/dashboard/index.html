@@ -43,7 +43,7 @@
                         <span class="card-text">Quantidade: </span>
                         <span style="font-weight: bold;" id="quantidade-duplicadas">{{ num_linhas_duplicadas }}</span>
                         <form style="margin-top: 10px;" action="" method="post">
-                            <button onclick="alertaAguardaPlanilha()" id="btn-planilha-campanha" type="submit"
+                            <button onclick="alertaAguardaPlanilha()" id="btn-categorias-duplicadas" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
@@ -71,5 +71,24 @@
                 alert("Aguarde o carregamento do dados, o arquivo será gerado!");
             }, 500); // Atraso de 500 milissegundos
         }
+    </script>
+
+    <script>
+        window.onload = function() {
+        // Obtém a URL atual
+        var urlAtual = window.location.href;
+        
+        // Define a URL alvo
+        var urlAlvo = 'http://192.168.18.13:8000/dashboard/atualiza_relatorio/';
+        
+        // Obtém o botão pelo ID
+        var btnAtualizarInformacoes = document.getElementById('btn-atualizar-informacoes');
+        
+        // Verifica se a URL atual é igual à URL alvo
+        if (urlAtual === urlAlvo) {
+            // Desabilita o botão
+            btnAtualizarInformacoes.disabled = true;
+        }
+        };
     </script>
 </body>
