@@ -56,10 +56,15 @@ def main(data_inicial_principal, data_final_principal, data_inicial_comparativo,
     df_comparativo = data_h[(data_h['DATA'] >= data_inicial_comparativo) & (data_h['DATA'] <= data_final_comparativo)]
     df_comparativo_groupby = df_comparativo.groupby(['SKU','ORIGEM_ID']).count().reset_index().drop(['DATA'], axis=1)
 
-    vendas_comparacao = df_principal_groupby.merge(df_comparativo_groupby, on=['SKU', 'ORIGEM_ID'], suffixes=('_PRINCIPAL', '_COMPARATIVO'))
+    vendas_comparacao = df_principal_groupby.merge(df_comparativo_groupby, on=['SKU', 'ORIGEM_ID'], how='outer',suffixes=('_PRINCIPAL', '_COMPARATIVO'))
+    vendas_comparacao['VENDAS_PRINCIPAL'].fillna(0, inplace=True)
+    vendas_comparacao['VENDAS_COMPARATIVO'].fillna(0, inplace=True)
+    vendas_comparacao = vendas_comparacao.sort_values(by='VENDAS_PRINCIPAL', ascending=False)
     vendas_comparacao['DIFERENCA_VENDAS'] = vendas_comparacao['VENDAS_PRINCIPAL'] - vendas_comparacao['VENDAS_COMPARATIVO']
     vendas_comparacao['RESULTADO'] = np.where(vendas_comparacao['DIFERENCA_VENDAS'] > 0, 'AUMENTOU', np.where(vendas_comparacao['DIFERENCA_VENDAS'] == 0, 'MANTEVE', 'DIMINUIU'))
     vendas_comparacao['PORCENTAGEM'] = round((vendas_comparacao['DIFERENCA_VENDAS'] / vendas_comparacao['VENDAS_PRINCIPAL']) * 100, 2)
+    vendas_comparacao.replace(-np.inf, float('nan'), inplace=True)
+
     
     # Alterando nomes da origem
     mapeamento = {2: 'MADZ', 3: 'LEAL', 4: 'PISSTE'}
