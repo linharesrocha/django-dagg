@@ -11,8 +11,8 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'dashboard/styles.css' %}">
-        <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
 
 
@@ -41,26 +41,41 @@
                     <div class="card-body">
                         <h5 class="card-title">Categorias Duplicadas</h5>
                         <span class="card-text">Quantidade: </span>
-                        <span style="font-weight: bold;" id="quantidade-duplicadas">{{ num_linhas_duplicadas }}</span>
+                        <span style="font-weight: bold;">{{ num_linhas_duplicadas }}</span>
                         <form style="margin-top: 10px;" action="excel_planilha_categorias_duplicadas/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" id="btn-categorias-duplicadas" type="submit"
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
-        <div style="margin-top: 10px;" class="row">
             <div class="col text-center">
                 <div class="card" style="width: 18rem">
                     <div class="card-body">
                         <h5 class="card-title">Vinculações Desconectadas</h5>
                         <p class="card-text">Verifica nas vinculações do aton se existe bolinhas vermelhas</p>
                         <span class="card-text">Quantidade: </span>
-                        <span style="font-weight: bold;" id="quantidade-duplicadas">{{ num_vinculacoes_desconectadas }}</span>
-                        <form style="margin-top: 10px;" action="excel_planilha_vinculacoes_desconectadas/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" id="btn-vinculacoes-erradas" type="submit"
+                        <span style="font-weight: bold;">{{ num_vinculacoes_desconectadas }}</span>
+                        <form style="margin-top: 10px;" action="excel_planilha_vinculacoes_desconectadas/"
+                            method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Vinculações Full Erradas</h5>
+                        <p class="card-text">Verifica nas vinculações do aton se existe produtos marcados como FULL sendo que não estão no FULL.</p>
+                        <span class="card-text">Quantidade: </span>
+                        <span style="font-weight: bold;">{{ num_vinculacoes_erradas_full }}</span>
+                        <form style="margin-top: 10px;" action="excel_planilha_vinculacoes_full_erradas/"
+                            method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
@@ -68,7 +83,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

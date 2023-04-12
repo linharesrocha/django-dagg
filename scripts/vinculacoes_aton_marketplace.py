@@ -1,9 +1,6 @@
-import os
-from pathlib import Path
 import pyodbc
 import pandas as pd
 import warnings
-from dotenv import load_dotenv
 from io import BytesIO
 from scripts.connect_to_database import get_connection
 
