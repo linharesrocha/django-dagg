@@ -2,6 +2,11 @@ h1, h2, h3, h4, h5, p, span {
     font-family: 'Montserrat';
 }
 
+a {
+    color: whitesmoke;
+    text-decoration: none;
+}
+
 .container {
     background-color: #F6F6F6;
 }
