@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from scripts import verifica_categorias_duplicadas_aton, vinculacoes_aton_marketplace, vinculacoes_erradas_full_ecom_sku, inativos_com_estoque_marktetplace
+from scripts import verifica_categorias_duplicadas_aton, vinculacoes_aton_marketplace, vinculacoes_erradas_full_ecom_sku, inativos_com_estoque_marktetplace, produtos_kit_sem_desmembra
 from django.http import HttpResponse
 
 def index(request):
@@ -12,9 +12,11 @@ def atualiza_dados(request):
     num_vinculacoes_desconectadas = vinculacoes_aton_marketplace.main(download)
     num_vinculacoes_erradas_full = vinculacoes_erradas_full_ecom_sku.main(download)
     num_inativos_com_estoque_mktp = inativos_com_estoque_marktetplace.main(download)
+    num_produtos_kit_sem_desmembra = produtos_kit_sem_desmembra.main(download)
     
     contexto = {'num_linhas_duplicadas' : num_linhas_duplicadas, 'num_vinculacoes_desconectadas': num_vinculacoes_desconectadas, 
-                'num_vinculacoes_erradas_full': num_vinculacoes_erradas_full, 'num_inativos_com_estoque_mktp': num_inativos_com_estoque_mktp}
+                'num_vinculacoes_erradas_full': num_vinculacoes_erradas_full, 'num_inativos_com_estoque_mktp': num_inativos_com_estoque_mktp,
+                'num_produtos_kit_sem_desmembra': num_produtos_kit_sem_desmembra}
     return render(request, 'dashboard/index.html', contexto)
 
 
@@ -62,6 +64,18 @@ def gerar_inativos_com_estoque_marketplace(request):
     nome_planilha = 'produtos_inativos_com_estoque_mktp.xlsx'
     
     arquivo_excel = inativos_com_estoque_marktetplace.main(download)
+    
+    # Crie uma resposta HTTP para retornar o arquivo ao usuário
+    response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{nome_planilha}"'
+    return response
+
+def gerar_produtos_kit_sem_desmembra(request):
+    download = True
+    
+    nome_planilha = 'produtos_kit_sem_desmembra.xlsx'
+    
+    arquivo_excel = produtos_kit_sem_desmembra.main(download)
     
     # Crie uma resposta HTTP para retornar o arquivo ao usuário
     response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
