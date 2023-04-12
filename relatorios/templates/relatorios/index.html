@@ -35,7 +35,7 @@
                             o
                             dia 1 do mês passado até hoje.</p>
                         <form action="excel_planilha_produtos_sem_vendas/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" id="btn-planilha-campanha" type="submit"
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
@@ -48,7 +48,7 @@
                         <h5 class="card-title">Dados Campanha</h5>
                         <p class="card-text">Realiza a coleta de dados de múltiplas tabelas do aton</p>
                         <form action="excel_planilha_campanha/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" id="btn-planilha-campanha" type="submit"
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
@@ -92,7 +92,19 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="margin-top: 10px;">
+        <div class="row">
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Todas Vinculações de Produtos Aton com Marketplaces</h5>
+                        <form action="excel_planilha_todas_vinculacoes_marketplace_aton/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

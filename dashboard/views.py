@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from scripts import verifica_categorias_duplicadas_aton, vinculacoes_aton_marketplace, vinculacoes_erradas_full_ecom_sku, inativos_com_estoque_marktetplace, produtos_kit_sem_desmembra
+from scripts import verifica_categorias_duplicadas_aton, vinculacoes_desativadas_aton_marketplace, vinculacoes_erradas_full_ecom_sku, inativos_com_estoque_marktetplace, produtos_kit_sem_desmembra
 from django.http import HttpResponse
 
 def index(request):
@@ -9,7 +9,7 @@ def index(request):
 def atualiza_dados(request):
     download = False
     num_linhas_duplicadas = verifica_categorias_duplicadas_aton.main(download)
-    num_vinculacoes_desconectadas = vinculacoes_aton_marketplace.main(download)
+    num_vinculacoes_desconectadas = vinculacoes_desativadas_aton_marketplace.main(download)
     num_vinculacoes_erradas_full = vinculacoes_erradas_full_ecom_sku.main(download)
     num_inativos_com_estoque_mktp = inativos_com_estoque_marktetplace.main(download)
     num_produtos_kit_sem_desmembra = produtos_kit_sem_desmembra.main(download)
@@ -38,7 +38,7 @@ def gerar_vinculacoes_desconectadas(request):
     
     nome_planilha = 'vinculacoes_desconectadas.xlsx'
     
-    arquivo_excel = inativos_com_estoque_marktetplace.main(download)
+    arquivo_excel = vinculacoes_desativadas_aton_marketplace.main(download)
     
     # Crie uma resposta HTTP para retornar o arquivo ao usuário
     response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
