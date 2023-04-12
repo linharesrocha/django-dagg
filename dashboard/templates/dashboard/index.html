@@ -51,6 +51,23 @@
                 </div>
             </div>
         </div>
+        <div style="margin-top: 10px;" class="row">
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Vinculações Desconectadas</h5>
+                        <p class="card-text">Verifica nas vinculações do aton se existe bolinhas vermelhas</p>
+                        <span class="card-text">Quantidade: </span>
+                        <span style="font-weight: bold;" id="quantidade-duplicadas">{{ num_vinculacoes_desconectadas }}</span>
+                        <form style="margin-top: 10px;" action="excel_planilha_vinculacoes_desconectadas/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" id="btn-vinculacoes-erradas" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
