@@ -16,14 +16,14 @@
     <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
 
 
-    <title>Dashboard</title>
+    <title>Dashboard Operacional</title>
 </head>
 
 <body>
     <div class="container">
         <div id="header" class="row">
             <div class="col">
-                <h1 id="header-titulo"><a href="/">DASHBOARD</a></h1>
+                <h1 id="header-titulo"><a href="/">DASHBOARD OPERACIONAL</a></h1>
             </div>
         </div>
         <div class="row">
@@ -75,6 +75,23 @@
                         <span class="card-text">Quantidade: </span>
                         <span style="font-weight: bold;">{{ num_vinculacoes_erradas_full }}</span>
                         <form style="margin-top: 10px;" action="excel_planilha_vinculacoes_full_erradas/"
+                            method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Produtos Inativos com Estoque no Marketplace</h5>
+                        <span class="card-text">Quantidade: </span>
+                        <span style="font-weight: bold;">{{ num_inativos_com_estoque_mktp }}</span>
+                        <form style="margin-top: 10px;" action="excel_planilha_inativos_com_estoque_marketplace/"
                             method="post">
                             <button onclick="alertaAguardaPlanilha()" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
