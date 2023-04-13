@@ -30,7 +30,7 @@
             <div class="col text-center">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Produtos Sem Venda</h5>
+                        <h5 class="card-title">Produtos para Inativar</h5>
                         <p class="card-text">Obtém os produtos ativos, com estoque zerado, que não foram vendidos desde
                             o
                             dia 1 do mês passado até hoje.</p>
@@ -65,7 +65,7 @@
                             <div class="row">
                                 <!-- PERÍODO PRINCIPAL -->
                                 <div class="col">
-                                    <p for="data_inicial_principal"style="font-weight: bold">Peródo principal</p>
+                                    <p for="data_inicial_principal"style="font-weight: bold">Período Recente</p>
                                     <input type="date" name="data_inicial_principal" id="data_inicial_principal">
                                     <p for="data_final_principal" style="margin-top: 10px;">Até</p>
                                     <input type="date" name="data_final_principal" id="data_final_principal">
@@ -74,7 +74,7 @@
                                 <!-- PERÍODO COMPARATIVO -->
                                 <div class="col">
                                     <div class="col">
-                                        <p for="data_inicial_comparativo"style="font-weight: bold">Peródo comparativo</p>
+                                        <p for="data_inicial_comparativo"style="font-weight: bold">Período Anterior</p>
                                         <input type="date" name="data_inicial_comparativo" id="data_inicial_comparativo">
                                         <p for="data_final_comparativo" style="margin-top: 10px;">Até</p>
                                         <input type="date" name="data_final_comparativo" id="data_final_comparativo">
@@ -102,6 +102,25 @@
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Todas as vendas no Aton</h5>
+                        <form action="excel_planilha_todas_as_vendas_aton/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Manutenção</h5>
                     </div>
                 </div>
             </div>

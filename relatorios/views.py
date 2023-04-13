@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes, todas_vinculacoes_aton_marketplace
+from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes, todas_vinculacoes_aton_marketplace, todas_as_vendas_aton
 from datetime import datetime, date
 
 def index(request):
@@ -87,4 +87,12 @@ def gerar_planilha_todas_vinculacoes_aton_marketplace(request):
     # Crie uma resposta HTTP para retornar o arquivo ao usuário
     response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = f'attachment; filename="{nome_planilha}"'
+    return response
+
+def gerar_planilha_todas_as_vendas_aton(request):
+    arquivo_excel = todas_as_vendas_aton.main()
+    
+     # Crie uma resposta HTTP para retornar o arquivo ao usuário
+    response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="todas_as_vendas_aton.xlsx"'
     return response
