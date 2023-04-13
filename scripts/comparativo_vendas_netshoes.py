@@ -56,13 +56,13 @@ def main(data_inicial_principal, data_final_principal, data_inicial_comparativo,
     df_comparativo = data_h[(data_h['DATA'] >= data_inicial_comparativo) & (data_h['DATA'] <= data_final_comparativo)]
     df_comparativo_groupby = df_comparativo.groupby(['SKU','ORIGEM_ID']).count().reset_index().drop(['DATA'], axis=1)
 
-    df_vendas_comparacao = df_principal_groupby.merge(df_comparativo_groupby, on=['SKU', 'ORIGEM_ID'], how='outer',suffixes=('_PRINCIPAL', '_COMPARATIVO'))
-    df_vendas_comparacao['VENDAS_PRINCIPAL'].fillna(0, inplace=True)
-    df_vendas_comparacao['VENDAS_COMPARATIVO'].fillna(0, inplace=True)
-    df_vendas_comparacao = df_vendas_comparacao.sort_values(by='VENDAS_PRINCIPAL', ascending=False)
-    df_vendas_comparacao['DIFERENCA_VENDAS'] = df_vendas_comparacao['VENDAS_PRINCIPAL'] - df_vendas_comparacao['VENDAS_COMPARATIVO']
+    df_vendas_comparacao = df_principal_groupby.merge(df_comparativo_groupby, on=['SKU', 'ORIGEM_ID'], how='outer',suffixes=('_RECENTE', '_ANTERIOR'))
+    df_vendas_comparacao['VENDAS_RECENTE'].fillna(0, inplace=True)
+    df_vendas_comparacao['VENDAS_ANTERIOR'].fillna(0, inplace=True)
+    df_vendas_comparacao = df_vendas_comparacao.sort_values(by='VENDAS_RECENTE', ascending=False)
+    df_vendas_comparacao['DIFERENCA_VENDAS'] = df_vendas_comparacao['VENDAS_RECENTE'] - df_vendas_comparacao['VENDAS_ANTERIOR']
     df_vendas_comparacao['RESULTADO'] = np.where(df_vendas_comparacao['DIFERENCA_VENDAS'] > 0, 'AUMENTOU', np.where(df_vendas_comparacao['DIFERENCA_VENDAS'] == 0, 'MANTEVE', 'DIMINUIU'))
-    df_vendas_comparacao['PORCENTAGEM'] = round((df_vendas_comparacao['DIFERENCA_VENDAS'] / df_vendas_comparacao['VENDAS_PRINCIPAL']) * 100, 2)
+    # df_vendas_comparacao['PORCENTAGEM'] = round((df_vendas_comparacao['DIFERENCA_VENDAS'] / df_vendas_comparacao['VENDAS_RECENTE']) * 100, 2)
     df_vendas_comparacao.replace(-np.inf, float('nan'), inplace=True)
 
     # Adicionando descrição do Aton
@@ -80,7 +80,7 @@ def main(data_inicial_principal, data_final_principal, data_inicial_comparativo,
     df_vendas_comparacao['ORIGEM_ID'] = df_vendas_comparacao['ORIGEM_ID'].replace(mapeamento)
     
     # Reordedando colunas
-    nova_ordem = ['DESCRICAO', 'SKU', 'ORIGEM_ID', 'VENDAS_PRINCIPAL', 'VENDAS_COMPARATIVO', 'DIFERENCA_VENDAS', 'RESULTADO', 'PORCENTAGEM']
+    nova_ordem = ['DESCRICAO', 'SKU', 'ORIGEM_ID', 'VENDAS_RECENTE', 'VENDAS_ANTERIOR', 'DIFERENCA_VENDAS', 'RESULTADO']
     df_vendas_comparacao = df_vendas_comparacao[nova_ordem]
     
     excel_bytes = BytesIO()

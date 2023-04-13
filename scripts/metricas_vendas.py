@@ -4,35 +4,6 @@ import warnings
 from connect_to_database import get_connection
 from datetime import datetime, timedelta
 
-# Função para validar o formato da data
-def validar_data(data):
-    try:
-        dia, mes, ano = data.split('-')
-        # Verifica se a data possui 3 elementos (dia, mês e ano)
-        if len(dia) == len(mes) == 2 and len(ano) == 4:
-            # Verifica se dia, mês e ano são inteiros
-            dia = int(dia)
-            mes = int(mes)
-            ano = int(ano)
-            # Verifica se o dia está dentro do intervalo válido
-            if dia >= 1 and dia <= 31:
-                # Verifica se o mês está dentro do intervalo válido
-                if mes >= 1 and mes <= 12:
-                    return True
-        return False
-    except ValueError:
-        return False
-
-
-# Loop para solicitar 4 datas ao usuário
-# for i in range(4):
-#     while True:
-#         data = input(f"Digite a data {i+1} (dd-mm-yyyy): ")
-#         if validar_data(data):
-#             datas.append(data)
-#             break
-#         else:
-#             print("Data inválida! Por favor, digite novamente.")
 
 data_periodo_1_inicial = '01-03-2023'
 data_periodo_1_final = '02-03-2023'
@@ -142,22 +113,31 @@ print(' ')
 print(f'PREÇO MÉDIO\nPeriodo 1: {preco_medio_periodo1}\nPeriodo 2: {preco_medio_periodo2}\nDiferença: {resultado_preco_medio} - {resultado_preco_medio_classificacao} {resultado_preco_medio_porcentagem}%')
 
 
-
+# Obtendo quantidade de vendas
 df_periodo_1_groupby = df_periodo_1.groupby(['SKU','ORIGEM_ID']).count().reset_index().drop(['DATA'], axis=1)
-
 df_periodo_2_groupby = df_periodo_2.groupby(['SKU','ORIGEM_ID']).count().reset_index().drop(['DATA'], axis=1)
-
 df_periodos_comparacao = df_periodo_1_groupby.merge(df_periodo_2_groupby, on=['SKU', 'ORIGEM_ID'], how='outer',suffixes=('_PRINCIPAL', '_COMPARATIVO'))
-
 df_periodos_comparacao.drop(columns=['COD_INTERNO_PRINCIPAL', 'QUANT_PRINCIPAL', 'SKU2_PRINCIPAL', 'COD_INTERNO_COMPARATIVO', 'QUANT_COMPARATIVO', 'SKU2_COMPARATIVO'], axis=1, inplace=True)
-
 df_periodos_comparacao.rename(columns={'VLR_TOTAL_PRINCIPAL':'VENDAS_PERIODO_1'}, inplace=True)
 df_periodos_comparacao.rename(columns={'VLR_TOTAL_COMPARATIVO':'VENDAS_PERIODO_2'}, inplace=True)
-
 df_periodos_comparacao['VENDAS_PERIODO_1'].fillna(0, inplace=True)
 df_periodos_comparacao['VENDAS_PERIODO_2'].fillna(0, inplace=True)
+df_periodos_comparacao = df_periodos_comparacao.sort_values(by='VENDAS_PERIODO_1', ascending=False)
+df_periodos_comparacao['DIFERENCA_VENDAS'] = df_periodos_comparacao['VENDAS_PERIODO_1'] - df_periodos_comparacao['VENDAS_PERIODO_2']
 
-df_periodos_comparacao = df_periodos_comparacao.sort_values(by='VENDAS_PRINCIPAL', ascending=False)
+# Obtendo quantidade de valor bruto
+
+
+ # Adicionando descrição do Aton
+comando = '''
+SELECT A.DESCRICAO, B.SKU, ORIGEM_NOME,B.ORIGEM_ID
+FROM MATERIAIS A
+LEFT JOIN ECOM_SKU B ON A.CODID = B.MATERIAL_ID
+LEFT JOIN ECOM_ORIGEM C ON B.ORIGEM_ID = C.ORIGEM_ID
+'''
+
+df_aton_descricao = pd.read_sql(comando, conexao)
+df_periodos_comparacao = df_periodos_comparacao.merge(df_aton_descricao[['SKU', 'DESCRICAO', 'ORIGEM_NOME', 'ORIGEM_ID']], on=['ORIGEM_ID', 'SKU'], how='outer')
 
 
 
