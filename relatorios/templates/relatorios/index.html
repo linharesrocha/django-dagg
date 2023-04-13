@@ -120,7 +120,17 @@
             <div class="col text-center">
                 <div class="card" style="width: 18rem">
                     <div class="card-body">
-                        <h5 class="card-title">Manutenção</h5>
+                        <h5 class="card-title">Relatório Envio Full</h5>
+                        <br>
+                        <form action="/" method="post">
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Selecione a planilha do Full</label>
+                                <input class="form-control" type="file" id="formFile">
+                            </div>
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
                     </div>
                 </div>
             </div>
