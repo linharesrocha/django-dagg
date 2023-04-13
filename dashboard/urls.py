@@ -8,5 +8,6 @@ urlpatterns = [
     path('atualiza_relatorio/excel_planilha_vinculacoes_desconectadas/', views.gerar_vinculacoes_desconectadas),
     path('atualiza_relatorio/excel_planilha_vinculacoes_full_erradas/', views.gerar_vinculacoes_full_erradas),
     path('atualiza_relatorio/excel_planilha_inativos_com_estoque_marketplace/', views.gerar_inativos_com_estoque_marketplace),
-    path('atualiza_relatorio/excel_planilha_produtos_kit_sem_desmembra/', views.gerar_produtos_kit_sem_desmembra)
+    path('atualiza_relatorio/excel_planilha_produtos_kit_sem_desmembra/', views.gerar_produtos_kit_sem_desmembra),
+    path('atualiza_relatorio/excel_planilha_produtos_inativo_com_estoque_aton/', views.gerar_inativos_com_estoque_aton)
 ]

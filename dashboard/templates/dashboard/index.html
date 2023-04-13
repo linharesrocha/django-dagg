@@ -103,10 +103,10 @@
             <div class="col text-center">
                 <div class="card" style="width: 18rem">
                     <div class="card-body">
-                        <h5 class="card-title">Produtos Kit sem a Opção Desmembrar Marcado</h5>
+                        <h5 class="card-title">Produtos Inativos com Estoque no Aton</h5>
                         <span class="card-text">Quantidade: </span>
-                        <span style="font-weight: bold;">{{ num_produtos_kit_sem_desmembra }}</span>
-                        <form style="margin-top: 10px;" action="excel_planilha_produtos_kit_sem_desmembra/"
+                        <span style="font-weight: bold;">{{ num_inativos_com_estoque_aton }}</span>
+                        <form style="margin-top: 10px;" action="excel_planilha_produtos_inativo_com_estoque_aton/"
                             method="post">
                             <button onclick="alertaAguardaPlanilha()" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
@@ -118,8 +118,15 @@
             <div class="col text-center">
                 <div class="card" style="width: 18rem">
                     <div class="card-body">
-                        <h5 class="card-title">Manutenção</h5>
-                        <span style="font-weight: bold;"></span>
+                        <h5 class="card-title">Produtos Kit sem a Opção Desmembrar Marcado</h5>
+                        <span class="card-text">Quantidade: </span>
+                        <span style="font-weight: bold;">{{ num_produtos_kit_sem_desmembra }}</span>
+                        <form style="margin-top: 10px;" action="excel_planilha_produtos_kit_sem_desmembra/"
+                            method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
                     </div>
                 </div>
             </div>
