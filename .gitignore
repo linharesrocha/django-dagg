@@ -19,3 +19,4 @@ media
 dagg/__pycache__
 scripts/__pycache__
 dashboard/__pycache__
+scripts/connect_to_database.py

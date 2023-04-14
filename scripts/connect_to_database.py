@@ -12,3 +12,5 @@ def get_connection():
                                             "UID=" + UID + ";"
                                                             "PWD=" + PWD + ";")
     return connection
+
+#
