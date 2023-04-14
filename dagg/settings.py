@@ -31,7 +31,8 @@ ALLOWED_HOSTS = [
     '192.168.18.13',
     '127.0.0.1',
     'self',
-    'localhost'
+    'localhost',
+    '192.168.18.28'
 ]
 
 
