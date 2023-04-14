@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.template import loader
-from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes, todas_vinculacoes_aton_marketplace, todas_as_vendas_aton
+from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes, todas_vinculacoes_aton_marketplace, todas_as_vendas_aton, relatorio_envio_full
 from datetime import datetime, date
+import pandas as pd
+from openpyxl import Workbook
+from io import BytesIO
+
 
 def index(request):
     return render(request, 'relatorios/index.html')
@@ -96,3 +99,13 @@ def gerar_planilha_todas_as_vendas_aton(request):
     response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = f'attachment; filename="todas_as_vendas_aton.xlsx"'
     return response
+
+def gerar_planilha_envio_full(request):
+    file = request.FILES['file']
+    
+    df_ml_full = pd.read_excel(file, skiprows=3, skipfooter=1)
+        
+    
+
+
+    pass

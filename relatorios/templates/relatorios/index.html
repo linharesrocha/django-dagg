@@ -122,10 +122,10 @@
                     <div class="card-body">
                         <h5 class="card-title">Relatório Envio Full</h5>
                         <br>
-                        <form action="/" method="post">
+                        <form action="excel_planilha_envio_full/" enctype="multipart/form-data" method="post">
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">Selecione a planilha do Full</label>
-                                <input class="form-control" type="file" id="formFile">
+                                <input class="form-control" type="file" name="file" id="file">
                             </div>
                             <button onclick="alertaAguardaPlanilha()" type="submit"
                                 value="Gerar Excel" class="btn btn-secondary">Download</button>
