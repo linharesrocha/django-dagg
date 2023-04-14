@@ -2,6 +2,8 @@ import pyodbc
 import pandas as pd
 import warnings
 from scripts.connect_to_database import get_connection
+from openpyxl.styles import PatternFill
+from collections import Counter
 from openpyxl.worksheet.filters import (
     FilterColumn,
     CustomFilter,
@@ -95,9 +97,20 @@ def main(file):
     cfs = CustomFilters(customFilter=[flt1])
     col = FilterColumn(colId=6, customFilters=cfs)
     filters.filterColumn.append(col)
-    
+
     # Resultado
     worksheet.column_dimensions['J'].hidden = True
+    
+    # Vendo valores duplicados
+    colunas_alvo = ["A", "F"] 
+    for coluna in colunas_alvo:
+        valores_coluna = [cell.value for cell in worksheet[coluna]]
+        valores_duplicados = [valor for valor, frequencia in Counter(valores_coluna).items() if frequencia > 1]
+        fill = PatternFill(start_color='FFABAB', end_color='FFABAB', fill_type='solid')
+        for cell in worksheet[coluna]:
+            if cell.value in valores_duplicados:
+                cell.fill = fill
+
 
     writer._save()
     output.seek(0)
