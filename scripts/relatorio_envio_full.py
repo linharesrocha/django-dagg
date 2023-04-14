@@ -7,8 +7,12 @@ from openpyxl.worksheet.filters import (
     CustomFilter,
     CustomFilters,
     )
+from io import BytesIO
+import openpyxl
 
-def main(df_ml_full):
+def main(file):
+    df_ml_full = pd.read_excel(file, skiprows=3, skipfooter=1)
+    
     warnings.filterwarnings('ignore')
     connection = get_connection()
     conexao = pyodbc.connect(connection)
@@ -58,10 +62,10 @@ def main(df_ml_full):
     df_completo['SUGESTAO'] = ''
 
     df_completo = df_completo[['COD_ML', 'ID_ANUNCIO', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'subtracao']]
-
-    # Escrever os dataframes em um arquivo Excel com duas abas
-    nome_arquivo_excel = 'scripts/meu_arquivo_excel.xlsx'
-    writer = pd.ExcelWriter(nome_arquivo_excel, engine='openpyxl')
+    
+        # Escrever os dataframes em um arquivo Excel com duas abas
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='openpyxl')
 
     df_completo.to_excel(writer, sheet_name='ENVIO_FULL', index=False)
     df_ml_full.to_excel(writer, sheet_name='PLAN_FULL', index=False)
@@ -92,4 +96,7 @@ def main(df_ml_full):
     col = FilterColumn(colId=6, customFilters=cfs)
     filters.filterColumn.append(col)
 
-    return worksheet
+    writer._save()
+    output.seek(0)
+    
+    return output

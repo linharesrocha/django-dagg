@@ -3,7 +3,12 @@ from django.http import HttpResponse
 from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes, todas_vinculacoes_aton_marketplace, todas_as_vendas_aton, relatorio_envio_full
 from datetime import datetime, date
 import pandas as pd
-from openpyxl import Workbook
+from io import BytesIO
+from openpyxl.worksheet.filters import (
+    FilterColumn,
+    CustomFilter,
+    CustomFilters,
+    )
 from io import BytesIO
 
 
@@ -103,9 +108,9 @@ def gerar_planilha_todas_as_vendas_aton(request):
 def gerar_planilha_envio_full(request):
     file = request.FILES['file']
     
-    df_ml_full = pd.read_excel(file, skiprows=3, skipfooter=1)
-        
+    output = relatorio_envio_full.main(file)
     
-
-
-    pass
+    # Retorne a resposta HTTP com o arquivo Excel como anexo
+    response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=nome_arquivo_excel.xlsx'
+    return response
