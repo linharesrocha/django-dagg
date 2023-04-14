@@ -1,7 +1,5 @@
 from dotenv import load_dotenv
 import os
-from pathlib import Path
-import pyodbc
 
 def get_connection():
     load_dotenv()
