@@ -2,7 +2,12 @@ import pyodbc
 import pandas as pd
 import warnings
 from connect_to_database import get_connection
-from openpyxl import Workbook
+from openpyxl.worksheet.filters import (
+    FilterColumn,
+    CustomFilter,
+    CustomFilters,
+    )
+from openpyxl.worksheet.table import Table, TableStyleInfo
 
 
 warnings.filterwarnings('ignore')
@@ -70,10 +75,24 @@ worksheet = writer.sheets['ENVIO_FULL']
 worksheet['L1'] = 'MESES'
 worksheet['M1'] = '1'
 
-# min_col=7 pois é a coluna G que é a coluna SUGESTÃO
+# Adiciona a formula nas linhas
 for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=7, max_col=7):
     for cell in row:
-        cell.value = '=(C2*$M$1)-J2'
+        cell.value = f'=(C{cell.row}*$M$1)-J{cell.row}'
 
+# Alterando tamanho das colunas
+worksheet.column_dimensions['F'].width = '65.43'
+worksheet.column_dimensions['I'].width = '14.86'
+worksheet.column_dimensions['A'].width = '11.43'
+
+# Adicionando filtros
+worksheet.auto_filter.ref = "A1:J1"
+
+# Filtrando valores maior 0 na coluna SUGESTAO
+filters = worksheet.auto_filter
+flt1 = CustomFilter(operator="greaterThan", val=0)
+cfs = CustomFilters(customFilter=[flt1])
+col = FilterColumn(colId=6, customFilters=cfs)
+filters.filterColumn.append(col)
 
 writer._save()
