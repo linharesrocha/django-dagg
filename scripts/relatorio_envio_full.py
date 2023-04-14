@@ -95,6 +95,9 @@ def main(file):
     cfs = CustomFilters(customFilter=[flt1])
     col = FilterColumn(colId=6, customFilters=cfs)
     filters.filterColumn.append(col)
+    
+    # Resultado
+    worksheet.column_dimensions['J'].hidden = True
 
     writer._save()
     output.seek(0)

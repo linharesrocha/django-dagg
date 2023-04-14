@@ -112,5 +112,5 @@ def gerar_planilha_envio_full(request):
     
     # Retorne a resposta HTTP com o arquivo Excel como anexo
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=nome_arquivo_excel.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=analise_envio_full.xlsx'
     return response
