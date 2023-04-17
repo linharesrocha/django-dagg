@@ -4,8 +4,8 @@ import os
 def get_connection():
     load_dotenv()
     DATABASE = os.getenv('DATABASE')
-    UID_BD = os.getenv('UID')
-    PWD_BD = os.getenv('PWD')
+    UID_BD = os.getenv('UID_BD')
+    PWD_BD = os.getenv('PWD_BD')
     connection = ("Driver={SQL Server};"
                     "Server=erp.ambarxcall.com.br;"
                     "Database=" + DATABASE + ";"
