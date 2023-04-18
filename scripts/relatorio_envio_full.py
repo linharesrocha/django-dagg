@@ -111,7 +111,9 @@ def main(file):
             if cell.value in valores_duplicados:
                 cell.fill = fill
 
-
+    # Congelando painel
+    worksheet.freeze_panes = 'A2'
+    
     writer._save()
     output.seek(0)
     
