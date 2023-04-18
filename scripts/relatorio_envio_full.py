@@ -10,7 +10,6 @@ from openpyxl.worksheet.filters import (
     CustomFilters,
     )
 from io import BytesIO
-import openpyxl
 
 def main(file):
     df_ml_full = pd.read_excel(file, skiprows=3, skipfooter=1)

@@ -12,7 +12,6 @@ def baixar_fotos(request):
     codid = request.POST['input-codid']
 
     lista_fotos = baixar_fotos_codid.main(codid)
-    print(lista_fotos)
     
     if lista_fotos == False:
         return HttpResponse('<script>alert("O CODID fornecido não tem foto!"); window.history.back();</script>')
@@ -37,7 +36,7 @@ def baixar_fotos(request):
     
     # Crie uma resposta HTTP para o arquivo zip
     response = HttpResponse(temp, content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename="fotos.zip"'
+    response['Content-Disposition'] = f'attachment; filename="fotos-{codid}.zip"'
 
     return response
 
