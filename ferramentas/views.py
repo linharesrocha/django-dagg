@@ -29,7 +29,7 @@ def baixar_fotos(request):
             foto_response = requests.get(foto_url)
             
             # Adicione a foto ao arquivo zip com um nome de arquivo único
-            nome_arquivo = f'foto{i+1}.jpg'
+            nome_arquivo = f'foto{i+1}-{codid}.jpg'
             zip_file.writestr(nome_arquivo, foto_response.content)
     
     temp.seek(0)
