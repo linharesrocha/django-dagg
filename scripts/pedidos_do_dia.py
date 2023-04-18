@@ -24,6 +24,8 @@ def main():
     WHERE B.TIPO = 'PEDIDO'
     AND B.POSICAO != 'CANCELADO'
     AND DATA >= '{data_ontem_formatada}'
+    AND B.POSICAO_PRINT = 1
+    AND A.EMPRESA != 4
     ORDER BY DATA
     '''
 
