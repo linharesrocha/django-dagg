@@ -38,13 +38,13 @@ def main(file):
     # Lendo o arquivo e pulando as três primeiras linhas
     df_ml_full = df_ml_full.iloc[1:]
 
-    df_ml_full['subtracao'] = df_ml_full['Envios pendentes de recebimento'] - \
-                            df_ml_full['Vendas não entregues'] - \
-                            df_ml_full['Em transferência'] - \
-                            df_ml_full['Devolvidas pelo comprador'] - \
-                            df_ml_full['Não aptas para venda'] - \
+    df_ml_full['subtracao'] = df_ml_full['Envios pendentes de recebimento'] + \
+                            df_ml_full['Vendas não entregues'] + \
+                            df_ml_full['Em transferência'] + \
+                            df_ml_full['Devolvidas pelo comprador'] + \
+                            df_ml_full['Não aptas para venda'] + \
                             df_ml_full['Aptas para venda']
-    df_ml_full['subtracao'] = abs(df_ml_full['subtracao'])
+    df_ml_full['subtracao'] = df_ml_full['subtracao']
     try:
         df_ml_full_filtrada = df_ml_full[['Código ML', 'ID do anúncio', 'Vendas últimos 30 dias (un.)', 'Aptas para venda', 'Tempo até fim do estoque ', 'subtracao']]
         nome_correto = 'Tempo até fim do estoque '
