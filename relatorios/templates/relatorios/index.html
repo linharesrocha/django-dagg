@@ -28,28 +28,45 @@
         </div>
         <div class="row">
             <div class="col text-center">
-                <div class="card" style="width: 18rem;">
+                <h2>Vendas</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Produtos sem Vendas</h5>
-                        <p class="card-text">Obtém os produtos ativos, com estoque zerado, que não foram vendidos desde
-                            o
-                            dia 1 do mês passado até hoje.</p>
-                        <form action="excel_planilha_produtos_sem_vendas/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" type="submit"
-                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                        <h5 class="card-title">Todas as vendas no Aton</h5>
+                        <form action="excel_planilha_todas_as_vendas_aton/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit" value="Gerar Excel"
+                                class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
                 </div>
             </div>
             <div class="col text-center">
-                <div class="card" style="width: 18rem; height:13.44rem;">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Dados Campanha</h5>
-                        <p class="card-text">Realiza a coleta de dados de múltiplas tabelas do aton</p>
-                        <form action="excel_planilha_campanha/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" type="submit"
-                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                        <h5 class="card-title">Vendas do dia Aton</h5>
+                        <form action="excel_planilha_pedidos_do_dia/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit" value="Gerar Excel"
+                                class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Produtos sem Vendas</h5>
+                        <p class="card-text">Produtos ativos, estoque 0, sem venda desde o dia 1 do mês passado até
+                            hoje.</p>
+                        <form action="excel_planilha_produtos_sem_vendas/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit" value="Gerar Excel"
+                                class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
@@ -65,7 +82,7 @@
                             <div class="row">
                                 <!-- PERÍODO PRINCIPAL -->
                                 <div class="col">
-                                    <p for="data_inicial_principal"style="font-weight: bold">Período Recente</p>
+                                    <p for="data_inicial_principal" style="font-weight: bold">Período Recente</p>
                                     <input type="date" name="data_inicial_principal" id="data_inicial_principal">
                                     <p for="data_final_principal" style="margin-top: 10px;">Até</p>
                                     <input type="date" name="data_final_principal" id="data_final_principal">
@@ -74,8 +91,9 @@
                                 <!-- PERÍODO COMPARATIVO -->
                                 <div class="col">
                                     <div class="col">
-                                        <p for="data_inicial_comparativo"style="font-weight: bold">Período Anterior</p>
-                                        <input type="date" name="data_inicial_comparativo" id="data_inicial_comparativo">
+                                        <p for="data_inicial_comparativo" style="font-weight: bold">Período Anterior</p>
+                                        <input type="date" name="data_inicial_comparativo"
+                                            id="data_inicial_comparativo">
                                         <p for="data_final_comparativo" style="margin-top: 10px;">Até</p>
                                         <input type="date" name="data_final_comparativo" id="data_final_comparativo">
                                         <br>
@@ -84,7 +102,8 @@
                             </div>
                             <div class="row" style="margin-top: 18px;">
                                 <div class="col">
-                                    <button onclick="alertaAguardaPlanilha()" class="btn btn-secondary" type="submit" style="text-align: left;" value="Download">Download</button>
+                                    <button onclick="alertaAguardaPlanilha()" class="btn btn-secondary" type="submit"
+                                        style="text-align: left;" value="Download">Download</button>
                                 </div>
                             </div>
                         </form>
@@ -94,29 +113,42 @@
         </div>
         <div class="row">
             <div class="col text-center">
-                <div class="card" style="width: 18rem">
+                <h2 style="margin-top: 25px;">Geral</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Todas Vinculações de Produtos Aton com Marketplaces</h5>
-                        <form action="excel_planilha_todas_vinculacoes_marketplace_aton/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" type="submit"
-                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                        <h5 class="card-title">Dados Campanha</h5>
+                        <p class="card-text">Realiza a coleta de dados de múltiplas tabelas do aton</p>
+                        <form action="excel_planilha_campanha/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit" value="Gerar Excel"
+                                class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
                 </div>
             </div>
             <div class="col text-center">
-                <div class="card" style="width: 18rem">
-                    <div class="card-body">
-                        <h5 class="card-title">Todas as vendas no Aton</h5>
-                        <form action="excel_planilha_todas_as_vendas_aton/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" type="submit"
-                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                <div class="card">
+                    <div style="padding-bottom: 15px;" class="card-body">
+                        <h5 style="padding-bottom: 16px;" class="card-title">Todas Vinculações de Produtos Aton com Marketplaces</h5>
+                        <form action="excel_planilha_todas_vinculacoes_marketplace_aton/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit" value="Gerar Excel"
+                                class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <h2 style="margin-top: 25px;">Operacional</h2>
+            </div>
+        </div>
+        <div class="row">
             <div class="col text-center">
                 <div class="card" style="width: 18rem">
                     <div class="card-body">
@@ -127,22 +159,8 @@
                                 <label for="formFile" class="form-label">Selecione a planilha do Full</label>
                                 <input class="form-control" type="file" name="file" id="file">
                             </div>
-                            <button onclick="alertaAguardaPlanilha()" type="submit"
-                                value="Gerar Excel" class="btn btn-secondary">Download</button>
-                            {% csrf_token %}
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col text-center">
-                <div class="card" style="width: 18rem">
-                    <div class="card-body">
-                        <h5 class="card-title">Relátorio Pedidos do Dia</h5>
-                        <form action="excel_planilha_pedidos_do_dia/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" type="submit"
-                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            <button onclick="alertaAguardaPlanilha()" type="submit" value="Gerar Excel"
+                                class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
