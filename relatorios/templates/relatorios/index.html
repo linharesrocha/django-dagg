@@ -135,6 +135,20 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Relátorio Pedidos do Dia</h5>
+                        <form action="excel_planilha_pedidos_do_dia/" method="post">
+                            <button onclick="alertaAguardaPlanilha()" type="submit"
+                                value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

@@ -8,5 +8,6 @@ urlpatterns = [
     path('excel_planilha_comparativo_vendas_netshoes/', views.gerar_planilha_comparativo_vendas_netshoes),
     path('excel_planilha_todas_vinculacoes_marketplace_aton/', views.gerar_planilha_todas_vinculacoes_aton_marketplace),
     path('excel_planilha_todas_as_vendas_aton/', views.gerar_planilha_todas_as_vendas_aton),
-    path('excel_planilha_envio_full/', views.gerar_planilha_envio_full)
+    path('excel_planilha_envio_full/', views.gerar_planilha_envio_full),
+    path('excel_planilha_pedidos_do_dia/', views.gerar_planilha_pedidos_dia)
 ]

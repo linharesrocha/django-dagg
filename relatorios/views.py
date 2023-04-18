@@ -1,15 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes, todas_vinculacoes_aton_marketplace, todas_as_vendas_aton, relatorio_envio_full
+from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes, todas_vinculacoes_aton_marketplace, todas_as_vendas_aton, relatorio_envio_full, pedidos_do_dia
 from datetime import datetime, date
-import pandas as pd
-from io import BytesIO
-from openpyxl.worksheet.filters import (
-    FilterColumn,
-    CustomFilter,
-    CustomFilters,
-    )
-from io import BytesIO
 
 
 def index(request):
@@ -113,4 +105,16 @@ def gerar_planilha_envio_full(request):
     # Retorne a resposta HTTP com o arquivo Excel como anexo
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=analise_envio_full.xlsx'
+    return response
+
+def gerar_planilha_pedidos_dia(request):
+    output = pedidos_do_dia.main()
+    
+    today = date.today()
+    dia_atual = str(today.strftime("%d-%m-%Y"))
+    nome_planilha = f'pedidos_do_dia_{dia_atual}'
+    
+    # Retorne a resposta HTTP com o arquivo Excel como anexo
+    response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename={nome_planilha}.xlsx'
     return response
