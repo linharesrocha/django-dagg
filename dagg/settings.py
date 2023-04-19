@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'home',
     'relatorios',
     'dashboard',
-    'ferramentas'
+    'ferramentas',
+    'trackeamento'
 ]
 
 MIDDLEWARE = [
@@ -89,8 +90,10 @@ WSGI_APPLICATION = 'dagg.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '..my.cnf'
+        }
     }
 }
 

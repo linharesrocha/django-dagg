@@ -21,3 +21,5 @@ scripts/__pycache__
 dashboard/__pycache__
 scripts/connect_to_database.py
 scripts/connect_to_database
+my.cnf
+LAB.PY
