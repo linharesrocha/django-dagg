@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import PosicaoNetshoes
+from . import atualiza_posicao
 
 def index(request):
     return render(request, 'trackeamento/index.html')
 
+
 def posicao_netshoes(request):
     return render(request, 'trackeamento/posicao-netshoes.html')
+
 
 def lista_posicao_netshoes(request):
     
@@ -24,6 +27,11 @@ def cadastrar_posicao_netshoes(request):
     # Verifica campo vazio
     if termo == '' or sku_netshoes == '':
         return HttpResponse('<script>alert("Preencha os campos vazios!"); window.history.back();</script>')
+    
+    # Transforma em lower
+    termo = termo.lower()
+    sku_netshoes = sku_netshoes.upper()
+    sku_netshoes = sku_netshoes.replace(' ', '')
     
     # Verifica se existe no banco
     my_obj = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).first()
