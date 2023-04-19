@@ -19,7 +19,7 @@ for trackeamento in trackeamentos:
     anuncios_list = []
     termo = trackeamento.termo_busca
     sku_netshoes = trackeamento.sku_netshoes
-    sku_netshoes_modificado = sku_netshoes.replace('-01', '')
+    sku_netshoes_modificado = sku_netshoes[:-3]
     
     # Páginas
     for i in range(1, 6):
