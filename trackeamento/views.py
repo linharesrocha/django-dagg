@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import PosicaoNetshoes
-from . import atualiza_posicao
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -31,7 +30,7 @@ def cadastrar_posicao_netshoes(request):
     # Transforma em lower
     termo = termo.lower()
     sku_netshoes = sku_netshoes.upper()
-    sku_netshoes = sku_netshoes.replace(' ', '')
+    sku_netshoes = sku_netshoes.strip()
     
     # Verifica se existe no banco
     my_obj = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).first()

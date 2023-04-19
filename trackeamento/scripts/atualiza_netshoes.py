@@ -19,7 +19,7 @@ for trackeamento in trackeamentos:
     anuncios_list = []
     termo = trackeamento.termo_busca
     sku_netshoes = trackeamento.sku_netshoes
-    sku_netshoes = sku_netshoes.replace('-01', '')
+    sku_netshoes_modificado = sku_netshoes.replace('-01', '')
     
     # Páginas
     for i in range(1, 6):
@@ -39,8 +39,14 @@ for trackeamento in trackeamentos:
             anuncios_list.append(anuncio['parent-sku'])
             
     
-    if sku_netshoes in anuncios_list:
-        posicao = anuncios_list.index(sku_netshoes)
-        print(f"O elemento {sku_netshoes} está na posição {posicao+1}.")
+    # Buscando a posição do anúncio
+    if sku_netshoes_modificado in anuncios_list:
+        posicao_anuncio = anuncios_list.index(sku_netshoes_modificado)
+        posicao_anuncio = posicao_anuncio + 1
     else:
-        print(f"O elemento {sku_netshoes} não está na lista.")
+        posicao_anuncio = None
+        
+    # Atualizando a posição no banco de dados
+    anuncio_track = PosicaoNetshoes.objects.get(sku_netshoes=sku_netshoes)
+    anuncio_track.posicao = posicao_anuncio
+    anuncio_track.save()
