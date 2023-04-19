@@ -9,7 +9,12 @@ def posicao_netshoes(request):
     return render(request, 'trackeamento/posicao-netshoes.html')
 
 def lista_posicao_netshoes(request):
-    return render(request, 'trackeamento/lista-posicao-netshoes.html')
+    
+    posicoes_netshoes = {
+        'posicoes_netshoes': PosicaoNetshoes.objects.all()
+    }
+    
+    return render(request, 'trackeamento/lista-posicao-netshoes.html', posicoes_netshoes)
 
 
 def cadastrar_posicao_netshoes(request):
