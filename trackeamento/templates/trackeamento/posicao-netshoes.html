@@ -33,6 +33,7 @@
                         <div class="card-body">
                             <h5 style="margin-bottom: 20px;">Cadastrar rastreador de posicão</h5>
                             <form action="" method="post">
+                                {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text" name="termo" id="inputGroup-sizing-sm">Termo</span>
                                     <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
@@ -41,11 +42,33 @@
                                     <span class="input-group-text" name="sku-netshoes" id="inputGroup-sizing-sm">SKU Netshoes</span>
                                     <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                                <button type="submit" class="btn btn-success" style="background-color: green!important;">Cadastrar</button>
                             </form>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="card" style="width: 25rem;">
+                        <div class="card-body">
+                            <h5 style="margin-bottom: 20px;">Remover rastreador de posicão</h5>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" name="sku-netshoes" id="inputGroup-sizing-sm">SKU Netshoes</span>
+                                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Remover</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <h3 style="margin-top: 70px;"><a href="" style="color: black;">LISTA</a></h3>
             </div>
         </div>
     </div>
