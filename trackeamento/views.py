@@ -8,6 +8,10 @@ def index(request):
 def posicao_netshoes(request):
     return render(request, 'trackeamento/posicao-netshoes.html')
 
+def lista_posicao_netshoes(request):
+    return render(request, 'trackeamento/lista-posicao-netshoes.html')
+
+
 def cadastrar_posicao_netshoes(request):
     termo = request.POST['termo-cadastro']
     sku_netshoes = request.POST['sku-netshoes-cadastro']
@@ -28,6 +32,7 @@ def cadastrar_posicao_netshoes(request):
     nova_posicao.save()
     
     return HttpResponse('<script>alert("Cadastro feito com sucesso!"); window.history.back();</script>')
+
 
 def remover_posicao_netshoes(request):
     sku_netshoes = request.POST['sku-netshoes-delete']
