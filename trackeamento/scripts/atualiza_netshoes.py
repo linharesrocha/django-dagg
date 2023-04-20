@@ -12,13 +12,14 @@ django.setup()
 from trackeamento.models import PosicaoNetshoes
 import requests
 from bs4 import BeautifulSoup
+from django.db.models import Subquery, OuterRef, Min
 
-trackeamentos = PosicaoNetshoes.objects.order_by('sku_netshoes', '-ultima_atualizacao').distinct('sku_netshoes')
+trackeamentos = PosicaoNetshoes.objects.values('termo_busca', 'sku_netshoes', 'anuncio_concorrente', 'nome').annotate(sku_min=Min('sku_netshoes'))
 
 for trackeamento in trackeamentos:
     anuncios_list = []
-    termo = trackeamento.termo_busca
-    sku_netshoes = trackeamento.sku_netshoes
+    termo = trackeamento['termo_busca']
+    sku_netshoes = trackeamento['sku_netshoes']
     sku_netshoes_modificado = sku_netshoes[:-3]
     
     # Páginas
@@ -51,7 +52,7 @@ for trackeamento in trackeamentos:
     anuncio_track_novo.termo_busca = termo
     anuncio_track_novo.sku_netshoes = sku_netshoes
     anuncio_track_novo.posicao = posicao_anuncio
-    anuncio_track_novo.anuncio_concorrente = trackeamento.anuncio_concorrente
-    anuncio_track_novo.nome = trackeamento.nome
+    anuncio_track_novo.anuncio_concorrente = trackeamento['anuncio_concorrente']
+    anuncio_track_novo.nome = trackeamento['nome']
     anuncio_track_novo.pagina = (posicao_anuncio - 1) // 42 + 1 if posicao_anuncio else None
     anuncio_track_novo.save()
