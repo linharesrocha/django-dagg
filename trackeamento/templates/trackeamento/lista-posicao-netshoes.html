@@ -46,7 +46,7 @@
                         <td>{{ posicao_netshoes.posicao }}</td>
                         <td>{{ posicao_netshoes.nome }}</td>
                         <td><a style="color: #212529;" href="https://www.netshoes.com.br/{{ posicao_netshoes.sku_netshoes }}" target="_blank">{{ posicao_netshoes.sku_netshoes }}</a></td>
-                        <td>{{ posicao_netshoes.termo_busca }}</td>
+                        <td><a style="color: #212529;" href="https://www.netshoes.com.br/busca?nsCat=Natural&q={{ posicao_netshoes.termo_busca }}" target="_blank">{{ posicao_netshoes.termo_busca }}</a></td>
                         {% if posicao_netshoes.anuncio_concorrente %}
                           <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
                         {% else %}
