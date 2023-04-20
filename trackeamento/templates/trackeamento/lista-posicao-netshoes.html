@@ -4,64 +4,69 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'trackeamento/styles-trackeamento.css' %}">
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
-    <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'trackeamento/styles-trackeamento.css' %}">
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
 
 
-    <title>Lista Posição Netshoes</title>
+  <title>Lista Posição Netshoes</title>
 </head>
 
 <body>
-    <div class="container">
-        <div id="header" class="row">
-            <div class="col">
-                <h1 id="header-titulo"><a href="/trackeamento/posicao-netshoes">LISTA</a></h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Página</th>
-                        <th scope="col">Posicao</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">SKU Netshoes</th>
-                        <th scope="col">Termo</th>
-                        <th scope="col"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {% for posicao_netshoes in posicoes_netshoes %}
-                      <tr>
-                        <th scope="row">{{ posicao_netshoes.pagina }}</th>
-                        <td>{{ posicao_netshoes.posicao }}</td>
-                        <td>{{ posicao_netshoes.nome }}</td>
-                        <td><a style="color: #212529;" href="https://www.netshoes.com.br/{{ posicao_netshoes.sku_netshoes }}" target="_blank">{{ posicao_netshoes.sku_netshoes }}</a></td>
-                        <td><a style="color: #212529;" href="https://www.netshoes.com.br/busca?nsCat=Natural&q={{ posicao_netshoes.termo_busca }}" target="_blank">{{ posicao_netshoes.termo_busca }}</a></td>
-                        {% if posicao_netshoes.anuncio_concorrente %}
-                          <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
-                        {% else %}
-                          <td></td>
-                        {% endif %}
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                  </table>
-            </div>
-        </div>
+  <div class="container">
+    <div id="header" class="row">
+      <div class="col">
+        <h1 id="header-titulo"><a href="/trackeamento/posicao-netshoes">LISTA</a></h1>
+      </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+    <div class="row">
+      <div class="col">
+        <div class="div" style="height: 650px; overflow-y: auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Página</th>
+                <th scope="col">Posicao</th>
+                <th scope="col">Nome</th>
+                <th scope="col">SKU Netshoes</th>
+                <th scope="col">Termo</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for posicao_netshoes in posicoes_netshoes %}
+              <tr>
+                <th scope="row">{{ posicao_netshoes.pagina }}</th>
+                <td>{{ posicao_netshoes.posicao }}</td>
+                <td>{{ posicao_netshoes.nome }}</td>
+                <td><a style="color: #212529;" href="https://www.netshoes.com.br/{{ posicao_netshoes.sku_netshoes }}"
+                    target="_blank">{{ posicao_netshoes.sku_netshoes }}</a></td>
+                <td><a style="color: #212529;"
+                    href="https://www.netshoes.com.br/busca?nsCat=Natural&q={{ posicao_netshoes.termo_busca }}"
+                    target="_blank">{{ posicao_netshoes.termo_busca }}</a></td>
+                {% if posicao_netshoes.anuncio_concorrente %}
+                <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>
