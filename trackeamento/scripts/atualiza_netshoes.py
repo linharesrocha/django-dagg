@@ -49,4 +49,6 @@ for trackeamento in trackeamentos:
     # Atualizando a posição no banco de dados
     anuncio_track = PosicaoNetshoes.objects.get(sku_netshoes=sku_netshoes)
     anuncio_track.posicao = posicao_anuncio
+    anuncio_track.pagina = (posicao_anuncio - 1) // 42 + 1 if posicao_anuncio else None
+
     anuncio_track.save()
