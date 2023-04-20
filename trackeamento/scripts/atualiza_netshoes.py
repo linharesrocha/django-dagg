@@ -13,7 +13,7 @@ from trackeamento.models import PosicaoNetshoes
 import requests
 from bs4 import BeautifulSoup
 
-trackeamentos = PosicaoNetshoes.objects.all()
+trackeamentos = PosicaoNetshoes.objects.order_by('sku_netshoes', '-ultima_atualizacao').distinct('sku_netshoes')
 
 for trackeamento in trackeamentos:
     anuncios_list = []
