@@ -8,5 +8,4 @@ class PosicaoNetshoes(models.Model):
     posicao = models.IntegerField(blank=True, null=True)
     pagina = models.IntegerField(blank=True, null=True)
     anuncio_concorrente = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    ultima_atualizacao = models.DateTimeField(auto_now_add=True)
