@@ -48,7 +48,9 @@
                         <td>{{ posicao_netshoes.sku_netshoes }}</td>
                         <td>{{ posicao_netshoes.termo_busca }}</td>
                         {% if posicao_netshoes.anuncio_concorrente %}
-                        <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
+                          <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
+                        {% else %}
+                          <td></td>
                         {% endif %}
                       </tr>
                     {% endfor %}
