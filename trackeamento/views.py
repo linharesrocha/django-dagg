@@ -22,15 +22,18 @@ def lista_posicao_netshoes(request):
 def cadastrar_posicao_netshoes(request):
     termo = request.POST['termo-cadastro']
     sku_netshoes = request.POST['sku-netshoes-cadastro']
+    nome = request.POST['nome-cadastro']
+    tipo_anuncio = request.POST['tipo_anuncio']
     
     # Verifica campo vazio
-    if termo == '' or sku_netshoes == '':
+    if termo == '' or sku_netshoes == '' or nome == '':
         return HttpResponse('<script>alert("Preencha os campos vazios!"); window.history.back();</script>')
     
     # Transforma em lower
     termo = termo.lower()
     sku_netshoes = sku_netshoes.upper()
     sku_netshoes = sku_netshoes.strip()
+    nome = nome.strip()
     
     # Verifica se existe no banco
     my_obj = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).first()
@@ -39,8 +42,10 @@ def cadastrar_posicao_netshoes(request):
     
     # Cadastra
     nova_posicao = PosicaoNetshoes()
+    nova_posicao.nome = nome
     nova_posicao.termo_busca = termo
-    nova_posicao.sku_netshoes = sku_netshoes    
+    nova_posicao.sku_netshoes = sku_netshoes
+    nova_posicao.anuncio_concorrente = True if tipo_anuncio == 'concorrente' else False    
     nova_posicao.save()
     
     return HttpResponse('<script>alert("Cadastro feito com sucesso!"); window.history.back();</script>')
