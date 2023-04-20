@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import PosicaoNetshoes
 from django.db.models import OuterRef, Subquery, Max
+import pandas as pd
+from datetime import datetime
+from io import BytesIO
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -78,3 +81,33 @@ def remover_posicao_netshoes(request):
     PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).delete()
 
     return HttpResponse('<script>alert("SKU Deletado do Banco de Dados!"); window.history.back(); </script>')
+
+
+def baixar_historico(request):
+    posicoes_netshoes = PosicaoNetshoes.objects.all()
+     
+    dados = {
+         'id': [posicao_netshoes.id for posicao_netshoes in posicoes_netshoes],
+         'pagina': [posicao_netshoes.pagina for posicao_netshoes in posicoes_netshoes],
+         'posicao': [posicao_netshoes.posicao for posicao_netshoes in posicoes_netshoes],
+         'nome': [posicao_netshoes.nome for posicao_netshoes in posicoes_netshoes],
+         'sku_netshoes': [posicao_netshoes.sku_netshoes for posicao_netshoes in posicoes_netshoes],
+         'termo_busca': [posicao_netshoes.termo_busca for posicao_netshoes in posicoes_netshoes],
+         'anuncio_concorrente': [posicao_netshoes.anuncio_concorrente for posicao_netshoes in posicoes_netshoes],
+         'ultima_atualizacao': [posicao_netshoes.ultima_atualizacao for posicao_netshoes in posicoes_netshoes]
+     }
+     
+    df = pd.DataFrame(dados)
+    
+    df['ultima_atualizacao'] = df['ultima_atualizacao'].dt.tz_localize(None)
+    df['pagina'].fillna('None', inplace=True)
+    df['posicao'].fillna('None', inplace=True)
+    
+    excel_bytes = BytesIO()
+    df.to_excel(excel_bytes, index=False)
+    excel_bytes.seek(0)
+    bytes_data = excel_bytes.getvalue()
+    
+    response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename=historico_netshoes_{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx'
+    return response

@@ -28,6 +28,14 @@
     </div>
     <div class="row">
       <div class="col">
+        <form action="{% url 'baixar-historico' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" style="margin-bottom: 5px;" class="btn btn-primary float-end">Histórico</button>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
         <div class="div" style="height: 650px; overflow-y: auto;">
           <table class="table">
             <thead>
