@@ -31,7 +31,9 @@
                 <table class="table">
                     <thead>
                       <tr>
+                        <th scope="col">Página</th>
                         <th scope="col">Posicao</th>
+                        <th scope="col">Nome</th>
                         <th scope="col">SKU Netshoes</th>
                         <th scope="col">Termo</th>
                       </tr>
@@ -39,7 +41,9 @@
                     <tbody>
                     {% for posicao_netshoes in posicoes_netshoes %}
                       <tr>
-                        <th scope="row">{{ posicao_netshoes.posicao }}</th>
+                        <th scope="row">{{ posicao_netshoes.pagina }}</th>
+                        <td>{{ posicao_netshoes.posicao }}</td>
+                        <td>{{ posicao_netshoes.nome }}</td>
                         <td>{{ posicao_netshoes.sku_netshoes }}</td>
                         <td>{{ posicao_netshoes.termo_busca }}</td>
                       </tr>
