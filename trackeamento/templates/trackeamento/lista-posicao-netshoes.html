@@ -37,6 +37,7 @@
                 <th scope="col">Nome</th>
                 <th scope="col">SKU Netshoes</th>
                 <th scope="col">Termo</th>
+                <th scope="col">Ultima Att</th>
                 <th scope="col"></th>
               </tr>
             </thead>
@@ -51,6 +52,7 @@
                 <td><a style="color: #212529;"
                     href="https://www.netshoes.com.br/busca?nsCat=Natural&q={{ posicao_netshoes.termo_busca }}"
                     target="_blank">{{ posicao_netshoes.termo_busca }}</a></td>
+                <td>{{posicao_netshoes.ultima_atualizacao}}</td>
                 {% if posicao_netshoes.anuncio_concorrente %}
                 <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
                 {% else %}
