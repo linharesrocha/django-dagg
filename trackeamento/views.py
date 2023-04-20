@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import PosicaoNetshoes
+from django.db.models import OuterRef, Subquery, Max
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -11,11 +12,21 @@ def posicao_netshoes(request):
 
 
 def lista_posicao_netshoes(request):
+
+    ultimos_valores = PosicaoNetshoes.objects.filter(
+        id__in=Subquery(
+            PosicaoNetshoes.objects.filter(
+                sku_netshoes=OuterRef('sku_netshoes')
+            ).values('sku_netshoes').annotate(
+                ultima_id=Max('id')
+            ).values('ultima_id')
+        )
+    )
     
     posicoes_netshoes = {
-        'posicoes_netshoes': PosicaoNetshoes.objects.all()
+        'posicoes_netshoes': ultimos_valores
     }
-    
+
     return render(request, 'trackeamento/lista-posicao-netshoes.html', posicoes_netshoes)
 
 
