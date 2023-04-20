@@ -19,21 +19,21 @@ trackeamentos = PosicaoNetshoes.objects.values('termo_busca', 'sku_netshoes', 'a
 for trackeamento in trackeamentos:
     anuncios_list = []
     termo = trackeamento['termo_busca']
+    termo_modificado = termo.replace(' ', '%20')
     sku_netshoes = trackeamento['sku_netshoes']
     sku_netshoes_modificado = sku_netshoes[:-3]
     
     # Páginas
     for i in range(1, 6):
-        url = f'https://www.netshoes.com.br/busca?nsCat=Natural&q={termo}&page={i}'
+        url = f'https://www.netshoes.com.br/busca?nsCat=Natural&q={termo_modificado}&page={i}'
         user_agent = {'User-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)' 'Chrome/106.0.0.0 Safari/537.36'}
         
         # Requisição
         page = requests.get(url, headers=user_agent)
         site = BeautifulSoup(page.content, "html.parser")
-        container = site.find(class_="item-list")
         
         # Anúncios em BS4
-        anuncios = container.find_all(class_="item-desktop--3")
+        anuncios = site.find_all(class_="item-desktop--3")
 
         # Armazenando SKU Netshoes
         for anuncio in anuncios:

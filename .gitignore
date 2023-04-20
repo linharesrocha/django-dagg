@@ -24,3 +24,6 @@ scripts/connect_to_database
 my.cnf
 LAB.PY
 test.xlsx
+
+dagg/settings
+dagg/settings.py
