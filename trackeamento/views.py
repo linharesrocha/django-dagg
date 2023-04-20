@@ -85,6 +85,9 @@ def remover_posicao_netshoes(request):
 
 def baixar_historico(request):
     posicoes_netshoes = PosicaoNetshoes.objects.all()
+    
+    if len(posicoes_netshoes) == 0:
+        return HttpResponse('<script>alert("Não há dados para baixar!"); window.history.back();</script>')
      
     dados = {
          'id': [posicao_netshoes.id for posicao_netshoes in posicoes_netshoes],
