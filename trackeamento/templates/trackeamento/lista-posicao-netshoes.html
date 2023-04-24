@@ -15,7 +15,6 @@
   <link rel="stylesheet" href="{% static 'styles.css' %}">
   <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
 
-
   <title>Lista Posição Netshoes</title>
 </head>
 
@@ -95,7 +94,7 @@
                 {% if posicao_netshoes.anuncio_concorrente %}
                 <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
                 {% else %}
-                <td></td>
+                <td><span style="color:rgb(213, 0, 0)">&#x25cf;</span></td>
                 {% endif %}
 
               </tr>
@@ -108,7 +107,9 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous">
+  </script>
+
 </body>
 
 </html>
