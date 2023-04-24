@@ -46,7 +46,7 @@ def main():
             posicao_anuncio = posicao_anuncio + 1
         else:
             posicao_anuncio = None
-            
+
         # Atualizando a posição no banco de dados
         anuncio_track_novo = PosicaoNetshoes()
         anuncio_track_novo.termo_busca = termo
@@ -54,5 +54,20 @@ def main():
         anuncio_track_novo.posicao = posicao_anuncio
         anuncio_track_novo.anuncio_concorrente = trackeamento['anuncio_concorrente']
         anuncio_track_novo.nome = trackeamento['nome']
-        anuncio_track_novo.pagina = (posicao_anuncio - 1) // 42 + 1 if posicao_anuncio else None
+        pagina_atual = (posicao_anuncio - 1) // 42 + 1 if posicao_anuncio else None
+        anuncio_track_novo.pagina = pagina_atual
+        
+        # Atualiza crescimento
+        ultimo_registro_pagina = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).last().pagina
+        
+        if ultimo_registro_pagina == None:
+            anuncio_track_novo.crescimento = None
+        elif pagina_atual > ultimo_registro_pagina:
+            anuncio_track_novo.crescimento = 'Subiu'
+        elif pagina_atual < ultimo_registro_pagina:
+            anuncio_track_novo.crescimento = 'Desceu'
+        else:
+            anuncio_track_novo.crescimento = 'Manteve'
+        
         anuncio_track_novo.save()
+        
