@@ -122,4 +122,4 @@ def baixar_historico(request):
 def atualizar_historico(request):
     atualiza_netshoes.main()
     
-    return HttpResponse('<script>alert("Histórico atualizado!"); window.history.back();</script>')
+    return HttpResponse('<script>alert("Certo! Atualize a página."); window.history.back();</script>')
