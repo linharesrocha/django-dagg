@@ -62,10 +62,10 @@ def main():
         
         if ultimo_registro_pagina == None:
             anuncio_track_novo.crescimento = 'Manteve'
-        elif pagina_atual > ultimo_registro_pagina:
-            anuncio_track_novo.crescimento = 'Subiu'
         elif pagina_atual < ultimo_registro_pagina:
             anuncio_track_novo.crescimento = 'Desceu'
+        elif pagina_atual > ultimo_registro_pagina:
+            anuncio_track_novo.crescimento = 'Subiu'
         
         anuncio_track_novo.save()
         

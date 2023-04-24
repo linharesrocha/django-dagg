@@ -62,9 +62,9 @@
                 {% if posicao_netshoes.crescimento is None %}
                 <td><span style="color: gray;">&#x25cf;</span></td>
                 {% elif posicao_netshoes.crescimento == 'Subiu' %}
-                <td><span style="color: green;">&#9650;</span></td>
-                {% elif posicao_netshoes.crescimento == 'Desceu' %}
                 <td><span style="color: rgb(208, 0, 0);">&#9660;</span></td>
+                {% elif posicao_netshoes.crescimento == 'Desceu' %}
+                <td><span style="color: green;">&#9650;</span></td>
                 {% elif posicao_netshoes.crescimento == 'Manteve' %}
                 <td><span style="color: gray;">&#x25cf;</span></td>
                 {% endif %}
