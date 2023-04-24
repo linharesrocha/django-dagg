@@ -1,3 +1,4 @@
 from atualiza_netshoes import main
 
-main()
+slack = True
+main(slack)

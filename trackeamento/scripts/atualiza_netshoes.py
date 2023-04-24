@@ -1,4 +1,26 @@
-def main():
+import os
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+from dotenv import load_dotenv
+
+def slack_notificao(sku, pag_antiga, pag_nova):
+    load_dotenv()
+
+    client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+    SLACK_CHANNEL_ID='C055387RAL9'
+
+    message = f'O SKU {sku} mudou da página {pag_antiga} para a página {pag_nova}.'
+    
+    try:
+        response = client.chat_postMessage(
+            channel=SLACK_CHANNEL_ID,
+            text=message
+        )
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+
+
+def main(slack):
     # Django Utils
     import os
     import django
@@ -60,14 +82,23 @@ def main():
         # Atualiza crescimento
         ultimo_registro_pagina = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).last().pagina
         
+        envia_notificacao = False
         if ultimo_registro_pagina == None:
             anuncio_track_novo.crescimento = 'Manteve'
         elif pagina_atual < ultimo_registro_pagina:
-            anuncio_track_novo.crescimento = 'Desceu'
+            anuncio_track_novo.crescimento = 'Desceu' 
+            envia_notificacao = True
         elif pagina_atual > ultimo_registro_pagina:
             anuncio_track_novo.crescimento = 'Subiu'
+            envia_notificacao = True
         else:
             anuncio_track_novo.crescimento = 'Manteve'
+        
+        # Verifica se o script foi rodado a partir do crontab e não do usuário
+        if slack == True:
+            # Verifica se houve mudança de página
+            if envia_notificacao == True:
+                slack_notificao(sku_netshoes, ultimo_registro_pagina, pagina_atual)
         
         anuncio_track_novo.save()
         

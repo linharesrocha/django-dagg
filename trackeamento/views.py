@@ -120,6 +120,7 @@ def baixar_historico(request):
 
 
 def atualizar_historico(request):
-    atualiza_netshoes.main()
+    slack = False
+    atualiza_netshoes.main(slack)
     
     return HttpResponse('<script>alert("Certo! Atualize a página."); window.history.back();</script>')
