@@ -8,4 +8,5 @@ urlpatterns = [
     path('posicao-netshoes/remover/', views.remover_posicao_netshoes, name='remover-posicao-netshoes'),
     path('posicao-netshoes/lista/', views.lista_posicao_netshoes, name='lista-posicao-netshoes'),
     path('posicao-netshoes/baixar-historico/', views.baixar_historico, name='baixar-historico'),
+    path('posicao-netshoes/atualizar-historico/', views.atualizar_historico, name='atualizar-historico'),
 ]

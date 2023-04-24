@@ -5,6 +5,7 @@ from django.db.models import OuterRef, Subquery, Max
 import pandas as pd
 from datetime import datetime
 from io import BytesIO
+from trackeamento.scripts import atualiza_netshoes
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -114,3 +115,9 @@ def baixar_historico(request):
     response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = f'attachment; filename=historico_netshoes_{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx'
     return response
+
+
+def atualizar_historico(request):
+    atualiza_netshoes.main()
+    
+    return HttpResponse('<script>alert("Histórico atualizado!"); window.history.back();</script>')
