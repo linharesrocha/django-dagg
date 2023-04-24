@@ -51,6 +51,7 @@
                 <th scope="col">Nome</th>
                 <th scope="col">SKU Netshoes</th>
                 <th scope="col">Termo</th>
+                <th scope="col">Crescimento</th>
                 <th scope="col">Ultima Att</th>
                 <th scope="col"></th>
               </tr>
@@ -66,12 +67,28 @@
                 <td><a style="color: #212529;"
                     href="https://www.netshoes.com.br/busca?nsCat=Natural&q={{ posicao_netshoes.termo_busca }}"
                     target="_blank">{{ posicao_netshoes.termo_busca }}</a></td>
+
+                <!-- Crescimento -->
+                {% if posicao_netshoes.crescimento is None %}
+                <td>none</td>
+                {% elif posicao_netshoes.crescimento == 'Subiu' %}
+                <td>subiu</td>
+                {% elif posicao_netshoes.crescimento == 'Desceu' %}
+                <td>desceu</td>
+                {% elif posicao_netshoes.crescimento == 'Manteve' %}
+                <td>manteve</td>
+                {% endif %}
+
+                <!-- Última atualização -->
                 <td>{{posicao_netshoes.ultima_atualizacao}}</td>
+
+                <!-- Anúncio Concorrente -->
                 {% if posicao_netshoes.anuncio_concorrente %}
                 <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
                 {% else %}
                 <td></td>
                 {% endif %}
+
               </tr>
               {% endfor %}
             </tbody>

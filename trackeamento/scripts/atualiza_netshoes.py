@@ -61,13 +61,11 @@ def main():
         ultimo_registro_pagina = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).last().pagina
         
         if ultimo_registro_pagina == None:
-            anuncio_track_novo.crescimento = None
+            anuncio_track_novo.crescimento = 'Manteve'
         elif pagina_atual > ultimo_registro_pagina:
             anuncio_track_novo.crescimento = 'Subiu'
         elif pagina_atual < ultimo_registro_pagina:
             anuncio_track_novo.crescimento = 'Desceu'
-        else:
-            anuncio_track_novo.crescimento = 'Manteve'
         
         anuncio_track_novo.save()
         
