@@ -1,4 +1,3 @@
-from atualiza_netshoes import main
+from atualiza_netshoes import start_atualiza_netshoes
 
-slack = True
-main(slack)
+start_atualiza_netshoes()

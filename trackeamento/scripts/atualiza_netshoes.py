@@ -3,6 +3,12 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 
+
+def start_atualiza_netshoes():
+    slack = True
+    main(slack)
+    
+    
 def slack_notificao(sku, pag_antiga, pag_nova):
     load_dotenv()
 
