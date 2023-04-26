@@ -15,7 +15,7 @@ def posicao_netshoes(request):
     return render(request, 'trackeamento/posicao-netshoes.html')
 
 
-def lista_posicao_netshoes(request):
+def painel_posicao_netshoes(request):
 
     ultimos_valores = PosicaoNetshoes.objects.filter(
         id__in=Subquery(
@@ -31,7 +31,7 @@ def lista_posicao_netshoes(request):
         'posicoes_netshoes': ultimos_valores
     }
 
-    return render(request, 'trackeamento/lista-posicao-netshoes.html', posicoes_netshoes)
+    return render(request, 'trackeamento/painel-posicao-netshoes.html', posicoes_netshoes)
 
 
 def cadastrar_posicao_netshoes(request):
