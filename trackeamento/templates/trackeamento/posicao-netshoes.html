@@ -35,17 +35,17 @@
                             <form action="{% url 'cadastrar-posicao-netshoes' %}" method="post">
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
-                                    <span class="input-group-text" id="inputGroup-sizing-sm">Nome</span>
+                                    <span style="width: 115px;" class="input-group-text" id="inputGroup-sizing-sm-name">Nome</span>
                                     <input type="text" class="form-control" id="nome-cadastro" name="nome-cadastro"
                                         aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
-                                    <span class="input-group-text" id="inputGroup-sizing-sm">Termo</span>
+                                    <span style="width: 115px;" class="input-group-text" id="inputGroup-sizing-sm-search">Pesquisa</span>
                                     <input type="text" class="form-control" id="termo-cadastro" name="termo-cadastro"
                                         aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
-                                    <span class="input-group-text" id="inputGroup-sizing-sm">SKU Netshoes</span>
+                                    <span style="background-color: rgb(255, 166, 0); font-weight: 900;" class="input-group-text" id="inputGroup-sizing-sm-sku">SKU Netshoes</span>
                                     <input type="text" class="form-control" id="sku-netshoes-cadastro"
                                         name="sku-netshoes-cadastro" aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-sm">
