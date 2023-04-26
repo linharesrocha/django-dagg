@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class PosicaoNetshoes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,3 +11,10 @@ class PosicaoNetshoes(models.Model):
     crescimento = models.CharField(max_length=20, null=True, blank=True)
     anuncio_concorrente = models.BooleanField(default=False)
     ultima_atualizacao = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.ultima_atualizacao = timezone.now()
+        return super(PosicaoNetshoes, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['-ultima_atualizacao']
