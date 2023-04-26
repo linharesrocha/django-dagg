@@ -15,6 +15,3 @@ class PosicaoNetshoes(models.Model):
     def save(self, *args, **kwargs):
         self.ultima_atualizacao = timezone.now()
         return super(PosicaoNetshoes, self).save(*args, **kwargs)
-
-    class Meta:
-        ordering = ['-ultima_atualizacao']
