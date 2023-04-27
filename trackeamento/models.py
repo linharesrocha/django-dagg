@@ -1,4 +1,4 @@
-import pytz
+from django.utils import timezone
 from django.db import models
 
 class PosicaoNetshoes(models.Model):
@@ -14,6 +14,7 @@ class PosicaoNetshoes(models.Model):
     
     def save(self, *args, **kwargs):
         if self.ultima_atualizacao is not None:
-            tz = pytz.timezone('America/Sao_Paulo')
-            self.ultima_atualizacao = tz.localize(self.ultima_atualizacao)
+            tz = timezone.get_current_timezone()
+            self.ultima_atualizacao = timezone.make_aware(self.ultima_atualizacao, tz)
+            print(self.ultima_atualizacao)
         super(PosicaoNetshoes, self).save(*args, **kwargs)
