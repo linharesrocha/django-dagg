@@ -14,5 +14,5 @@ class PosicaoNetshoes(models.Model):
     
     def save(self, *args, **kwargs):
         tz = pytz.timezone('America/Sao_Paulo')
-        self.created_at = tz.localize(self.created_at)
+        self.ultima_atualizacao = tz.localize(self.ultima_atualizacao)
         super(PosicaoNetshoes, self).save(*args, **kwargs)
