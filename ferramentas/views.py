@@ -4,6 +4,7 @@ from scripts import baixar_fotos_codid, remover_fotos_codid
 import tempfile
 import requests
 import zipfile
+from ferramentas.scripts import catalogo_requerido
 
 def index(request):
     return render(request, 'index-ferramentas.html')
@@ -48,3 +49,12 @@ def remover_fotos(request):
         return HttpResponse('<script>alert("FOTOS DELETADAS COM SUCESSO!"); window.history.back();</script>')
     else:
         return HttpResponse('<script>alert("O PRODUTO ESTÁ SEM FOTO!"); window.history.back();</script>')
+    
+def remover_catalogo_requerido(request):
+    
+    resposta = catalogo_requerido.main()
+    
+    if resposta:
+        return HttpResponse('<script>alert("Sucesso!"); window.history.back();</script>')
+    else:
+        return HttpResponse('<script>alert("Erro!"); window.history.back();</script>')
