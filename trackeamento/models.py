@@ -10,8 +10,4 @@ class PosicaoNetshoes(models.Model):
     pagina = models.IntegerField(blank=True, null=True)
     crescimento = models.CharField(max_length=20, null=True, blank=True)
     anuncio_concorrente = models.BooleanField(default=False)
-    ultima_atualizacao = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        self.ultima_atualizacao = timezone.now()
-        return super(PosicaoNetshoes, self).save(*args, **kwargs)
+    ultima_atualizacao = models.DateTimeField(default=timezone.localtime)
