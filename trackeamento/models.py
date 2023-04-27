@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import pytz
 
 class PosicaoNetshoes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,4 +11,8 @@ class PosicaoNetshoes(models.Model):
     pagina = models.IntegerField(blank=True, null=True)
     crescimento = models.CharField(max_length=20, null=True, blank=True)
     anuncio_concorrente = models.BooleanField(default=False)
-    ultima_atualizacao = models.DateTimeField(default=timezone.localtime)
+    ultima_atualizacao = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        self.created_at = timezone.now().astimezone(pytz.timezone('America/Sao_Paulo'))
+        super().save(*args, **kwargs)
