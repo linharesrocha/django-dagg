@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 import pytz
 
 class PosicaoNetshoes(models.Model):
@@ -14,5 +13,6 @@ class PosicaoNetshoes(models.Model):
     ultima_atualizacao = models.DateTimeField(auto_now_add=True)
     
     def save(self, *args, **kwargs):
-        self.created_at = timezone.now().astimezone(pytz.timezone('America/Sao_Paulo'))
-        super().save(*args, **kwargs)
+        tz = pytz.timezone('America/Sao_Paulo')
+        self.created_at = tz.localize(self.created_at)
+        super(PosicaoNetshoes, self).save(*args, **kwargs)
