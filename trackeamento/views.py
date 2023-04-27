@@ -27,6 +27,9 @@ def painel_posicao_netshoes(request):
         )
     )
     
+    for valor in ultimos_valores:
+        valor.ultima_atualizacao = valor.ultima_atualizacao.strftime('%d/%m/%Y %H:%M')
+    
     posicoes_netshoes = {
         'posicoes_netshoes': ultimos_valores
     }
