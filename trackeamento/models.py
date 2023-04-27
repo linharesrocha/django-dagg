@@ -10,7 +10,7 @@ class PosicaoNetshoes(models.Model):
     pagina = models.IntegerField(blank=True, null=True)
     crescimento = models.CharField(max_length=20, null=True, blank=True)
     anuncio_concorrente = models.BooleanField(default=False)
-    ultima_atualizacao = models.DateTimeField(auto_now_add=True)
+    ultima_atualizacao = models.DateTimeField(auto_now=True)
     
     def save(self, *args, **kwargs):
         if self.ultima_atualizacao is not None:
