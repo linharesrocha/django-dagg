@@ -49,7 +49,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Vendas do dia Aton</h5>
                         <form action="excel_planilha_pedidos_do_dia/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" type="submit" value="Gerar Excel"
+                            <button type="submit" value="Gerar Excel"
                                 class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
@@ -65,7 +65,7 @@
                         <p class="card-text">Produtos ativos, estoque 0, sem venda desde o dia 1 do mês passado até
                             hoje.</p>
                         <form action="excel_planilha_produtos_sem_vendas/" method="post">
-                            <button onclick="alertaAguardaPlanilha()" type="submit" value="Gerar Excel"
+                            <button type="submit" value="Gerar Excel"
                                 class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
