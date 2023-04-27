@@ -1,5 +1,5 @@
-from django.db import models
 import pytz
+from django.db import models
 
 class PosicaoNetshoes(models.Model):
     id = models.AutoField(primary_key=True)
@@ -13,6 +13,7 @@ class PosicaoNetshoes(models.Model):
     ultima_atualizacao = models.DateTimeField(auto_now_add=True)
     
     def save(self, *args, **kwargs):
-        tz = pytz.timezone('America/Sao_Paulo')
-        self.ultima_atualizacao = tz.localize(self.ultima_atualizacao)
+        if self.ultima_atualizacao is not None:
+            tz = pytz.timezone('America/Sao_Paulo')
+            self.ultima_atualizacao = tz.localize(self.ultima_atualizacao)
         super(PosicaoNetshoes, self).save(*args, **kwargs)
