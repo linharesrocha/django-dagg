@@ -120,7 +120,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-USE_TZ = True
+USE_TZ = False
+
 USE_I18N = True
 
 LANGUAGE_CODE = 'pt-BR'
