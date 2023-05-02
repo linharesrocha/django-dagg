@@ -76,7 +76,7 @@
                 <td>{{ posicao_netshoes.posicao }}</td>
 
                 <!-- Nome -->
-                <td>{{ posicao_netshoes.nome }}</td>
+                <td><a style="color: #212529;" href="{% url 'item-posicao-netshoes' posicao_netshoes.sku_netshoes %}">{{ posicao_netshoes.nome }}</a></td>
 
                 <!-- SKU Netshoes -->
                 <td><a style="color: #212529;" href="https://www.netshoes.com.br/{{ posicao_netshoes.sku_netshoes }}"

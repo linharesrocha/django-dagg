@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import PosicaoNetshoes
 from django.db.models import OuterRef, Subquery, Max
@@ -12,7 +12,7 @@ def index(request):
 
 
 def posicao_netshoes(request):
-    return render(request, 'trackeamento/posicao-netshoes.html')
+    return render(request, 'trackeamento/netshoes/posicao-netshoes.html')
 
 
 def painel_posicao_netshoes(request):
@@ -34,7 +34,7 @@ def painel_posicao_netshoes(request):
         'posicoes_netshoes': ultimos_valores
     }
 
-    return render(request, 'trackeamento/painel-posicao-netshoes.html', posicoes_netshoes)
+    return render(request, 'trackeamento/netshoes/painel-posicao-netshoes.html', posicoes_netshoes)
 
 
 def cadastrar_posicao_netshoes(request):
@@ -127,3 +127,19 @@ def atualizar_historico(request):
     atualiza_netshoes.main(slack)
     
     return HttpResponse('<script>alert("Certo! Atualize a página."); window.history.back();</script>')
+
+
+def item_posicao_netshoes(request, sku_netshoes):
+    item = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).first()
+    return render(request, 'trackeamento/netshoes/item-posicao-netshoes.html', {'item': item})
+
+
+def item_alterar_nome(request):
+    novo_nome = request.POST['novo-nome']
+    sku_netshoes = request.POST.get('sku_netshoes')
+
+    print(sku_netshoes)
+    
+    PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).update(nome=novo_nome)
+
+    return redirect('painel-posicao-netshoes')
