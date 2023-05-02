@@ -13,5 +13,4 @@ class PosicaoNetshoes(models.Model):
     ultima_atualizacao = models.DateTimeField(default=timezone.now)
 
     def local_ultima_atualizacao(self):
-        print(timezone.localtime(self.ultima_atualizacao))
         return timezone.localtime(self.ultima_atualizacao)
