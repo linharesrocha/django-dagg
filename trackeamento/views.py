@@ -137,9 +137,6 @@ def item_posicao_netshoes(request, sku_netshoes):
 def item_alterar_nome(request):
     novo_nome = request.POST['novo-nome']
     sku_netshoes = request.POST.get('sku_netshoes')
-
-    print(sku_netshoes)
-    
     PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).update(nome=novo_nome)
 
     return redirect('painel-posicao-netshoes')

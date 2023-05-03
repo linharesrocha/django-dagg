@@ -4,10 +4,8 @@ from time import sleep
 import webbrowser
 from database_config import *
 
-URL = 'http://localhost:8000'
-
-# Url para obter Refresh Token
-url = f"https://auth.mercadolivre.com.br/authorization?response_type=code&client_id={client_id}&redirect_uri={URL}"
+# Url para obter Refresh Token Inicial
+url = f"https://auth.mercadolivre.com.br/authorization?response_type=code&client_id={client_id}&redirect_uri=http://localhost:8000"
 
 # Enviando requisição e abrendo a página
 webbrowser.open(url)
@@ -15,9 +13,27 @@ webbrowser.open(url)
 # Armazena o Refresh Token
 CODE = input('Refresh Token: ').replace('http://localhost:8000/?code=', '').replace('localhost:8000/?code=', '')
 
-# Atualiza no BD
-first_row = TokenMercadoLivreAPI.objects.get(id=1)
-first_row.code = CODE
-first_row.save()
+# Headers do Access Token 
+headers = {"accept": "application/json", "content-type": "application/x-www-form-urlencoded"}
+data = {
+    "grant_type": "authorization_code",
+    "client_id": client_id,
+    "client_secret": client_secret,
+    "code": CODE,
+    "redirect_uri": 'http://localhost:8000'
+}
 
-print('Refresh Token salvo no banco de dados!')
+# Enviando Requisição para obter o Refresh Token Permanente
+response = requests.post("https://api.mercadolibre.com/oauth/token", headers=headers, data=data).json()
+
+try:
+    if response['status'] == 400:
+        print('Erro ao obter o Refresh Token')
+        print(response)
+except:
+    refresh_token = response['refresh_token']
+    
+    # Salva no banco de dados os Access Token
+    TokenMercadoLivreAPI.objects.filter(id=1).update(refresh_token_inicial=refresh_token_inicial)  
+    
+    print('Sucesso!')
