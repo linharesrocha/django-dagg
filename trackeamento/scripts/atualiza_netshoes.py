@@ -9,13 +9,18 @@ def start_atualiza_netshoes():
     main(slack)
     
     
-def slack_notificao(sku, pag_antiga, pag_nova):
+def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C055387RAL9'
 
-    message = f'O SKU {sku} mudou da página {pag_antiga} para a página {pag_nova}.'
+    if str(concorrente) == '1':
+        concorrente = 'Anúncio Concorrente'
+    else:
+        concorrente = 'Anúncio Dagg'
+    
+    message = f'{nome} - {sku} - {concorrente}\nMudou da página {pag_antiga} para a página {pag_nova}.'
     
     try:
         response = client.chat_postMessage(
@@ -105,7 +110,7 @@ def main(slack):
         if slack == True:
             # Verifica se houve mudança de página
             if envia_notificacao == True:
-                slack_notificao(sku_netshoes, ultimo_registro_pagina, pagina_atual)
+                slack_notificao(trackeamento['nome'], sku_netshoes, ultimo_registro_pagina, pagina_atual, trackeamento['anuncio_concorrente'])
         
         anuncio_track_novo.save()
         
