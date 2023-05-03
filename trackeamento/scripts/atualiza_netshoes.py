@@ -2,6 +2,10 @@ import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 def start_atualiza_netshoes():
@@ -37,7 +41,7 @@ def main(slack):
     import django
     import sys
 
-    sys.path.append('.')
+    sys.path.append(str(BASE_DIR))
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dagg.settings')
     django.setup()
 
