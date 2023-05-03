@@ -11,7 +11,6 @@ from mercadolivre.models import TokenMercadoLivreAPI
 first_row = TokenMercadoLivreAPI.objects.first()
 
 refresh_token_inicial = first_row.refresh_token_inicial
-refresh_token_atualizado = first_row.refresh_token_atualizado
 access_token = first_row.access_token
 client_id = first_row.client_id
 client_secret = first_row.client_secret

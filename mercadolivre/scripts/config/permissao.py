@@ -25,15 +25,9 @@ data = {
 
 # Enviando Requisição para obter o Refresh Token Permanente
 response = requests.post("https://api.mercadolibre.com/oauth/token", headers=headers, data=data).json()
+refresh_token = response['refresh_token']
 
-try:
-    if response['status'] == 400:
-        print('Erro ao obter o Refresh Token')
-        print(response)
-except:
-    refresh_token = response['refresh_token']
-    
-    # Salva no banco de dados os Access Token
-    TokenMercadoLivreAPI.objects.filter(id=1).update(refresh_token_inicial=refresh_token_inicial)  
-    
-    print('Sucesso!')
+# Salva no banco de dados os Access Token
+TokenMercadoLivreAPI.objects.filter(id=1).update(refresh_token_inicial=refresh_token)  
+
+print('Sucesso!')
