@@ -180,3 +180,7 @@ def item_alterar_nome(request):
     PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).update(nome=novo_nome)
 
     return redirect('painel-posicao-netshoes')
+
+
+def posicao_mercadolivre(request):
+    return render(request, 'trackeamento/mercadolivre/posicao-mercadolivre.html')
