@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import PosicaoNetshoes
+from .models import PosicaoNetshoes, MetricasMercadoLivre
 from django.db.models import OuterRef, Subquery, Max
 import pandas as pd
 from datetime import datetime
 from io import BytesIO
 from trackeamento.scripts import atualiza_netshoes
-from openpyxl.styles import Alignment, PatternFill, numbers
+from openpyxl.styles import Alignment, PatternFill
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -183,9 +183,42 @@ def item_alterar_nome(request):
 
 
 def metricas_mercadolivre(request):
+    # Caso o usuário entre
     if request.method == 'GET':
         return render(request, 'trackeamento/mercadolivre/metricas-mercadolivre.html')
+    
+    # Caso o usário faça alguma ação
     elif request.method == 'POST':
         action = request.POST.get('action')
-        print(action)
+       
+       # Caso a ação seja cadastrar um MLB
+        if action == 'cadastrar':
+            
+            # Tratando os dados
+            termo = request.POST['termo-cadastro'].lower()
+            mlb = request.POST['mlb-mercadolivre-cadastro'].upper().replace('-','')
+            
+            # Verifica se existe no banco
+            my_obj = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb).first()
+            if my_obj is not None:
+                return HttpResponse('<script>alert("MLB já existe no banco de dados!"); window.history.back();</script>')
+            
+            # Cadastra
+            MetricasMercadoLivre(termo_busca=termo, mlb_anuncio=mlb).save()
+            
+            return HttpResponse('<script>alert("Cadastrado com sucesso!"); window.history.back();</script>')
+        
+        # Caso a ação seja remover um MLB
+        elif action == 'remover':
+            mlb_anuncio = request.POST['mlb-mercadolivre-delete']
+            
+            # Verifica se existe no banco de dados
+            my_obj = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).first()
+            if my_obj is None:
+                return HttpResponse('<script>alert("MLB não existe no banco de dados!"); window.history.back();</script>')
+            # Caso exista, deleta
+            else:
+                MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).delete()
+                return HttpResponse('<script>alert("Removido com sucesso!"); window.history.back();</script>')
+        
         return render(request, 'trackeamento/mercadolivre/metricas-mercadolivre.html')
