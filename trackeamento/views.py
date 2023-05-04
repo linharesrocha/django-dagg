@@ -222,3 +222,21 @@ def metricas_mercadolivre(request):
                 return HttpResponse('<script>alert("Removido com sucesso!"); window.history.back();</script>')
         
         return render(request, 'trackeamento/mercadolivre/metricas-mercadolivre.html')
+    
+
+def metricas_mercadolivre_painel(request):
+    ultimos_valores = MetricasMercadoLivre.objects.filter(
+        id__in=Subquery(
+            MetricasMercadoLivre.objects.filter(
+                mlb_anuncio=OuterRef('mlb_anuncio')
+            ).values('mlb_anuncio').annotate(
+                ultima_id=Max('id')
+            ).values('ultima_id')
+        )
+    )
+    
+    for valor in ultimos_valores:
+        valor.ultima_atualizacao = valor.ultima_atualizacao.strftime('%d/%m/%Y %H:%M')
+        
+
+    return render(request, 'trackeamento/mercadolivre/painel-metricas-mercadolivre.html', {'lista_mercadolivre': ultimos_valores})
