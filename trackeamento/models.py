@@ -30,3 +30,7 @@ class MetricasMercadoLivre(models.Model):
     taxa_conversao_total = models.FloatField(blank=True, null=True)
     pontuacao_anuncio = models.FloatField(blank=True, null=True)
     criacao_anuncio = models.DateTimeField(null=True, blank=True)
+    ultima_atualizacao = models.DateTimeField(default=timezone.now)
+
+    def local_ultima_atualizacao(self):
+        return timezone.localtime(self.ultima_atualizacao)

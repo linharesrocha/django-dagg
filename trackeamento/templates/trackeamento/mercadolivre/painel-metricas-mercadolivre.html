@@ -36,14 +36,49 @@
     <div class="row">
       <div class="col">
         <div class="div" style="height: 650px; overflow-y: auto;">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Página</th>
+                <th scope="col">Posição</th>
+                <th scope="col">Nome</th>
+                <th scope="col">MLB</th>
+                <th scope="col">Termo</th>
+                <th scope="col">Ultima Att</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in lista_mercadolivre %}
+              <tr>
+                <!-- Página -->
+                <th style="color:black" scope="row">{{ item.pagina }}</th>
+
+                <!-- Posição -->
+                <td>{{ item.posicao }}</td>
+
+                <!-- Nome -->
+                <td>{{ item.nome }}</td>
+
+                <!-- MLB  -->
+                <td>{{ item.mlb_anuncio }}</td>
+
+                <!-- Termo -->
+                <td>{{ item.termo_busca }}</td>
+
+                <!-- Ultima Att -->
+                <td>{{ item.ultima_atualizacao }}</td>
+
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous">
-  </script>
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>
