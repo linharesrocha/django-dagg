@@ -49,11 +49,13 @@ def main(slack):
     from trackeamento.models import PosicaoNetshoes
     import requests
     from bs4 import BeautifulSoup
-    from django.db.models import Subquery, OuterRef, Min
+    from django.db.models import Min
 
     trackeamentos = PosicaoNetshoes.objects.values('termo_busca', 'sku_netshoes', 'anuncio_concorrente', 'nome').annotate(sku_min=Min('sku_netshoes'))
+    print(f'ATUALIZANDO TRACKEAMENTO DE {len(trackeamentos)} PRODUTOS NETSHOES')
 
-    for trackeamento in trackeamentos:
+    for indice, trackeamento in enumerate(trackeamentos):
+        print(f'{indice+1}/{len(trackeamentos)} - {trackeamento["sku_netshoes"]}')
         anuncios_list = []
         termo = trackeamento['termo_busca']
         termo_modificado = termo.replace(' ', '%20')
