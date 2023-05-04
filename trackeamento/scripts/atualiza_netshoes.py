@@ -97,20 +97,20 @@ def main(slack):
         pagina_atual = (posicao_anuncio - 1) // 42 + 1 if posicao_anuncio else None
         anuncio_track_novo.pagina = pagina_atual
         
-        # Atualiza crescimento
+        # Atualiza variacao
         ultimo_registro_pagina = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).last().pagina
         
         envia_notificacao = False
         if ultimo_registro_pagina == None:
-            anuncio_track_novo.crescimento = 'Manteve'
+            anuncio_track_novo.variacao = 'Manteve'
         elif pagina_atual < ultimo_registro_pagina:
-            anuncio_track_novo.crescimento = 'Desceu' 
+            anuncio_track_novo.variacao = 'Melhorou' 
             envia_notificacao = True
         elif pagina_atual > ultimo_registro_pagina:
-            anuncio_track_novo.crescimento = 'Subiu'
+            anuncio_track_novo.variacao = 'Piorou'
             envia_notificacao = True
         else:
-            anuncio_track_novo.crescimento = 'Manteve'
+            anuncio_track_novo.variacao = 'Manteve'
         
         # Verifica se o script foi rodado a partir do crontab e não do usuário
         if slack == True:

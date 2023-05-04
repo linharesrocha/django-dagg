@@ -106,7 +106,7 @@ def baixar_historico(request):
          'nome': [posicao_netshoes.nome for posicao_netshoes in posicoes_netshoes],
          'sku_netshoes': [posicao_netshoes.sku_netshoes for posicao_netshoes in posicoes_netshoes],
          'termo_busca': [posicao_netshoes.termo_busca for posicao_netshoes in posicoes_netshoes],
-         'crescimento': [posicao_netshoes.crescimento for posicao_netshoes in posicoes_netshoes],
+         'variacao': [posicao_netshoes.variacao for posicao_netshoes in posicoes_netshoes],
          'anuncio_concorrente': [posicao_netshoes.anuncio_concorrente for posicao_netshoes in posicoes_netshoes],
          'ultima_atualizacao': [posicao_netshoes.ultima_atualizacao for posicao_netshoes in posicoes_netshoes]
      }
@@ -115,7 +115,7 @@ def baixar_historico(request):
     
     df['ultima_atualizacao'] = df['ultima_atualizacao'].dt.tz_localize(None)
     df['pagina'].fillna('None', inplace=True)
-    df['crescimento'].fillna('None', inplace=True)
+    df['variacao'].fillna('None', inplace=True)
     df['posicao'].fillna('None', inplace=True)
     
     output = BytesIO()
