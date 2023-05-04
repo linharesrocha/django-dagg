@@ -6,12 +6,7 @@ import pandas as pd
 from datetime import datetime
 from io import BytesIO
 from trackeamento.scripts import atualiza_netshoes
-from openpyxl.worksheet.filters import (
-    FilterColumn,
-    CustomFilter,
-    CustomFilters,
-    )
-from openpyxl.styles import Alignment, PatternFill
+from openpyxl.styles import Alignment, PatternFill, numbers
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -117,6 +112,8 @@ def baixar_historico(request):
     df['pagina'].fillna('None', inplace=True)
     df['variacao'].fillna('None', inplace=True)
     df['posicao'].fillna('None', inplace=True)
+    df['ultima_atualizacao'] = pd.to_datetime(df['ultima_atualizacao'])
+    df['ultima_atualizacao'] = df['ultima_atualizacao'].dt.strftime('%d-%m-%Y %H:%M:%S')
     
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='openpyxl')
@@ -149,6 +146,7 @@ def baixar_historico(request):
         for cell in row:
             cell.alignment = alignment
 
+    # Atualiza cores do cabeçalho
     cor_header = 'F79646'
     for i, row in enumerate(worksheet.iter_rows(min_row=1, max_row=1)):
         if i == 0:
