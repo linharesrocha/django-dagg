@@ -182,5 +182,10 @@ def item_alterar_nome(request):
     return redirect('painel-posicao-netshoes')
 
 
-def posicao_mercadolivre(request):
-    return render(request, 'trackeamento/mercadolivre/posicao-mercadolivre.html')
+def metricas_mercadolivre(request):
+    if request.method == 'GET':
+        return render(request, 'trackeamento/mercadolivre/metricas-mercadolivre.html')
+    elif request.method == 'POST':
+        action = request.POST.get('action')
+        print(action)
+        return render(request, 'trackeamento/mercadolivre/metricas-mercadolivre.html')
