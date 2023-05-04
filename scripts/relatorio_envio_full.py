@@ -64,7 +64,7 @@ def main(file):
 
     df_completo = df_completo[['COD_ML', 'ID_ANUNCIO', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'subtracao']]
     
-        # Escrever os dataframes em um arquivo Excel com duas abas
+    # Escrever os dataframes em um arquivo Excel com duas abas
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='openpyxl')
 
@@ -97,7 +97,7 @@ def main(file):
     col = FilterColumn(colId=6, customFilters=cfs)
     filters.filterColumn.append(col)
 
-    # Resultado
+    # Escondendo coluna Resultado
     worksheet.column_dimensions['J'].hidden = True
     
     # Vendo valores duplicados

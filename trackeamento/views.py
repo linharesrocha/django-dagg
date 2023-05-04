@@ -6,6 +6,12 @@ import pandas as pd
 from datetime import datetime
 from io import BytesIO
 from trackeamento.scripts import atualiza_netshoes
+from openpyxl.worksheet.filters import (
+    FilterColumn,
+    CustomFilter,
+    CustomFilters,
+    )
+from openpyxl.styles import Alignment
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -112,12 +118,41 @@ def baixar_historico(request):
     df['crescimento'].fillna('None', inplace=True)
     df['posicao'].fillna('None', inplace=True)
     
-    excel_bytes = BytesIO()
-    df.to_excel(excel_bytes, index=False)
-    excel_bytes.seek(0)
-    bytes_data = excel_bytes.getvalue()
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='openpyxl')
+    df.to_excel(writer, sheet_name='HISTORICO',index=False)
+    worksheet = writer.sheets['HISTORICO']
     
-    response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
+    # Adicionando filtros
+    worksheet.auto_filter.ref = "A1:I1"
+    
+    # Alterando tamanho das colunas
+    worksheet.column_dimensions['A'].width = '3.30'
+    worksheet.column_dimensions['B'].width = '10.71'
+    worksheet.column_dimensions['C'].width = '11.57'
+    worksheet.column_dimensions['D'].width = '51'
+    worksheet.column_dimensions['E'].width = '15.57'
+    worksheet.column_dimensions['F'].width = '16.29'
+    worksheet.column_dimensions['G'].width = '11.14'
+    worksheet.column_dimensions['H'].width = '19.29'
+    worksheet.column_dimensions['I'].width = '21.71'
+        
+    # Escondendo coluna ID
+    worksheet.column_dimensions['A'].hidden = True
+    
+    # Congelando painel
+    worksheet.freeze_panes = 'A2'
+    
+    # Define a formatação de centralização
+    alignment = Alignment(horizontal='center', vertical='center')
+    for row in worksheet.iter_rows():
+        for cell in row:
+            cell.alignment = alignment
+    
+    writer._save()
+    output.seek(0)
+    
+    response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename=historico_netshoes_{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx'
     return response
 
