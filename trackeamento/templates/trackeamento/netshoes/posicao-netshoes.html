@@ -16,14 +16,14 @@
     <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
 
 
-    <title>Posição Netshoes</title>
+    <title>Métricas Netshoes</title>
 </head>
 
 <body>
     <div class="container">
         <div id="header" class="row">
             <div class="col">
-                <h1 id="header-titulo"><a href="/trackeamento/">POSICAO NETSHOES</a></h1>
+                <h1 id="header-titulo"><a href="/trackeamento/">MÉTRICAS NETSHOES</a></h1>
             </div>
         </div>
         <div class="row">
@@ -31,7 +31,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="card" style="width: 25rem;">
                         <div class="card-body">
-                            <h5 style="margin-bottom: 20px;">Cadastrar rastreador de posicão</h5>
+                            <h5 style="margin-bottom: 20px;">Cadastro SKU</h5>
                             <form action="{% url 'cadastrar-posicao-netshoes' %}" method="post">
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
@@ -73,7 +73,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="card" style="width: 25rem;">
                         <div class="card-body">
-                            <h5 style="margin-bottom: 20px;">Remover rastreador de posicão</h5>
+                            <h5 style="margin-bottom: 20px;">Remover SKU</h5>
                             <form action="{% url 'remover-posicao-netshoes' %}" method="post">
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
