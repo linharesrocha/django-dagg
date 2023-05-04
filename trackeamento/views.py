@@ -150,15 +150,9 @@ def baixar_historico(request):
             cell.alignment = alignment
 
     cor_header = 'F79646'
-    cor1 = 'D9D9D9' # cor da primeira linha
-    cor2 = 'FFFFFF' # cor da segunda linha
-    for i, row in enumerate(worksheet.iter_rows(min_row=1, max_row=len(df)+1)):
+    for i, row in enumerate(worksheet.iter_rows(min_row=1, max_row=1)):
         if i == 0:
             fill = PatternFill(start_color=cor_header, end_color=cor_header, fill_type='solid')
-        elif i % 2 == 0:
-            fill = PatternFill(start_color=cor1, end_color=cor1, fill_type='solid')
-        else:
-            fill = PatternFill(start_color=cor2, end_color=cor2, fill_type='solid')
         for cell in row:
             cell.fill = fill
     
