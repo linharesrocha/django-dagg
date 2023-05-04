@@ -8,7 +8,7 @@ class PosicaoNetshoes(models.Model):
     sku_netshoes = models.CharField(max_length=255)
     posicao = models.IntegerField(blank=True, null=True)
     pagina = models.IntegerField(blank=True, null=True)
-    crescimento = models.CharField(max_length=20, null=True, blank=True)
+    variacao = models.CharField(max_length=20, null=True, blank=True)
     anuncio_concorrente = models.BooleanField(default=False)
     ultima_atualizacao = models.DateTimeField(default=timezone.now)
 
