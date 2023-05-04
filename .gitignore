@@ -1,21 +1,17 @@
 venv
 .env
-
-# Visual Studio Code # 
 .vscode/* 
 !.vscode/settings.json 
 !.vscode/tasks.json 
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
-
 *.log
 *.pot
 *.pyc
 __pycache__
 db.sqlite3
 media
-
 dagg/__pycache__
 scripts/__pycache__
 dashboard/__pycache__
@@ -24,7 +20,5 @@ scripts/connect_to_database
 my.cnf
 LAB.PY
 test.xlsx
-
-dagg/settings
 test.py
-dagg/settings.py
+trackeamento/scripts/repository.py

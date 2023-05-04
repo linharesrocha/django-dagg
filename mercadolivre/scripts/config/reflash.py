@@ -1,5 +1,10 @@
-from database_config import *
 import requests
+import sys
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent
+sys.path.append(str(BASE_DIR))
+from database_config import *
+
 
 def refreshToken():
     headers = {"accept": "application/json", "content-type": "application/x-www-form-urlencoded"}

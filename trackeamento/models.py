@@ -26,6 +26,7 @@ class MetricasMercadoLivre(models.Model):
     visita_total = models.IntegerField(blank=True, null=True)
     vendas_diaria = models.FloatField(blank=True, null=True)
     vendas_total = models.IntegerField(blank=True, null=True)
+    vende_a_cada_visita = models.FloatField(blank=True, null=True)
     taxa_conversao_diaria = models.FloatField(blank=True, null=True)
     taxa_conversao_total = models.FloatField(blank=True, null=True)
     pontuacao_anuncio = models.FloatField(blank=True, null=True)
