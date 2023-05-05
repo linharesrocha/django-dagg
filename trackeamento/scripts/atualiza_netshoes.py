@@ -99,10 +99,8 @@ def main(slack):
         
         # Atualiza variacao
         ultimo_registro_pagina = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).last().pagina
-        print(pagina_atual)
-        print(ultimo_registro_pagina)
         envia_notificacao = False
-        if ultimo_registro_pagina == None:
+        if ultimo_registro_pagina == None or pagina_atual == None:
             anuncio_track_novo.variacao = 'Manteve'
         elif pagina_atual < ultimo_registro_pagina:
             anuncio_track_novo.variacao = 'Melhorou' 
