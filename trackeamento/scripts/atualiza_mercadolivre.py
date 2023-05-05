@@ -147,25 +147,25 @@ def main(slack):
         novo_registro_meli.criacao_anuncio = criacao_anuncio
         
         # Atualiza variacao
-        ultimo_registro_pagina = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).last().pagina
+        # ultimo_registro_pagina = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).last().pagina
         
-        envia_notificacao = False
-        if ultimo_registro_pagina == None:
-            novo_registro_meli.variacao = 'Manteve'
-        elif pagina < ultimo_registro_pagina:
-            novo_registro_meli.variacao = 'Melhorou' 
-            envia_notificacao = True
-        elif pagina > ultimo_registro_pagina:
-            novo_registro_meli.variacao = 'Piorou'
-            envia_notificacao = True
-        else:
-            novo_registro_meli.variacao = 'Manteve'
+        # envia_notificacao = False
+        # if ultimo_registro_pagina == None:
+        #     novo_registro_meli.variacao = 'Manteve'
+        # elif pagina < ultimo_registro_pagina:
+        #     novo_registro_meli.variacao = 'Melhorou' 
+        #     envia_notificacao = True
+        # elif pagina > ultimo_registro_pagina:
+        #     novo_registro_meli.variacao = 'Piorou'
+        #     envia_notificacao = True
+        # else:
+        #     novo_registro_meli.variacao = 'Manteve'
         
-        # Verifica se o script foi rodado a partir do crontab e não do usuário
-        if slack == True:
-            # Verifica se houve mudança de página
-            if envia_notificacao == True:
-                pass
+        # # Verifica se o script foi rodado a partir do crontab e não do usuário
+        # if slack == True:
+        #     # Verifica se houve mudança de página
+        #     if envia_notificacao == True:
+        #         pass
         
         
         novo_registro_meli.save()
