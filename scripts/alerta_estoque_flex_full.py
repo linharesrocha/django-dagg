@@ -11,7 +11,7 @@ def slack_notificao(cod_interno, sku, prodmktp_id, estoque, index, tamanho_df):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    SLACK_CHANNEL_ID='C045HEE4G7L'
+    SLACK_CHANNEL_ID='C030X3UMR3M'
 
     message = f'FLEX! {index}/{tamanho_df}\n{cod_interno} está com {estoque} estoque!  MLB: {sku} / PRODMKTP_ID: {prodmktp_id}'
     
