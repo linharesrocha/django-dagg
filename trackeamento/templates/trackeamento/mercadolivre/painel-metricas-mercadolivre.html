@@ -27,7 +27,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <form action="" method="post">
+        <form action="{% url 'baixar-historico-mercadolivre' %}" method="post">
           {% csrf_token %}
           <button type="submit" style="margin-bottom: 5px;" class="btn btn-primary float-end">Histórico</button>
         </form>

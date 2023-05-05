@@ -240,3 +240,59 @@ def metricas_mercadolivre_painel(request):
         
 
     return render(request, 'trackeamento/mercadolivre/painel-metricas-mercadolivre.html', {'lista_mercadolivre': ultimos_valores})
+
+
+def baixar_historico_mercadolivre(request):
+    lista_mercadolivre = MetricasMercadoLivre.objects.all()
+    
+    if len(lista_mercadolivre) == 0:
+        return HttpResponse('<script>alert("Não há dados para baixar!"); window.history.back();</script>')
+     
+    dados = {
+        'id': [anuncio.id for anuncio in lista_mercadolivre],
+        'nome': [anuncio.nome for anuncio in lista_mercadolivre],
+        'termo_busca': [anuncio.termo_busca for anuncio in lista_mercadolivre],
+        'mlb_anuncio': [anuncio.mlb_anuncio for anuncio in lista_mercadolivre],
+        'posicao': [anuncio.posicao for anuncio in lista_mercadolivre],
+        'pagina': [anuncio.pagina for anuncio in lista_mercadolivre],
+        'visita_diaria': [anuncio.visita_diaria for anuncio in lista_mercadolivre],
+        'visita_total': [anuncio.visita_total for anuncio in lista_mercadolivre],
+        'vendas_diaria': [anuncio.vendas_diaria for anuncio in lista_mercadolivre],
+        'vendas_total': [anuncio.vendas_total for anuncio in lista_mercadolivre],
+        'vende_a_cada_visita': [anuncio.vende_a_cada_visita for anuncio in lista_mercadolivre],
+        'taxa_conversao_diaria': [anuncio.taxa_conversao_diaria for anuncio in lista_mercadolivre],
+        'taxa_conversao_total': [anuncio.taxa_conversao_total for anuncio in lista_mercadolivre],
+        'pontuacao_anuncio': [anuncio.pontuacao_anuncio for anuncio in lista_mercadolivre],
+        'criacao_anuncio': [anuncio.criacao_anuncio for anuncio in lista_mercadolivre],
+        'ultima_atualizacao': [anuncio.ultima_atualizacao for anuncio in lista_mercadolivre]
+    }
+     
+    df = pd.DataFrame(dados)
+    
+    df['ultima_atualizacao'] = df['ultima_atualizacao'].dt.tz_localize(None)
+    df['nome'].fillna('None', inplace=True)
+    df['posicao'].fillna('None', inplace=True)
+    df['pagina'].fillna('None', inplace=True)
+    df['visita_diaria'].fillna('None', inplace=True)
+    df['visita_total'].fillna('None', inplace=True)
+    df['vendas_diaria'].fillna('None', inplace=True)
+    df['vendas_total'].fillna('None', inplace=True)
+    df['vende_a_cada_visita'].fillna('None', inplace=True)
+    df['taxa_conversao_diaria'].fillna('None', inplace=True)
+    df['taxa_conversao_total'].fillna('None', inplace=True)
+    df['pontuacao_anuncio'].fillna('None', inplace=True)
+    df['criacao_anuncio'].fillna('None', inplace=True)
+    df['ultima_atualizacao'] = pd.to_datetime(df['ultima_atualizacao'])
+    df['ultima_atualizacao'] = df['ultima_atualizacao'].dt.strftime('%d-%m-%Y %H:%M:%S')
+    
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='openpyxl')
+    df.to_excel(writer, sheet_name='HISTORICO',index=False)
+    worksheet = writer.sheets['HISTORICO']
+    
+    writer._save()
+    output.seek(0)
+    
+    response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename=historico_netshoes_{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx'
+    return response

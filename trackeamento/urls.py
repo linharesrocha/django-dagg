@@ -13,4 +13,5 @@ urlpatterns = [
     path('posicao-netshoes/painel/alterar_nome', views.item_alterar_nome, name='item-alterar-nome'),
     path('metricas-mercadolivre/', views.metricas_mercadolivre, name='metricas-mercadolivre'),
     path('metricas-mercadolivre/painel/', views.metricas_mercadolivre_painel, name='metricas-mercadolivre-painel'),
+    path('metricas-mercadolivre/painel/baixar-historico-mercadolivre/', views.baixar_historico_mercadolivre, name='baixar-historico-mercadolivre'),
 ]
