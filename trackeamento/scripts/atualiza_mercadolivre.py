@@ -12,7 +12,7 @@ sys.path.append(str(BASE_DIR))
 from mercadolivre.scripts.config import reflash
 
 
-def start_atualiza_netshoes():
+def start_atualiza_mercadolivre():
     slack = True
     main(slack)
 
