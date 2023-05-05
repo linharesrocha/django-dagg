@@ -7,13 +7,13 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 
-def slack_notificao(cod_interno, sku, prodmktp_id, estoque):
+def slack_notificao(cod_interno, sku, prodmktp_id, estoque, index, tamanho_df):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C045HEE4G7L'
 
-    message = f'FLEX!\n{cod_interno} está com {estoque} estoque!  MLB: {sku} / PRODMKTP_ID: {prodmktp_id}'
+    message = f'FLEX! {index}/{tamanho_df}\n{cod_interno} está com {estoque} estoque!  MLB: {sku} / PRODMKTP_ID: {prodmktp_id}'
     
     try:
         response = client.chat_postMessage(
@@ -47,6 +47,6 @@ def main():
     df_flex['SKU'] = df_flex['SKU'].str.strip()
 
     for index, item in df_flex.iterrows():
-        slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], int(item['ESTOQUE']))
+        slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], int(item['ESTOQUE']), index+1, len(df_flex))
         
 main()
