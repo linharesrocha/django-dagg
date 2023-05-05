@@ -27,6 +27,12 @@
     </div>
     <div class="row">
       <div class="col">
+        <form action="{% url 'atualizar-historico-mercadolivre' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" style="margin-bottom: 5px;" class="btn btn-primary float-end">Atualizar</button>
+        </form>
+      </div>
+      <div class="col-1">
         <form action="{% url 'baixar-historico-mercadolivre' %}" method="post">
           {% csrf_token %}
           <button type="submit" style="margin-bottom: 5px;" class="btn btn-primary float-end">Histórico</button>

@@ -5,7 +5,7 @@ from django.db.models import OuterRef, Subquery, Max
 import pandas as pd
 from datetime import datetime
 from io import BytesIO
-from trackeamento.scripts import atualiza_netshoes
+from trackeamento.scripts import atualiza_netshoes, atualiza_mercadolivre
 from openpyxl.styles import Alignment, PatternFill
 
 def index(request):
@@ -240,6 +240,13 @@ def metricas_mercadolivre_painel(request):
         
 
     return render(request, 'trackeamento/mercadolivre/painel-metricas-mercadolivre.html', {'lista_mercadolivre': ultimos_valores})
+
+
+def atualizar_metricas_mercadolivre(request):
+    slack = False
+    atualiza_mercadolivre.main(slack)
+    
+    return HttpResponse('<script>alert("Certo! Atualize a página."); window.history.back();</script>') 
 
 
 def baixar_historico_mercadolivre(request):

@@ -14,4 +14,5 @@ urlpatterns = [
     path('metricas-mercadolivre/', views.metricas_mercadolivre, name='metricas-mercadolivre'),
     path('metricas-mercadolivre/painel/', views.metricas_mercadolivre_painel, name='metricas-mercadolivre-painel'),
     path('metricas-mercadolivre/painel/baixar-historico-mercadolivre/', views.baixar_historico_mercadolivre, name='baixar-historico-mercadolivre'),
+    path('metricas-mercadolivre/painel/atualizar-historico-mercadolivre/', views.atualizar_metricas_mercadolivre, name='atualizar-historico-mercadolivre'),
 ]

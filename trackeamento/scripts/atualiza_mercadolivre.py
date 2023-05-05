@@ -1,13 +1,45 @@
 import requests
 from pathlib import Path
 import sys
+from dotenv import load_dotenv
 from datetime import datetime
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
 from mercadolivre.scripts.config import reflash
 
-def main():
+
+def start_atualiza_netshoes():
+    slack = True
+    main(slack)
+
+
+def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente):
+    load_dotenv()
+
+    client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+    SLACK_CHANNEL_ID='C055387RAL9'
+
+    if str(concorrente) == '1':
+        concorrente = 'Anúncio Concorrente'
+    else:
+        concorrente = 'Anúncio Dagg'
+    
+    message = f'{nome} - {sku} - {concorrente}\nMudou da página {pag_antiga} para a página {pag_nova}.'
+    
+    try:
+        response = client.chat_postMessage(
+            channel=SLACK_CHANNEL_ID,
+            text=message
+        )
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+        
+
+def main(slack):
     # Django Utils
     import os
     import django
@@ -113,7 +145,27 @@ def main():
         novo_registro_meli.taxa_conversao_total = taxa_conversao_total
         novo_registro_meli.pontuacao_anuncio = pontuacao_anuncio
         novo_registro_meli.criacao_anuncio = criacao_anuncio
-        novo_registro_meli.save()
         
-    
-main()
+        # Atualiza variacao
+        ultimo_registro_pagina = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).last().pagina
+        
+        envia_notificacao = False
+        if ultimo_registro_pagina == None:
+            novo_registro_meli.variacao = 'Manteve'
+        elif pagina < ultimo_registro_pagina:
+            novo_registro_meli.variacao = 'Melhorou' 
+            envia_notificacao = True
+        elif pagina > ultimo_registro_pagina:
+            novo_registro_meli.variacao = 'Piorou'
+            envia_notificacao = True
+        else:
+            novo_registro_meli.variacao = 'Manteve'
+        
+        # Verifica se o script foi rodado a partir do crontab e não do usuário
+        if slack == True:
+            # Verifica se houve mudança de página
+            if envia_notificacao == True:
+                pass
+        
+        
+        novo_registro_meli.save()
