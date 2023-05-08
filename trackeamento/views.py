@@ -213,10 +213,14 @@ def metricas_mercadolivre(request):
                 return redirect('metricas-mercadolivre')
             
             # Verifica se existe no banco
-            my_obj = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb).first()
-            if my_obj is not None:
-                messages.add_message(request, constants.ERROR, 'MLB já existe no banco de dados!')
-                return redirect('metricas-mercadolivre')
+            objects = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb)
+            if objects is not None:
+                # Percorre cada objecto e verifica se o termo é igual
+                for obj in objects:
+                    if termo == obj.termo_busca:
+                        print('entrei')
+                        messages.add_message(request, constants.ERROR, 'MLB já está cadastrado com o mesmo termo!')
+                        return redirect('metricas-mercadolivre')
             
             # Cadastra
             MetricasMercadoLivre(termo_busca=termo, mlb_anuncio=mlb).save()

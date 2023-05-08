@@ -128,7 +128,6 @@ def main(slack):
             pagina = 1
         else:
             pagina = (posicao_anuncio - 57) // 56 + 2
-            pagina = min(pagina, 10)
 
 
         # Salvando no banco de dados
