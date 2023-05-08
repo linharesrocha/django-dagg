@@ -48,7 +48,8 @@ def cadastrar_posicao_netshoes(request):
     
     # Verifica campo vazio
     if termo == '' or sku_netshoes == '' or nome == '':
-        return HttpResponse('<script>alert("Preencha os campos vazios!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'Preencha os campos vazios!')
+        return redirect('posicao-netshoes')
     
     # Transforma em lower
     termo = termo.lower()
@@ -59,7 +60,8 @@ def cadastrar_posicao_netshoes(request):
     # Verifica se existe no banco
     my_obj = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).first()
     if my_obj is not None:
-        return HttpResponse('<script>alert("SKU já existe no banco de dados!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'SKU já existe no banco de dados!')
+        return redirect('posicao-netshoes')
     
     # Cadastra
     nova_posicao = PosicaoNetshoes()
@@ -69,7 +71,8 @@ def cadastrar_posicao_netshoes(request):
     nova_posicao.anuncio_concorrente = True if tipo_anuncio == 'concorrente' else False    
     nova_posicao.save()
     
-    return HttpResponse('<script>alert("Cadastro feito com sucesso!"); window.history.back();</script>')
+    messages.add_message(request, constants.SUCCESS, 'Cadastrado com sucesso!')
+    return redirect('posicao-netshoes')
 
 
 def remover_posicao_netshoes(request):
@@ -77,24 +80,28 @@ def remover_posicao_netshoes(request):
     
     # Verifica campo vazio
     if sku_netshoes == '':
-        return HttpResponse('<script>alert("Preencha o campo vazio!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'Preencha o campo vazio!')
+        return redirect('posicao-netshoes')
     
     # Verifica se existe no banco
     my_obj = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).first()
     if my_obj is None:
-        return HttpResponse('<script>alert("SKU não encontrado no banco de dados!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'SKU não existe no banco de dados!')
+        return redirect('posicao-netshoes')
     
     # Deleta
     PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).delete()
 
-    return HttpResponse('<script>alert("SKU Deletado do Banco de Dados!"); window.history.back(); </script>')
+    messages.add_message(request, constants.SUCCESS, 'Removido com sucesso!')
+    return redirect('posicao-netshoes')
 
 
 def baixar_historico(request):
     posicoes_netshoes = PosicaoNetshoes.objects.all()
     
     if len(posicoes_netshoes) == 0:
-        return HttpResponse('<script>alert("Não há dados para baixar!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'Não há dados para baixar!')
+        return redirect('painel-posicao-netshoes')
      
     dados = {
          'id': [posicao_netshoes.id for posicao_netshoes in posicoes_netshoes],
@@ -168,7 +175,8 @@ def atualizar_historico(request):
     slack = False
     atualiza_netshoes.main(slack)
     
-    return HttpResponse('<script>alert("Certo! Atualize a página."); window.history.back();</script>')
+    messages.add_message(request, constants.SUCCESS, 'Histórico Atualizado!')
+    return redirect('painel-posicao-netshoes')
 
 
 def item_posicao_netshoes(request, sku_netshoes):
@@ -207,12 +215,14 @@ def metricas_mercadolivre(request):
             # Verifica se existe no banco
             my_obj = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb).first()
             if my_obj is not None:
-                return HttpResponse('<script>alert("MLB já existe no banco de dados!"); window.history.back();</script>')
+                messages.add_message(request, constants.ERROR, 'MLB já existe no banco de dados!')
+                return redirect('metricas-mercadolivre')
             
             # Cadastra
             MetricasMercadoLivre(termo_busca=termo, mlb_anuncio=mlb).save()
             
-            return HttpResponse('<script>alert("Cadastrado com sucesso!"); window.history.back();</script>')
+            messages.add_message(request, constants.SUCCESS, 'Cadastrado com sucesso!')
+            return redirect('metricas-mercadolivre')
         
         # Caso a ação seja remover um MLB
         elif action == 'remover':
@@ -221,11 +231,13 @@ def metricas_mercadolivre(request):
             # Verifica se existe no banco de dados
             my_obj = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).first()
             if my_obj is None:
-                return HttpResponse('<script>alert("MLB não existe no banco de dados!"); window.history.back();</script>')
+                messages.add_message(request, constants.ERROR, 'MLB não existe no banco de dados!')
+                return redirect('metricas-mercadolivre')
             # Caso exista, deleta
             else:
                 MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).delete()
-                return HttpResponse('<script>alert("Removido com sucesso!"); window.history.back();</script>')
+                messages.add_message(request, constants.SUCCESS, 'Removido com sucesso!')
+                return redirect('metricas-mercadolivre')
         
         return render(request, 'trackeamento/mercadolivre/metricas-mercadolivre.html')
     
@@ -252,14 +264,16 @@ def atualizar_metricas_mercadolivre(request):
     slack = False
     atualiza_mercadolivre.main(slack)
     
-    return HttpResponse('<script>alert("Certo! Atualize a página."); window.history.back();</script>') 
+    messages.add_message(request, constants.SUCCESS, 'Métricas Atualizadas!')
+    return redirect('metricas-mercadolivre-painel')
 
 
 def baixar_historico_mercadolivre(request):
     lista_mercadolivre = MetricasMercadoLivre.objects.all()
     
     if len(lista_mercadolivre) == 0:
-        return HttpResponse('<script>alert("Não há dados para baixar!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'Não há dados para baixar!')
+        return redirect('metricas-mercadolivre-painel')
      
     dados = {
         'id': [anuncio.id for anuncio in lista_mercadolivre],
