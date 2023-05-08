@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_netshoes, todas_vinculacoes_aton_marketplace, todas_as_vendas_aton, relatorio_envio_full, pedidos_do_dia
 from datetime import datetime, date
+from django.contrib.messages import constants
+from django.contrib import messages
 
 
 def index(request):
@@ -52,19 +54,23 @@ def gerar_planilha_comparativo_vendas_netshoes(request):
         
         # Verifica se todas estão com data
         if data_inicial_principal == '' or data_final_principal == '' or data_inicial_comparativo == '' or data_inicial_comparativo == '':
-            return HttpResponse('<script>alert("Preencha todas as datas!"); window.history.back();</script>')
+            messages.add_message(request, constants.ERROR, 'Preencha todas as datas!')
+            return redirect('index')
         
         # Valida se a data é até hoje
         if data_final_principal > hoje_formatado:
-            return HttpResponse('<script>alert("Data final principal maior do que hoje!"); window.history.back();</script>')
+            messages.add_message(request, constants.ERROR, 'Data principal final maior que hoje!')
+            return redirect('index')
         
         # Valida data principal 
         if data_inicial_principal > data_final_principal:
-            return HttpResponse('<script>alert("Data principal inicial maior que a data principal final!"); window.history.back();</script>')
+            messages.add_message(request, constants.ERROR, 'Data principal inicial maior que a data principal final!')
+            return redirect('index')
         
         # Valida data comparativa
         if data_inicial_comparativo > data_final_comparativo:
-            return HttpResponse('<script>alert("Data comparativa inicial maior que a data comparativa final!"); window.history.back();</script>')
+            messages.add_message(request, constants.ERROR, 'Data comparativa inicial maior que a data comparativa final!')
+            return redirect('index')
         
         # Nome planilha
         nome_planilha = f'relatorio_comparativo_netshoes.xlsx'
