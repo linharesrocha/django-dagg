@@ -246,22 +246,12 @@ def metricas_mercadolivre(request):
         return render(request, 'trackeamento/mercadolivre/metricas-mercadolivre.html')
     
 
-def metricas_mercadolivre_painel(request):
-    ultimos_valores = MetricasMercadoLivre.objects.values('mlb_anuncio', 'termo_busca').distinct().values()
-    
-    for valor in ultimos_valores:
-        valor['ultima_atualizacao'] = valor['ultima_atualizacao'].strftime('%d/%m/%Y %H:%M')
-        
-
-    return render(request, 'trackeamento/mercadolivre/painel-metricas-mercadolivre.html', {'lista_mercadolivre': ultimos_valores})
-
-
 def atualizar_metricas_mercadolivre(request):
     slack = False
     atualiza_mercadolivre.main(slack)
     
     messages.add_message(request, constants.SUCCESS, 'Métricas Atualizadas!')
-    return redirect('metricas-mercadolivre-painel')
+    return redirect('metricas-mercadolivre')
 
 
 def baixar_historico_mercadolivre(request):
@@ -269,7 +259,7 @@ def baixar_historico_mercadolivre(request):
     
     if len(lista_mercadolivre) == 0:
         messages.add_message(request, constants.ERROR, 'Não há dados para baixar!')
-        return redirect('metricas-mercadolivre-painel')
+        return redirect('metricas-mercadolivre')
      
     dados = {
         'id': [anuncio.id for anuncio in lista_mercadolivre],
@@ -317,5 +307,5 @@ def baixar_historico_mercadolivre(request):
     output.seek(0)
     
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = f'attachment; filename=historico_netshoes_{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx'
+    response['Content-Disposition'] = f'attachment; filename=historico_mercadolivre_{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx'
     return response

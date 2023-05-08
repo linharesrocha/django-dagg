@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div style="height: 500px;" class="container">
         <div id="header" class="row">
             <div class="col">
                 <h1 id="header-titulo"><a href="/trackeamento/">MÉTRICAS MERCADO LIVRE</a></h1>
@@ -37,6 +37,22 @@
                 </div>
                 {% endfor %}
                 {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form action="{% url 'atualizar-historico-mercadolivre' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" style="margin-bottom: 5px;"
+                        class="btn btn-primary float-end">Atualizar</button>
+                </form>
+            </div>
+            <div class="col-1">
+                <form action="{% url 'baixar-historico-mercadolivre' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" style="margin-bottom: 5px;"
+                        class="btn btn-primary float-end">Histórico</button>
+                </form>
             </div>
         </div>
         <div class="row">
@@ -79,7 +95,8 @@
                                         name="termo-mercadolivre-delete" required>
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
-                                    <span style="background-color: rgb(255, 166, 0); font-weight: 900; width: 100px;" class="input-group-text">MLB ML</span>
+                                    <span style="background-color: rgb(255, 166, 0); font-weight: 900; width: 100px;"
+                                        class="input-group-text">MLB ML</span>
                                     <input type="text" class="form-control" id="mlb-mercadolivre-delete"
                                         name="mlb-mercadolivre-delete" required>
                                 </div>
@@ -89,12 +106,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col text-center">
-                <h3 style="margin-top: 50px; margin-bottom: 50px;"><a href="{% url 'metricas-mercadolivre-painel' %}"
-                        style="color: #E84545;">PAINEL</a></h3>
             </div>
         </div>
     </div>
