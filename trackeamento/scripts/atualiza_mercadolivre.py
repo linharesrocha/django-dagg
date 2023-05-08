@@ -6,6 +6,7 @@ from datetime import datetime
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 import os
+import json
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
@@ -65,6 +66,7 @@ def main(slack):
         print(f'{indice+1}/{len(lista_mercadolivre)} - {anuncio["mlb_anuncio"]}')
         termo_busca = anuncio['termo_busca']
         mlb_anuncio = anuncio['mlb_anuncio']
+        print(mlb_anuncio)
 
         # Visitas
         visitas_totais = requests.get(f"https://api.mercadolibre.com/visits/items?ids={mlb_anuncio}", headers=header).json().get(mlb_anuncio)
@@ -83,7 +85,7 @@ def main(slack):
             taxa_conversao_total = round((vendas_anuncio / visitas_totais) * 100,2)
             vende_a_cada_visita = round(visitas_totais / vendas_anuncio , 1)
         else:
-            taxa_conversao = 0
+            taxa_conversao_total = 0
             vende_a_cada_visita = 0
             
         # Visita Diaria / Vendas Diaria / Taxa Conversao Diaria
@@ -110,12 +112,12 @@ def main(slack):
             
             # Adiciona todos os mlbs em uma lista
             for dicionario in response['results']:
-                mlb_anuncio = dicionario['id']
-                mlbs.append(mlb_anuncio)
+                mlb_anuncio_pesquisa = dicionario['id']
+                mlbs.append(mlb_anuncio_pesquisa)
 
                 # Verifica se o mlb está na lista e retorna o index + 1 se não retorna None
-                if mlb_anuncio in mlbs:
-                    posicao_anuncio = mlbs.index(mlb_anuncio) + 1
+                if mlb_anuncio_pesquisa in mlbs:
+                    posicao_anuncio = mlbs.index(mlb_anuncio_pesquisa) + 1
                     mlb_found = True
                     break
 

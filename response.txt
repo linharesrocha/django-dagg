@@ -1,0 +1,695 @@
+{
+    "id": "MLB2941119647",
+    "site_id": "MLB",
+    "title": "Pochete Esportiva Fitness Para Corrida Doleira Imperme\u00e1vel",
+    "subtitle": null,
+    "seller_id": 195279505,
+    "category_id": "MLB28143",
+    "official_store_id": null,
+    "price": 53.31,
+    "base_price": 53.31,
+    "original_price": 59.9,
+    "inventory_id": "VLUC56420",
+    "currency_id": "BRL",
+    "initial_quantity": 493,
+    "available_quantity": 46,
+    "sold_quantity": 447,
+    "sale_terms": [
+        {
+            "id": "WARRANTY_TYPE",
+            "name": "Tipo de garantia",
+            "value_id": "2230280",
+            "value_name": "Garantia do vendedor",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "2230280",
+                    "name": "Garantia do vendedor",
+                    "struct": null
+                }
+            ],
+            "value_type": "list"
+        },
+        {
+            "id": "WARRANTY_TIME",
+            "name": "Tempo de garantia",
+            "value_id": null,
+            "value_name": "3 meses",
+            "value_struct": {
+                "number": 3,
+                "unit": "meses"
+            },
+            "values": [
+                {
+                    "id": null,
+                    "name": "3 meses",
+                    "struct": {
+                        "number": 3,
+                        "unit": "meses"
+                    }
+                }
+            ],
+            "value_type": "number_unit"
+        }
+    ],
+    "buying_mode": "buy_it_now",
+    "listing_type_id": "gold_special",
+    "start_time": "2022-11-11T19:25:23.000Z",
+    "stop_time": "2042-11-06T04:00:00.000Z",
+    "end_time": "2042-11-06T04:00:00.000Z",
+    "expiration_time": "2023-11-23T23:32:38.000Z",
+    "condition": "new",
+    "permalink": "https://produto.mercadolivre.com.br/MLB-2941119647-pochete-esportiva-fitness-para-corrida-doleira-impermeavel-_JM",
+    "thumbnail_id": "867771-MLB52388911015_112022",
+    "thumbnail": "http://http2.mlstatic.com/D_867771-MLB52388911015_112022-I.jpg",
+    "secure_thumbnail": "https://http2.mlstatic.com/D_867771-MLB52388911015_112022-I.jpg",
+    "pictures": [
+        {
+            "id": "867771-MLB52388911015_112022",
+            "url": "http://http2.mlstatic.com/D_867771-MLB52388911015_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_867771-MLB52388911015_112022-O.jpg",
+            "size": "500x246",
+            "max_size": "883x435",
+            "quality": ""
+        },
+        {
+            "id": "652093-MLB52388911016_112022",
+            "url": "http://http2.mlstatic.com/D_652093-MLB52388911016_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_652093-MLB52388911016_112022-O.jpg",
+            "size": "500x246",
+            "max_size": "983x485",
+            "quality": ""
+        },
+        {
+            "id": "749561-MLB52388911014_112022",
+            "url": "http://http2.mlstatic.com/D_749561-MLB52388911014_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_749561-MLB52388911014_112022-O.jpg",
+            "size": "462x500",
+            "max_size": "1000x1082",
+            "quality": ""
+        },
+        {
+            "id": "650172-MLB52388911007_112022",
+            "url": "http://http2.mlstatic.com/D_650172-MLB52388911007_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_650172-MLB52388911007_112022-O.jpg",
+            "size": "500x500",
+            "max_size": "1000x1000",
+            "quality": ""
+        },
+        {
+            "id": "970989-MLB52388911009_112022",
+            "url": "http://http2.mlstatic.com/D_970989-MLB52388911009_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_970989-MLB52388911009_112022-O.jpg",
+            "size": "500x500",
+            "max_size": "1000x1000",
+            "quality": ""
+        },
+        {
+            "id": "812159-MLB52388911013_112022",
+            "url": "http://http2.mlstatic.com/D_812159-MLB52388911013_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_812159-MLB52388911013_112022-O.jpg",
+            "size": "483x500",
+            "max_size": "892x923",
+            "quality": ""
+        },
+        {
+            "id": "739476-MLB52388911010_112022",
+            "url": "http://http2.mlstatic.com/D_739476-MLB52388911010_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_739476-MLB52388911010_112022-O.jpg",
+            "size": "470x500",
+            "max_size": "940x1000",
+            "quality": ""
+        },
+        {
+            "id": "912003-MLB52388911006_112022",
+            "url": "http://http2.mlstatic.com/D_912003-MLB52388911006_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_912003-MLB52388911006_112022-O.jpg",
+            "size": "500x500",
+            "max_size": "1000x1000",
+            "quality": ""
+        },
+        {
+            "id": "812299-MLB52388911011_112022",
+            "url": "http://http2.mlstatic.com/D_812299-MLB52388911011_112022-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_812299-MLB52388911011_112022-O.jpg",
+            "size": "500x500",
+            "max_size": "1000x1000",
+            "quality": ""
+        },
+        {
+            "id": "879372-MLB54123545547_032023",
+            "url": "http://http2.mlstatic.com/D_879372-MLB54123545547_032023-O.jpg",
+            "secure_url": "https://http2.mlstatic.com/D_879372-MLB54123545547_032023-O.jpg",
+            "size": "500x500",
+            "max_size": "1000x1000",
+            "quality": ""
+        }
+    ],
+    "video_id": "-Uo4f0ihCF0",
+    "descriptions": [],
+    "accepts_mercadopago": true,
+    "non_mercado_pago_payment_methods": [],
+    "shipping": {
+        "mode": "me2",
+        "methods": [],
+        "tags": [
+            "self_service_in"
+        ],
+        "dimensions": null,
+        "local_pick_up": false,
+        "free_shipping": false,
+        "logistic_type": "fulfillment",
+        "store_pick_up": false
+    },
+    "international_delivery_mode": "none",
+    "seller_address": {
+        "comment": "Sala 103 Referencia: Sala 103 - DAGG \n- Em cima dos CORREIOS\n- De segunda a sexta de 7h30 ate 16h30",
+        "address_line": "Avenida Jos\u00e9 C\u00e2ndido da Silveira 535",
+        "zip_code": "31170193",
+        "city": {
+            "id": "TUxCQ0JFTGU0ODdm",
+            "name": "Belo Horizonte"
+        },
+        "state": {
+            "id": "BR-MG",
+            "name": "Minas Gerais"
+        },
+        "country": {
+            "id": "BR",
+            "name": "Brasil"
+        },
+        "search_location": {
+            "neighborhood": {
+                "id": "TUxCQkNJREJEMUY3",
+                "name": "Cidade Nova"
+            },
+            "city": {
+                "id": "TUxCQ0JFTGU0ODdm",
+                "name": "Belo Horizonte"
+            },
+            "state": {
+                "id": "TUxCUE1JTlMxNTAyZA",
+                "name": "Minas Gerais"
+            }
+        },
+        "latitude": -19.893408,
+        "longitude": -43.922421,
+        "id": 172995048
+    },
+    "seller_contact": null,
+    "location": {},
+    "geolocation": {
+        "latitude": -19.893408,
+        "longitude": -43.922421
+    },
+    "coverage_areas": [],
+    "attributes": [
+        {
+            "id": "BRAND",
+            "name": "Marca",
+            "value_id": null,
+            "value_name": "Personalizada Dagg Fitness Running",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": null,
+                    "name": "Personalizada Dagg Fitness Running",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "CLOSURE_TYPE",
+            "name": "Tipo de fechamento",
+            "value_id": "3769567",
+            "value_name": "Fivela",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "3769567",
+                    "name": "Fivela",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "COLOR",
+            "name": "Cor",
+            "value_id": "52049",
+            "value_name": "Preto",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "52049",
+                    "name": "Preto",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "COMPARTMENTS_NUMBER",
+            "name": "Quantidade de compartimentos",
+            "value_id": null,
+            "value_name": "1",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": null,
+                    "name": "1",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "number"
+        },
+        {
+            "id": "COMPOSITION",
+            "name": "Composi\u00e7\u00e3o",
+            "value_id": null,
+            "value_name": "El\u00e1stico,Imperme\u00e1vel,Poli\u00e9ster",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "7589432",
+                    "name": "El\u00e1stico",
+                    "struct": null
+                },
+                {
+                    "id": null,
+                    "name": "Imperme\u00e1vel",
+                    "struct": null
+                },
+                {
+                    "id": "4682203",
+                    "name": "Poli\u00e9ster",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "FABRIC_DESIGN",
+            "name": "Desenho do tecido",
+            "value_id": "930483",
+            "value_name": "Liso",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "930483",
+                    "name": "Liso",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "GENDER",
+            "name": "G\u00eanero",
+            "value_id": "110461",
+            "value_name": "Sem g\u00eanero",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "110461",
+                    "name": "Sem g\u00eanero",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "list"
+        },
+        {
+            "id": "GTIN",
+            "name": "C\u00f3digo universal de produto",
+            "value_id": "-1",
+            "value_name": null,
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "-1",
+                    "name": null,
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "IS_ADJUSTABLE",
+            "name": "\u00c9 ajust\u00e1vel",
+            "value_id": "242085",
+            "value_name": "Sim",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "242085",
+                    "name": "Sim",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "boolean"
+        },
+        {
+            "id": "IS_KIT",
+            "name": "\u00c9 kit",
+            "value_id": "242084",
+            "value_name": "N\u00e3o",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "242084",
+                    "name": "N\u00e3o",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "boolean"
+        },
+        {
+            "id": "IS_WATERPROOF",
+            "name": "\u00c9 \u00e0 prova d'\u00e1gua",
+            "value_id": "242085",
+            "value_name": "Sim",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "242085",
+                    "name": "Sim",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "boolean"
+        },
+        {
+            "id": "ITEM_CONDITION",
+            "name": "Condi\u00e7\u00e3o do item",
+            "value_id": "2230284",
+            "value_name": "Novo",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "2230284",
+                    "name": "Novo",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "list"
+        },
+        {
+            "id": "LENGTH",
+            "name": "Comprimento",
+            "value_id": null,
+            "value_name": "20 cm",
+            "value_struct": {
+                "number": 20,
+                "unit": "cm"
+            },
+            "values": [
+                {
+                    "id": null,
+                    "name": "20 cm",
+                    "struct": {
+                        "number": 20,
+                        "unit": "cm"
+                    }
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "number_unit"
+        },
+        {
+            "id": "MAIN_COLOR",
+            "name": "Cor principal",
+            "value_id": "2450295",
+            "value_name": "Preto",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "2450295",
+                    "name": "Preto",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "list"
+        },
+        {
+            "id": "MAIN_MATERIAL",
+            "name": "Material principal",
+            "value_id": "466794",
+            "value_name": "Poli\u00e9ster",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "466794",
+                    "name": "Poli\u00e9ster",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "MODEL",
+            "name": "Modelo",
+            "value_id": null,
+            "value_name": "Bolsa de Cintura Cinta Porta Celular Resistente a \u00e1gua Ajust\u00e1vel Leve Masculina Feminina Unissex Bag",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": null,
+                    "name": "Bolsa de Cintura Cinta Porta Celular Resistente a \u00e1gua Ajust\u00e1vel Leve Masculina Feminina Unissex Bag",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "PACKAGE_HEIGHT",
+            "name": "Altura da embalagem",
+            "value_id": null,
+            "value_name": "3.8 cm",
+            "value_struct": {
+                "number": 3.8,
+                "unit": "cm"
+            },
+            "values": [
+                {
+                    "id": null,
+                    "name": "3.8 cm",
+                    "struct": {
+                        "number": 3.8,
+                        "unit": "cm"
+                    }
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "number_unit"
+        },
+        {
+            "id": "PACKAGE_LENGTH",
+            "name": "Comprimento da embalagem",
+            "value_id": null,
+            "value_name": "30.2 cm",
+            "value_struct": {
+                "number": 30.2,
+                "unit": "cm"
+            },
+            "values": [
+                {
+                    "id": null,
+                    "name": "30.2 cm",
+                    "struct": {
+                        "number": 30.2,
+                        "unit": "cm"
+                    }
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "number_unit"
+        },
+        {
+            "id": "PACKAGE_WEIGHT",
+            "name": "Peso da embalagem",
+            "value_id": null,
+            "value_name": "80 g",
+            "value_struct": {
+                "number": 80,
+                "unit": "g"
+            },
+            "values": [
+                {
+                    "id": null,
+                    "name": "80 g",
+                    "struct": {
+                        "number": 80,
+                        "unit": "g"
+                    }
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "number_unit"
+        },
+        {
+            "id": "PACKAGE_WIDTH",
+            "name": "Largura da embalagem",
+            "value_id": null,
+            "value_name": "19.9 cm",
+            "value_struct": {
+                "number": 19.9,
+                "unit": "cm"
+            },
+            "values": [
+                {
+                    "id": null,
+                    "name": "19.9 cm",
+                    "struct": {
+                        "number": 19.9,
+                        "unit": "cm"
+                    }
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "number_unit"
+        },
+        {
+            "id": "PRODUCT_FEATURES",
+            "name": "Caracter\u00edsticas do produto",
+            "value_id": "8847339",
+            "value_name": "Sem validade",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "8847339",
+                    "name": "Sem validade",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "list"
+        },
+        {
+            "id": "SELLER_SKU",
+            "name": "SKU",
+            "value_id": null,
+            "value_name": "DG304783",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": null,
+                    "name": "DG304783",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "string"
+        },
+        {
+            "id": "SHIPMENT_PACKING",
+            "name": "Embalagem do env\u00edo",
+            "value_id": "7435891",
+            "value_name": "Flyer",
+            "value_struct": null,
+            "values": [
+                {
+                    "id": "7435891",
+                    "name": "Flyer",
+                    "struct": null
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "list"
+        },
+        {
+            "id": "WIDTH",
+            "name": "Largura",
+            "value_id": null,
+            "value_name": "12 cm",
+            "value_struct": {
+                "number": 12,
+                "unit": "cm"
+            },
+            "values": [
+                {
+                    "id": null,
+                    "name": "12 cm",
+                    "struct": {
+                        "number": 12,
+                        "unit": "cm"
+                    }
+                }
+            ],
+            "attribute_group_id": "OTHERS",
+            "attribute_group_name": "Outros",
+            "value_type": "number_unit"
+        }
+    ],
+    "warnings": [],
+    "listing_source": "",
+    "variations": [],
+    "status": "active",
+    "sub_status": [],
+    "tags": [
+        "good_quality_picture",
+        "good_quality_thumbnail",
+        "immediate_payment",
+        "cart_eligible"
+    ],
+    "warranty": "Garantia do vendedor: 3 meses",
+    "catalog_product_id": null,
+    "domain_id": "MLB-FANNY_PACKS",
+    "seller_custom_field": "DG304783",
+    "parent_item_id": null,
+    "differential_pricing": null,
+    "deal_ids": [
+        "MLB17636",
+        "MLB17184",
+        "MLB17295",
+        "MLB17634",
+        "MLB17635"
+    ],
+    "automatic_relist": false,
+    "date_created": "2022-11-11T19:25:24.000Z",
+    "last_updated": "2023-05-08T00:09:55.693Z",
+    "health": 0.75,
+    "catalog_listing": false,
+    "item_relations": [],
+    "channels": [
+        "marketplace"
+    ]
+}

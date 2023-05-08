@@ -38,6 +38,7 @@ def main():
     AND B.ARMAZEM = '1'
     AND C.INATIVO = 'N'
     AND B.ESTOQUE <= '1'
+    AND A.FULFILLMENT = 'S'
     ORDER BY MATERIAL_ID
     '''
 
