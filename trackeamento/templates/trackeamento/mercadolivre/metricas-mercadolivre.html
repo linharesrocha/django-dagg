@@ -74,7 +74,12 @@
                             <form action="" method="post">
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
-                                    <span class="input-group-text" id="inputGroup-sizing-sm">MLB ML</span>
+                                    <span style="width: 100px;" class="input-group-text">Pesquisa</span>
+                                    <input type="text" class="form-control" id="termo-mercadolivre-delete"
+                                        name="termo-mercadolivre-delete" required>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="background-color: rgb(255, 166, 0); font-weight: 900; width: 100px;" class="input-group-text">MLB ML</span>
                                     <input type="text" class="form-control" id="mlb-mercadolivre-delete"
                                         name="mlb-mercadolivre-delete" required>
                                 </div>

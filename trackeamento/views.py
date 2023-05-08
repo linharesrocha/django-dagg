@@ -231,15 +231,16 @@ def metricas_mercadolivre(request):
         # Caso a ação seja remover um MLB
         elif action == 'remover':
             mlb_anuncio = request.POST['mlb-mercadolivre-delete']
+            termo = request.POST['termo-mercadolivre-delete']
             
             # Verifica se existe no banco de dados
-            my_obj = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).first()
+            my_obj = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).filter(termo_busca=termo).first()
             if my_obj is None:
-                messages.add_message(request, constants.ERROR, 'MLB não existe no banco de dados!')
+                messages.add_message(request, constants.ERROR, 'MLB ou Termo não existe no banco de dados!')
                 return redirect('metricas-mercadolivre')
             # Caso exista, deleta
             else:
-                MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).delete()
+                MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).filter(termo_busca=termo).delete()
                 messages.add_message(request, constants.SUCCESS, 'Removido com sucesso!')
                 return redirect('metricas-mercadolivre')
         
