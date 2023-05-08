@@ -62,11 +62,11 @@ def main(slack):
     lista_mercadolivre = MetricasMercadoLivre.objects.values('termo_busca', 'mlb_anuncio').annotate(sku_min=Min('mlb_anuncio'))
     print(f'ATUALIZANDO TRACKEAMENTO DE {len(lista_mercadolivre)} PRODUTOS MERCADOLIVRE')
     
+    # Percorrendo cada MLB unicos cadastrado 
     for indice, anuncio in enumerate(lista_mercadolivre):
         print(f'{indice+1}/{len(lista_mercadolivre)} - {anuncio["mlb_anuncio"]}')
         termo_busca = anuncio['termo_busca']
         mlb_anuncio = anuncio['mlb_anuncio']
-        print(mlb_anuncio)
 
         # Visitas
         visitas_totais = requests.get(f"https://api.mercadolibre.com/visits/items?ids={mlb_anuncio}", headers=header).json().get(mlb_anuncio)
@@ -116,8 +116,8 @@ def main(slack):
                 mlbs.append(mlb_anuncio_pesquisa)
 
                 # Verifica se o mlb está na lista e retorna o index + 1 se não retorna None
-                if mlb_anuncio_pesquisa in mlbs:
-                    posicao_anuncio = mlbs.index(mlb_anuncio_pesquisa) + 1
+                if mlb_anuncio in mlbs:
+                    posicao_anuncio = mlbs.index(mlb_anuncio) + 1
                     mlb_found = True
                     break
 
