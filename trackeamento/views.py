@@ -218,7 +218,6 @@ def metricas_mercadolivre(request):
                 # Percorre cada objecto e verifica se o termo é igual
                 for obj in objects:
                     if termo == obj.termo_busca:
-                        print('entrei')
                         messages.add_message(request, constants.ERROR, 'MLB já está cadastrado com o mesmo termo!')
                         return redirect('metricas-mercadolivre')
             
@@ -248,18 +247,10 @@ def metricas_mercadolivre(request):
     
 
 def metricas_mercadolivre_painel(request):
-    ultimos_valores = MetricasMercadoLivre.objects.filter(
-        id__in=Subquery(
-            MetricasMercadoLivre.objects.filter(
-                mlb_anuncio=OuterRef('mlb_anuncio')
-            ).values('mlb_anuncio').annotate(
-                ultima_id=Max('id')
-            ).values('ultima_id')
-        )
-    )
+    ultimos_valores = MetricasMercadoLivre.objects.values('mlb_anuncio', 'termo_busca').distinct().values()
     
     for valor in ultimos_valores:
-        valor.ultima_atualizacao = valor.ultima_atualizacao.strftime('%d/%m/%Y %H:%M')
+        valor['ultima_atualizacao'] = valor['ultima_atualizacao'].strftime('%d/%m/%Y %H:%M')
         
 
     return render(request, 'trackeamento/mercadolivre/painel-metricas-mercadolivre.html', {'lista_mercadolivre': ultimos_valores})
