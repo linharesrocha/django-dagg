@@ -26,6 +26,19 @@
                 <h1 id="header-titulo"><a href="/trackeamento/">MÉTRICAS MERCADO LIVRE</a></h1>
             </div>
         </div>
+        <!-- Messages -->
+        <div class="row">
+            <div class="col">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {{ message.tags}} alert-dismissible fade show text-center" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
         <div class="row">
             <div class="col text-center">
                 <div class="d-flex justify-content-center">
@@ -35,14 +48,19 @@
                             <form action="" method="post">
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 100px;" class="input-group-text" id="inputGroup-sizing-sm-search">Pesquisa</span>
-                                    <input type="text" class="form-control" id="termo-cadastro" name="termo-cadastro" required>
+                                    <span style="width: 100px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-search">Pesquisa</span>
+                                    <input type="text" class="form-control" id="termo-cadastro" name="termo-cadastro"
+                                        required>
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
-                                    <span style="background-color: rgb(255, 166, 0); font-weight: 900; width: 100px;" class="input-group-text">MLB ML</span>
-                                    <input type="text" class="form-control" id="mlb-mercadolivre-cadastro" name="mlb-mercadolivre-cadastro" required>
+                                    <span style="background-color: rgb(255, 166, 0); font-weight: 900; width: 100px;"
+                                        class="input-group-text">MLB ML</span>
+                                    <input type="text" class="form-control" id="mlb-mercadolivre-cadastro"
+                                        name="mlb-mercadolivre-cadastro" required>
                                 </div>
-                                <button type="submit" class="btn btn-success" name="action" value="cadastrar" style="background-color: green!important;">Cadastrar</button>
+                                <button type="submit" class="btn btn-success" name="action" value="cadastrar"
+                                    style="background-color: green!important;">Cadastrar</button>
                             </form>
                         </div>
                     </div>
@@ -57,9 +75,11 @@
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text" id="inputGroup-sizing-sm">MLB ML</span>
-                                    <input type="text" class="form-control" id="mlb-mercadolivre-delete" name="mlb-mercadolivre-delete" required>
+                                    <input type="text" class="form-control" id="mlb-mercadolivre-delete"
+                                        name="mlb-mercadolivre-delete" required>
                                 </div>
-                                <button type="submit" name="action" value="remover" class="btn btn-primary">Remover</button>
+                                <button type="submit" name="action" value="remover"
+                                    class="btn btn-primary">Remover</button>
                             </form>
                         </div>
                     </div>

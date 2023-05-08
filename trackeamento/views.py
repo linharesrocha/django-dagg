@@ -7,6 +7,8 @@ from datetime import datetime
 from io import BytesIO
 from trackeamento.scripts import atualiza_netshoes, atualiza_mercadolivre
 from openpyxl.styles import Alignment, PatternFill
+from django.contrib.messages import constants
+from django.contrib import messages
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -195,8 +197,12 @@ def metricas_mercadolivre(request):
         if action == 'cadastrar':
             
             # Tratando os dados
-            termo = request.POST['termo-cadastro'].lower()
-            mlb = request.POST['mlb-mercadolivre-cadastro'].upper().replace('-','')
+            termo = request.POST['termo-cadastro'].lower().strip()
+            mlb = request.POST['mlb-mercadolivre-cadastro'].upper().replace('-','').strip()
+            
+            if not mlb.startswith('MLB'):
+                messages.add_message(request, constants.ERROR, 'MLB não está começando com MLB!')
+                return redirect('metricas-mercadolivre')
             
             # Verifica se existe no banco
             my_obj = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb).first()
