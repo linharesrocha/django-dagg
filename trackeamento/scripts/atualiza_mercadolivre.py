@@ -7,6 +7,8 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 import os
 import json
+from datetime import datetime, timedelta
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
@@ -62,6 +64,10 @@ def main(slack):
     lista_mercadolivre = MetricasMercadoLivre.objects.values('termo_busca', 'mlb_anuncio').annotate(sku_min=Min('mlb_anuncio'))
     print(f'ATUALIZANDO TRACKEAMENTO DE {len(lista_mercadolivre)} PRODUTOS MERCADOLIVRE')
     
+    # Obtendo dia de ontem
+    ontem = datetime.now() - timedelta(days=1)
+    data_ontem = ontem.strftime('%Y-%m-%d')
+    
     # Percorrendo cada MLB unicos cadastrado 
     for indice, anuncio in enumerate(lista_mercadolivre):
         print(f'{indice+1}/{len(lista_mercadolivre)} - {anuncio["mlb_anuncio"]}')
@@ -87,10 +93,11 @@ def main(slack):
         else:
             taxa_conversao_total = 0
             vende_a_cada_visita = 0
+        
             
         # Visita Diaria / Vendas Diaria / Taxa Conversao Diaria
-        visitas_diaria = round(visitas_totais / 30,2)
-        vendas_diaria = round(vendas_anuncio / 30, 2)
+        visitas_diaria = requests.get(f"https://api.mercadolibre.com/items/{mlb_anuncio}/visits/time_window?last=1&unit=day", headers=header).json().get('total_visits')
+        vendas_diaria = requests.get(f'https://api.mercadolibre.com/orders/search?seller=195279505&item={mlb_anuncio}&order.status=paid&order.date_created.from={data_ontem}T00:00:00.000-00:00', headers=header).json().get('paging').get('total')
         taxa_conversao_diaria = round((vendas_diaria / visitas_diaria) * 100, 2)
 
         # Posição do Anúncio
@@ -102,10 +109,13 @@ def main(slack):
 
         while True:
             # Limita a quantidade de requisições    
-            if offset >= 500 or mlb_found:
+            if offset >= 1200 or mlb_found:
                 break
 
             response = requests.get(f'https://api.mercadolibre.com/sites/MLB/search?q={termo_busca}&offset={offset}', headers=header).json()
+            
+            with open('response.json', 'a') as f:
+                json.dump(response, f)
 
             # Proxima pagina
             offset = offset + 50
