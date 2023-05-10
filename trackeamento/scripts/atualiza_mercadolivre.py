@@ -6,8 +6,8 @@ from datetime import datetime
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 import os
-import json
 from datetime import datetime, timedelta
+from posicao_produtos_mercadolivre import main as posicao_produtos_mercadolivre
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -101,44 +101,7 @@ def main(slack):
         taxa_conversao_diaria = round((vendas_diaria / visitas_diaria) * 100, 2)
 
         # Posição do Anúncio
-        offset = 0
-        mlbs = []
-        mlb_found = False
-        posicao_anuncio = None
-        
-
-        while True:
-            # Limita a quantidade de requisições    
-            if offset >= 1200 or mlb_found:
-                break
-
-            response = requests.get(f'https://api.mercadolibre.com/sites/MLB/search?q={termo_busca}&offset={offset}', headers=header).json()
-            
-            with open('response.json', 'a') as f:
-                json.dump(response, f)
-
-            # Proxima pagina
-            offset = offset + 50
-            
-            # Adiciona todos os mlbs em uma lista
-            for dicionario in response['results']:
-                mlb_anuncio_pesquisa = dicionario['id']
-                mlbs.append(mlb_anuncio_pesquisa)
-
-                # Verifica se o mlb está na lista e retorna o index + 1 se não retorna None
-                if mlb_anuncio in mlbs:
-                    posicao_anuncio = mlbs.index(mlb_anuncio) + 1
-                    mlb_found = True
-                    break
-
-        # Obtem a página
-        if posicao_anuncio is None:
-            pagina = None
-        elif posicao_anuncio <= 56:
-            pagina = 1
-        else:
-            pagina = (posicao_anuncio - 57) // 56 + 2
-
+        pagina = posicao_produtos_mercadolivre(termo_busca, mlb_anuncio)
 
         # Salvando no banco de dados
         novo_registro_meli = MetricasMercadoLivre()
