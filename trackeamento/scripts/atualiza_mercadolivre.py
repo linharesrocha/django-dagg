@@ -26,16 +26,16 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     
     # Controle
     pagina_normal = 1
-    contador_pagina = 49
     posicao_anuncio_normal = None
     mlbs = []
     mlb_found = False
     
     # Primeira página
-    response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}', headers={'User-agent': user_agent})
+    response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}')
     
     # Página normal
-    while True:        
+    while True:
+        print(pagina_normal)
         # Request
         soup = BeautifulSoup(response.content, 'html.parser')
         items = soup.find_all(class_='ui-search-layout__item')
@@ -59,18 +59,17 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
             break
         else:
             pagina_normal += 1
-            response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}_Desde_{contador_pagina}_NoIndex_True', headers={'User-agent': user_agent})
-            contador_pagina += 48
+            paginacao = soup.find(class_='shops__pagination-link').get('href')
+            response = requests.get(paginacao)
                 
     # Controle
     pagina_full = 1
-    contador_pagina = 49
     posicao_anuncio_full = None
     mlbs = []
     mlb_found = False
     
     # Primeira página
-    response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full', headers={'User-agent': user_agent})
+    response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full')
     
     # Página Full
     while True:
@@ -97,8 +96,8 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
             return posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full
         else:
             pagina_full += 1
-            response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full_Desde_{contador_pagina}_NoIndex_True', headers={'User-agent': user_agent})
-            contador_pagina += 48
+            paginacao = soup.find(class_='shops__pagination-link').get('href')
+            response = requests.get(paginacao)
 
 
 def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente):
