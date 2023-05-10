@@ -24,6 +24,9 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     # Global
     user_agent = 'Mozilla/5.0 (Windows; 10) Gecko/20100101 Firefox/88.0'
     
+    termo_busca = 'joelheira ortopédica'
+    mlb = 'MLB3278981070'
+    
     # Controle
     pagina_normal = 1
     posicao_anuncio_normal = None

@@ -9,6 +9,7 @@ from trackeamento.scripts import atualiza_netshoes, atualiza_mercadolivre
 from openpyxl.styles import Alignment, PatternFill
 from django.contrib.messages import constants
 from django.contrib import messages
+import unidecode
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -42,6 +43,7 @@ def painel_posicao_netshoes(request):
 
 def cadastrar_posicao_netshoes(request):
     termo = request.POST['termo-cadastro']
+    termo = unidecode.unidecode(termo)
     sku_netshoes = request.POST['sku-netshoes-cadastro']
     nome = request.POST['nome-cadastro']
     tipo_anuncio = request.POST['tipo_anuncio']
@@ -52,7 +54,7 @@ def cadastrar_posicao_netshoes(request):
         return redirect('posicao-netshoes')
     
     # Transforma em lower
-    termo = termo.lower()
+    termo = termo.lower().strip()
     sku_netshoes = sku_netshoes.upper()
     sku_netshoes = sku_netshoes.strip()
     nome = nome.strip()
@@ -206,6 +208,7 @@ def metricas_mercadolivre(request):
             
             # Tratando os dados
             termo = request.POST['termo-cadastro'].lower().strip()
+            termo = unidecode.unidecode(termo)
             mlb = request.POST['mlb-mercadolivre-cadastro'].upper().replace('-','').strip()
             
             if not mlb.startswith('MLB'):
