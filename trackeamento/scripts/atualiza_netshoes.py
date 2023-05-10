@@ -24,7 +24,7 @@ def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente):
     else:
         concorrente = 'Anúncio Dagg'
     
-    message = f'{nome} - {sku} - {concorrente}\nMudou da página {pag_antiga} para a página {pag_nova}.'
+    message = f'NETSHOES!\n{nome} - {sku} - {concorrente}\nMudou da página {pag_antiga} para a página {pag_nova}.'
     
     try:
         response = client.chat_postMessage(
