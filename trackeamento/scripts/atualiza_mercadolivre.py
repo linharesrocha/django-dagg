@@ -7,7 +7,7 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 import os
 from datetime import datetime, timedelta
-from posicao_produtos_mercadolivre import main as posicao_produtos_mercadolivre
+from . import posicao_produtos_mercadolivre
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -101,15 +101,17 @@ def main(slack):
         taxa_conversao_diaria = round((vendas_diaria / visitas_diaria) * 100, 2)
 
         # Posição do Anúncio
-        pagina = posicao_produtos_mercadolivre(termo_busca, mlb_anuncio)
+        posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full = posicao_produtos_mercadolivre.main(termo_busca, mlb_anuncio)
 
         # Salvando no banco de dados
         novo_registro_meli = MetricasMercadoLivre()
         novo_registro_meli.nome = titulo
         novo_registro_meli.termo_busca = termo_busca
         novo_registro_meli.mlb_anuncio = mlb_anuncio
-        novo_registro_meli.posicao = posicao_anuncio
-        novo_registro_meli.pagina = pagina
+        novo_registro_meli.posicao = posicao_anuncio_normal
+        novo_registro_meli.pagina = pagina_normal
+        novo_registro_meli.posicao_full = posicao_anuncio_full
+        novo_registro_meli.pagina_full = pagina_full
         novo_registro_meli.visita_diaria = visitas_diaria
         novo_registro_meli.visita_total = visitas_totais
         novo_registro_meli.vendas_diaria = vendas_diaria

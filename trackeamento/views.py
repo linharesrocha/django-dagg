@@ -268,6 +268,8 @@ def baixar_historico_mercadolivre(request):
         'mlb_anuncio': [anuncio.mlb_anuncio for anuncio in lista_mercadolivre],
         'posicao': [anuncio.posicao for anuncio in lista_mercadolivre],
         'pagina': [anuncio.pagina for anuncio in lista_mercadolivre],
+        'posicao_full': [anuncio.posicao_full for anuncio in lista_mercadolivre],
+        'pagina_full': [anuncio.pagina_full for anuncio in lista_mercadolivre],
         'visita_diaria': [anuncio.visita_diaria for anuncio in lista_mercadolivre],
         'visita_total': [anuncio.visita_total for anuncio in lista_mercadolivre],
         'vendas_diaria': [anuncio.vendas_diaria for anuncio in lista_mercadolivre],
@@ -286,6 +288,8 @@ def baixar_historico_mercadolivre(request):
     df['nome'].fillna('None', inplace=True)
     df['posicao'].fillna('None', inplace=True)
     df['pagina'].fillna('None', inplace=True)
+    df['posicao_full'].fillna('None', inplace=True)
+    df['pagina_full'].fillna('None', inplace=True)
     df['visita_diaria'].fillna('None', inplace=True)
     df['visita_total'].fillna('None', inplace=True)
     df['vendas_diaria'].fillna('None', inplace=True)

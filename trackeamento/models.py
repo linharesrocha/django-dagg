@@ -22,6 +22,8 @@ class MetricasMercadoLivre(models.Model):
     mlb_anuncio = models.CharField(max_length=255)
     posicao = models.IntegerField(blank=True, null=True)
     pagina = models.IntegerField(blank=True, null=True)
+    posicao_full = models.IntegerField(blank=True, null=True)
+    pagina_full = models.IntegerField(blank=True, null=True)
     visita_diaria = models.FloatField(blank=True, null=True)
     visita_total = models.IntegerField(blank=True, null=True)
     vendas_diaria = models.FloatField(blank=True, null=True)
