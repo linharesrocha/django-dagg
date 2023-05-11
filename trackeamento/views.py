@@ -10,6 +10,7 @@ from openpyxl.styles import Alignment, PatternFill
 from django.contrib.messages import constants
 from django.contrib import messages
 import unidecode
+from openpyxl.utils import get_column_letter
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -309,6 +310,48 @@ def baixar_historico_mercadolivre(request):
     writer = pd.ExcelWriter(output, engine='openpyxl')
     df.to_excel(writer, sheet_name='HISTORICO',index=False)
     worksheet = writer.sheets['HISTORICO']
+    
+    # Adicionando filtros
+    primeira_coluna = worksheet.min_column
+    ultima_coluna = worksheet.max_column
+    worksheet.auto_filter.ref = f'{get_column_letter(primeira_coluna)}1:{get_column_letter(ultima_coluna)}1'
+    
+    # Alterando tamanho das colunas
+    worksheet.column_dimensions['A'].width = '6.57'
+    worksheet.column_dimensions['B'].width = '59'
+    worksheet.column_dimensions['C'].width = '17.86'
+    worksheet.column_dimensions['D'].width = '15.57'
+    worksheet.column_dimensions['E'].width = '10.86'
+    worksheet.column_dimensions['F'].width = '10.71'
+    worksheet.column_dimensions['G'].width = '15.57'
+    worksheet.column_dimensions['H'].width = '14.71'
+    worksheet.column_dimensions['I'].width = '15.57'
+    worksheet.column_dimensions['J'].width = '14.71'
+    worksheet.column_dimensions['K'].width = '17.29'
+    worksheet.column_dimensions['L'].width = '16.29'
+    worksheet.column_dimensions['M'].width = '23.43'
+    worksheet.column_dimensions['N'].width = '24.86'
+    worksheet.column_dimensions['O'].width = '24'
+    worksheet.column_dimensions['P'].width = '22.43'
+    worksheet.column_dimensions['Q'].width = '19.14'
+    worksheet.column_dimensions['R'].width = '21.71'
+
+    # Congelando painel
+    worksheet.freeze_panes = 'A2'
+    
+    # Define a formatação de centralização
+    alignment = Alignment(horizontal='center', vertical='center')
+    for row in worksheet.iter_rows():
+        for cell in row:
+            cell.alignment = alignment
+            
+    # Atualiza cores do cabeçalho
+    cor_header = 'F79646'
+    for i, row in enumerate(worksheet.iter_rows(min_row=1, max_row=1)):
+        if i == 0:
+            fill = PatternFill(start_color=cor_header, end_color=cor_header, fill_type='solid')
+        for cell in row:
+            cell.fill = fill
     
     writer._save()
     output.seek(0)
