@@ -8,6 +8,7 @@ from slack_sdk.errors import SlackApiError
 import os
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
+import time
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -36,7 +37,12 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     mlb_found = False
     
     # Primeira página
+    start_time = time.time()
+    print('BUSCA NORMAL')
     response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}')
+    print(f'Página: {pagina_normal}')
+    print(f'URL: https://lista.mercadolivre.com.br/{termo_busca}')
+    print(f'Response: {response.url}')
     
     # Página normal
     while True:
@@ -72,6 +78,9 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 pagina_normal += 1
                 paginacao = soup.find(class_='andes-pagination__button--next').find('a').get('href')
                 response = requests.get(paginacao)
+                print(f'Página: {pagina_normal}')
+                print(f'URL: {paginacao}')
+                print(f'Response: {response.url}')
             except:
                 # Não existe mais página
                 pagina_normal = None
@@ -84,6 +93,7 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     mlb_found = False
     
     # Primeira página
+    print('BUSCA NORMAL')
     response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full_NoIndex_True')
     print(f'Página: {pagina_full}')
     print(f'URL: https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full_NoIndex_True')
@@ -116,6 +126,10 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
         if mlb_found or pagina_full > 10:
             if posicao_anuncio_full == None:
                 pagina_full = None
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            mins, secs = divmod(elapsed_time, 60)
+            print(f"Tempo de execução: {int(mins)} minutos e {round(secs,2)} segundos")
             return posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full
         else:
             try:
@@ -126,6 +140,10 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 print(f'URL: {paginacao}')
                 print(f'Response: {response.url}')
             except:
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                mins, secs = divmod(elapsed_time, 60)
+                print(f"Tempo de execução: {int(mins)} minutos e {round(secs,2)} segundos")
                 # Não existe mais página
                 print('Não existe mais página')
                 pagina_full = None
