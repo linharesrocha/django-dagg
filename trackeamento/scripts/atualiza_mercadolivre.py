@@ -62,9 +62,14 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 pagina_normal = None
             break
         else:
-            pagina_normal += 1
-            paginacao = soup.find(class_='andes-pagination__button--next').find('a').get('href')
-            response = requests.get(paginacao)
+            try:
+                pagina_normal += 1
+                paginacao = soup.find(class_='andes-pagination__button--next').find('a').get('href')
+                response = requests.get(paginacao)
+            except:
+                # Não existe mais página
+                pagina_normal = None
+                break
                 
     # Controle
     pagina_full = 1
@@ -104,9 +109,14 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 pagina_full = None
             return posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full
         else:
-            pagina_full += 1
-            paginacao = soup.find(class_='andes-pagination__button--next').find('a').get('href') + '_Frete_Full'
-            response = requests.get(paginacao)
+            try:
+                pagina_full += 1
+                paginacao = soup.find(class_='andes-pagination__button--next').find('a').get('href') + '_Frete_Full'
+                response = requests.get(paginacao)
+            except:
+                # Não existe mais página
+                pagina_full = None
+                return posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full
 
 def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente):
     load_dotenv()
