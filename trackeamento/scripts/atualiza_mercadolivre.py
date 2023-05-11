@@ -21,6 +21,12 @@ def start_atualiza_mercadolivre():
     
     
 def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
+    # Teste
+    # termo_busca = 'chinelo nuvem'
+    # mlb_anuncio = 'MLB2691941243'
+    # posicao_anuncio_normal = None
+    # pagina_normal = None
+    
     print(f'Termo: {termo_busca} - {mlb_anuncio}')
     
     # Controle
@@ -78,7 +84,10 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     mlb_found = False
     
     # Primeira página
-    response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full')
+    response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full_NoIndex_True')
+    print(f'Página: {pagina_full}')
+    print(f'URL: https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full_NoIndex_True')
+    print(f'Response: {response.url}')
     
     # Página Full
     while True:
@@ -103,7 +112,7 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 mlb_found = True
                 break
         
-        # Stop
+        # Caso o anúncio seja encontrado ou a página ser maior que 20
         if mlb_found or pagina_full > 10:
             if posicao_anuncio_full == None:
                 pagina_full = None
@@ -113,8 +122,12 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 pagina_full += 1
                 paginacao = soup.find(class_='andes-pagination__button--next').find('a').get('href') + '_Frete_Full'
                 response = requests.get(paginacao)
+                print(f'Página: {pagina_full}')
+                print(f'URL: {paginacao}')
+                print(f'Response: {response.url}')
             except:
                 # Não existe mais página
+                print('Não existe mais página')
                 pagina_full = None
                 return posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full
 
