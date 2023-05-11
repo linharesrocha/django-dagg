@@ -336,6 +336,9 @@ def baixar_historico_mercadolivre(request):
     worksheet.column_dimensions['Q'].width = '19.14'
     worksheet.column_dimensions['R'].width = '21.71'
 
+    # Escondendo coluna ID
+    worksheet.column_dimensions['A'].hidden = True
+    
     # Congelando painel
     worksheet.freeze_panes = 'A2'
     
