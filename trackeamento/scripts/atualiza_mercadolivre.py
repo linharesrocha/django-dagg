@@ -21,8 +21,7 @@ def start_atualiza_mercadolivre():
     
     
 def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
-    # Global
-    user_agent = 'Mozilla/5.0 (Windows; 10) Gecko/20100101 Firefox/88.0'
+    print(f'Termo: {termo_busca} - {mlb_anuncio}')
     
     # Controle
     pagina_normal = 1
@@ -35,16 +34,21 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     
     # Página normal
     while True:
-        print(pagina_normal)
         # Request
         soup = BeautifulSoup(response.content, 'html.parser')
         items = soup.find_all(class_='ui-search-layout__item')
         
         # Armazena mlb dos anúncios
         for item in items:
-            form_class = item.find(class_='ui-search-bookmark')
-            item_id = form_class.find('input', {'name': 'itemId'})['value']
-            mlbs.append(item_id)
+            try:
+                form_class = item.find(class_='ui-search-bookmark')
+                item_id = form_class.find('input', {'name':'itemId'})['value']
+                mlbs.append(item_id)
+            except:
+                click1_mercadolivre = item.find(class_='ui-search-result__image').find('a').get('href')
+                link = requests.get(click1_mercadolivre).url
+                item_id = 'MLB' + link.split("-")[1]
+                mlbs.append(item_id)
             
             # Confere se o anúncio é o que está sendo buscado
             if str(item_id) == str(mlb_anuncio):
@@ -59,7 +63,7 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
             break
         else:
             pagina_normal += 1
-            paginacao = soup.find(class_='shops__pagination-link').get('href')
+            paginacao = soup.find(class_='andes-pagination__button--next').find('a').get('href')
             response = requests.get(paginacao)
                 
     # Controle
@@ -79,11 +83,16 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
         
         # Armazena mlb dos anúncios
         for item in items:
-            form_class = item.find(class_='ui-search-bookmark')
-            item_id = form_class.find('input', {'name': 'itemId'})['value']
-            mlbs.append(item_id)
+            try:
+                form_class = item.find(class_='ui-search-bookmark')
+                item_id = form_class.find('input', {'name':'itemId'})['value']
+                mlbs.append(item_id)
+            except:
+                click1_mercadolivre = item.find(class_='ui-search-result__image').find('a').get('href')
+                link = requests.get(click1_mercadolivre).url
+                item_id = 'MLB' + link.split("-")[1]
+                mlbs.append(item_id)
 
-         
             if str(item_id) == str(mlb_anuncio):
                 posicao_anuncio_full = mlbs.index(mlb_anuncio) + 1
                 mlb_found = True
@@ -96,9 +105,8 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
             return posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full
         else:
             pagina_full += 1
-            paginacao = soup.find(class_='shops__pagination-link').get('href')
+            paginacao = soup.find(class_='andes-pagination__button--next').find('a').get('href') + '_Frete_Full'
             response = requests.get(paginacao)
-
 
 def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente):
     load_dotenv()
