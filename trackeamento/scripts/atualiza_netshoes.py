@@ -19,7 +19,7 @@ def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente):
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C030X3UMR3M'
 
-    if str(concorrente) == '1':
+    if concorrente == True:
         concorrente = 'Anúncio Concorrente'
     else:
         concorrente = 'Anúncio Dagg'
