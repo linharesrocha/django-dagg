@@ -24,6 +24,19 @@
             <h1 id="header-titulo"><a href="/">ATON FERRAMENTAS</a></h1>
         </div>
     </div>
+    <!-- Messages -->
+    <div class="row">
+        <div class="col">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert {{ message.tags}} alert-dismissible fade show text-center" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <div class="card" style="width: 22rem">
@@ -34,8 +47,8 @@
                             <div class="col-8">
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text" id="inputGroup-sizing-sm">CODID</span>
-                                    <input type="number" name="input-codid" id="input-codid" min="0" step="1" class="form-control"
-                                        aria-describedby="inputGroup-sizing-sm">
+                                    <input type="number" name="input-codid" id="input-codid" min="0" step="1"
+                                        class="form-control" required>
                                 </div>
                             </div>
                             <div class="col">
@@ -51,8 +64,8 @@
                             <div class="col-8">
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text" id="inputGroup-sizing-sm">CODID</span>
-                                    <input type="number" name="input-codid" id="input-codid" min="0" step="1" class="form-control"
-                                       aria-describedby="inputGroup-sizing-sm">
+                                    <input type="number" name="input-codid" id="input-codid" min="0" step="1"
+                                        class="form-control" required>
                                 </div>
                             </div>
                             <div class="col">
@@ -69,12 +82,13 @@
             <div class="card" style="width: 22rem">
                 <div class="card-body">
                     <h5 class="card-title  text-center">Catálogo Requirido</h5>
-                    <p class="card-text text-center">Remove a opção de todos os produtos que estão na aba de publicação.</p>
+                    <p class="card-text text-center">Remove a opção de todos os produtos que estão na aba de publicação.
+                    </p>
                     <form style="margin-top: 10px;" action="{% url 'remover-catalogo-requerido' %}" method="post">
                         <div class="row">
                             <div class="col text-center">
                                 <button id="btn-remover-fotos" type="submit" value="Gerar Excel"
-                                class="btn btn-secondary">Remover</button>
+                                    class="btn btn-secondary">Remover</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -93,7 +107,7 @@
     crossorigin="anonymous"></script>
 
 <script>
-    document.getElementById('formulario-postagem').addEventListener('submit', function(event) {
+    document.getElementById('formulario-postagem').addEventListener('submit', function (event) {
         var confirmacao = confirm("Você deseja excluir TODAS as fotos desse CODID?"); // Exibe o prompt
         if (!confirmacao) {
             event.preventDefault(); // Cancela o envio do formulário se o usuário clicar em "Cancelar"

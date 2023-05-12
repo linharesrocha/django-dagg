@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from scripts import baixar_fotos_codid, remover_fotos_codid
 import tempfile
 import requests
 import zipfile
 from ferramentas.scripts import catalogo_requerido
+from django.contrib.messages import constants
+from django.contrib import messages
 
 def index(request):
     return render(request, 'index-ferramentas.html')
@@ -15,7 +17,8 @@ def baixar_fotos(request):
     lista_fotos = baixar_fotos_codid.main(codid)
     
     if lista_fotos == False:
-        return HttpResponse('<script>alert("O CODID fornecido não tem foto!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'O CODID fornecido não tem foto!')
+        return redirect('index-ferramentas')
     
     # Crie um arquivo temporário para armazenar as fotos baixadas
     temp = tempfile.TemporaryFile()
@@ -46,15 +49,19 @@ def remover_fotos(request):
     
     status = remover_fotos_codid.main(codid)
     if status:
-        return HttpResponse('<script>alert("FOTOS DELETADAS COM SUCESSO!"); window.history.back();</script>')
+        messages.add_message(request, constants.SUCCESS, 'Fotos deletadas!')
+        return redirect('index-ferramentas')
     else:
-        return HttpResponse('<script>alert("O PRODUTO ESTÁ SEM FOTO!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'O Produto está sem foto!')
+        return redirect('index-ferramentas')
     
 def remover_catalogo_requerido(request):
     
     resposta = catalogo_requerido.main()
     
     if resposta:
-        return HttpResponse('<script>alert("Sucesso!"); window.history.back();</script>')
+        messages.add_message(request, constants.SUCCESS, 'Sucesso!')
+        return redirect('index-ferramentas')
     else:
-        return HttpResponse('<script>alert("Erro!"); window.history.back();</script>')
+        messages.add_message(request, constants.ERROR, 'Erro!')
+        return redirect('index-ferramentas')
