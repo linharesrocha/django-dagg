@@ -93,7 +93,7 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     mlb_found = False
     
     # Primeira página
-    print('BUSCA NORMAL')
+    print('BUSCA FULL')
     response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full_NoIndex_True')
     print(f'Página: {pagina_full}')
     print(f'URL: https://lista.mercadolivre.com.br/{termo_busca}_Frete_Full_NoIndex_True')
