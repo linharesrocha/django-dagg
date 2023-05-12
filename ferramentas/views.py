@@ -7,6 +7,9 @@ import zipfile
 from ferramentas.scripts import catalogo_requerido
 from django.contrib.messages import constants
 from django.contrib import messages
+from scripts.connect_to_database import get_connection
+import pyodbc
+
 
 def index(request):
     return render(request, 'index-ferramentas.html')
@@ -63,5 +66,29 @@ def remover_catalogo_requerido(request):
         messages.add_message(request, constants.SUCCESS, 'Sucesso!')
         return redirect('index-ferramentas')
     else:
+        messages.add_message(request, constants.ERROR, 'Erro!')
+        return redirect('index-ferramentas')
+    
+def alterar_ean(request):
+    autoid = request.POST.get('autoid')
+    ean = request.POST.get('ean')
+    
+    try:
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        cursor = conexao.cursor()
+    
+        comando = f'''
+        UPDATE PUBLICA_PRODUTO
+        SET EAN = '{ean}'
+        WHERE AUTOID = '{autoid}'
+        '''
+    
+        cursor.execute(comando)
+        conexao.commit()
+        
+        messages.add_message(request, constants.SUCCESS, 'EAN Alterado!')
+        return redirect('index-ferramentas')
+    except:
         messages.add_message(request, constants.ERROR, 'Erro!')
         return redirect('index-ferramentas')

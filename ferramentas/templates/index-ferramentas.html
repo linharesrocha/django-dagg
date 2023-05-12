@@ -82,13 +82,47 @@
             <div class="card" style="width: 22rem">
                 <div class="card-body">
                     <h5 class="card-title  text-center">Catálogo Requirido</h5>
-                    <p class="card-text text-center">Remove a opção de todos os produtos que estão na aba de publicação.
-                    </p>
+                    <p class="card-text text-center">Remove a opção de todos os produtos que estão na aba de publicação.</p>
                     <form style="margin-top: 10px;" action="{% url 'remover-catalogo-requerido' %}" method="post">
                         <div class="row">
                             <div class="col text-center">
                                 <button id="btn-remover-fotos" type="submit" value="Gerar Excel"
                                     class="btn btn-secondary">Remover</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Alterar EAN</h5>
+                    <p class="card-text text-center">Altera o EAN do Produto apenas na parte de publicação.</p>
+                    <form action="{% url 'alterar-ean' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">AUTOID</span>
+                                    <input type="number" name="autoid" id="autoid" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">EAN</span>
+                                    <input type="number" name="ean" id="ean" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: orange!important;" id="btn-baixar-fotos" type="submit"
+                                    value="Gerar Excel" class="btn btn-secondary">Alterar</button>
                             </div>
                         </div>
                         {% csrf_token %}
