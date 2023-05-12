@@ -91,7 +91,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="card" style="width: 25rem;">
                         <div class="card-body">
-                            <h5 style="margin-bottom: 20px;">Remover SKU</h5>
+                            <h5 style="margin-bottom: 20px; ">Remover SKU</h5>
                             <form action="{% url 'remover-posicao-netshoes' %}" method="post">
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
@@ -100,7 +100,7 @@
                                         name="sku-netshoes-delete" aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-sm" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Remover</button>
+                                <button style="background-color: red!important;" type="submit" class="btn btn-primary">Remover</button>
                             </form>
                         </div>
                     </div>
