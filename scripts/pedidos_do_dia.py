@@ -7,11 +7,24 @@ from openpyxl.utils import get_column_letter
 import datetime
 
 def main():
+    # Obtém a data atual
     hoje = datetime.datetime.now()
+
+    # Removendo um dia
     ontem = hoje - datetime.timedelta(days=1)
+
+    # Verifica se ontem foi domingo
+    if ontem.weekday() == 6:  # 6 representa domingo (segunda-feira é 0 e domingo é 6)
+        # Removendo três dias se ontem foi domingo
+        ontem = hoje - datetime.timedelta(days=3)
+    else:
+        # Removendo um dia se ontem não foi domingo
+        ontem = hoje - datetime.timedelta(days=1)
+        
+    # Formatação das datas
     data_ontem_formatada = ontem.strftime('%Y-%d-%m')
     data_hoje_formatada = hoje.strftime('%Y-%d-%m')
-    
+        
     warnings.filterwarnings('ignore')
     connection = get_connection()
     conexao = pyodbc.connect(connection)
