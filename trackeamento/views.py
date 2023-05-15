@@ -192,7 +192,7 @@ def gerar_grafico(sku_netshoes):
     itens = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).all()
 
     # Extrai as colunas de DATA e PAGINA dos dados 
-    datas = [i.ultima_atualizacao.strftime('%d-%m-%Y') for i in itens]
+    datas = [i.ultima_atualizacao.strftime('%d-%m') for i in itens]
     paginas = [i.pagina for i in itens]
     paginas = [0 if pagina is None else pagina for pagina in paginas]
 
