@@ -12,6 +12,8 @@ from django.contrib import messages
 import unidecode
 from openpyxl.utils import get_column_letter
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 import seaborn as sns
 from io import BytesIO
 import base64
@@ -194,6 +196,7 @@ def gerar_grafico(sku_netshoes):
     paginas = [i.pagina for i in itens]
     paginas = [0 if pagina is None else pagina for pagina in paginas]
 
+    plt.clf()
     sns.set(style=None, rc=None)
     sns.lineplot(x=datas, y=paginas)
     sns.set(rc={'figure.figsize':(50, 50)})
