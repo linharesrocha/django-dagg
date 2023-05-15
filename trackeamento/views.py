@@ -11,6 +11,10 @@ from django.contrib.messages import constants
 from django.contrib import messages
 import unidecode
 from openpyxl.utils import get_column_letter
+import matplotlib.pyplot as plt
+import seaborn as sns
+from io import BytesIO
+import base64
 
 def index(request):
     return render(request, 'trackeamento/index.html')
@@ -182,9 +186,37 @@ def atualizar_historico(request):
     return redirect('painel-posicao-netshoes')
 
 
+def gerar_grafico(sku_netshoes):
+    itens = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).all()
+
+    # Extrai as colunas de DATA e PAGINA dos dados 
+    datas = [i.ultima_atualizacao.strftime('%d-%m-%Y') for i in itens]
+    paginas = [i.pagina for i in itens]
+    paginas = [0 if pagina is None else pagina for pagina in paginas]
+
+    sns.set(style=None, rc=None)
+    sns.lineplot(x=datas, y=paginas)
+    sns.set(rc={'figure.figsize':(50, 50)})
+    plt.xlabel('Data')
+    plt.ylabel('Página')
+    plt.title('Histórico de Páginas')
+    plt.xticks(rotation=50)
+    
+    # Cria um buffer de memória para salvar o gráfico
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    imagem_grafico = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    buffer.close()
+
+    return imagem_grafico
+
 def item_posicao_netshoes(request, sku_netshoes):
     item = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).first()
-    return render(request, 'trackeamento/netshoes/item-posicao-netshoes.html', {'item': item})
+    
+    imagem_grafico = gerar_grafico(sku_netshoes)
+    
+    return render(request, 'trackeamento/netshoes/item-posicao-netshoes.html', {'item': item, 'imagem_grafico': imagem_grafico})
 
 
 def item_alterar_nome(request):
