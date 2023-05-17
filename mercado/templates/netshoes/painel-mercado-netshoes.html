@@ -145,7 +145,7 @@
                                 <!-- Foto -->
                                 <td class="foto"><img src="{{ item.6 }}" alt="Imagem" width="100" height="100"></td>
                                 <!-- Apagar -->
-                                <td></td>
+                                <td><button style="background-color: red!important;" class="btn btn-primary" onclick="excluirLinha(this)">Excluir</button></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -208,6 +208,12 @@
             document.getElementById("menor-preco").value = menorPreco;
         }
     </script>
+    <script>
+        function excluirLinha(botao) {
+          var linha = botao.parentNode.parentNode;
+          linha.parentNode.removeChild(linha);
+        }
+      </script>
 </body>
 
 </html>
