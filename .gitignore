@@ -21,6 +21,7 @@ my.cnf
 LAB.PY
 test.xlsx
 test.py
+test.html
 trackeamento/scripts/repository.py
 response.json
 scripts/DECATHLON.py
