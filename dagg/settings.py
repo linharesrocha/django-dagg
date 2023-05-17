@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'ferramentas',
     'trackeamento',
     'mercadolivre',
+    'mercado',
 ]
 
 MIDDLEWARE = [

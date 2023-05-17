@@ -1,0 +1,213 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'trackeamento/styles-trackeamento.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
+
+    <title>Painel Posição Netshoes</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header" class="row">
+            <div class="col">
+                <h1 id="header-titulo"><a href="{% url 'index' %}">PAINEL</a></h1>
+            </div>
+        </div>
+        <!-- Messages -->
+        <div class="row">
+            <div class="col">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {{ message.tags}} alert-dismissible fade show text-center" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <form action="{% url 'pesquisa-mercado-netshoes' %}" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Pesquisa" id="pesquisa" name="pesquisa"
+                            required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <input type="number" class="form-control" placeholder="Quantidade" id="quantidade"
+                            name="quantidade" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <select class="form-select" name="opcoes_pesquisa">
+                        <option value="1" selected>Mais Populares</option>
+                        <option value="2">Mais Vendidos</option>
+                        <option value="3">Lançamentos</option>
+                        <option value="4">Ofertas</option>
+                        <option value="5">Melhor Avaliados</option>
+                        <option value="6">Maior Preço</option>
+                        <option value="7">Menor Preço</option>
+                    </select>
+                </div>
+                <div class="col-1">
+                    <button style="background-color: green!important;" type="submit"
+                        class="btn btn-primary">Buscar</button>
+                </div>
+                <div class="col-1">
+                    <button onclick="somarValoresItem3()" style="background-color: orange!important;" type="button"
+                        class="btn btn-warning">Calcular</button>
+                </div>
+            </div>
+        </form>
+        <div class="row text-center">
+            <div class="col">
+                <h3 style="color: red;">Estátísticas</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Maior Preço</span>
+                    <input type="number" class="form-control" id="maior-preco" name="maior-preco" value="0" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Menor Preço</span>
+                    <input type="number" class="form-control" id="menor-preco" name="menor-preco" value="0" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Média</span>
+                    <input type="number" class="form-control" id="media" name="media" value="0" disabled>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Mediana</span>
+                    <input type="number" class="form-control" id="mediana" name="mediana" value="0" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col">
+                <h3 style="color: red;">Resultado</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="div" style="height: 650px; overflow-y: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Titulo</th>
+                                <th scope="col">Preço De</th>
+                                <th scope="col">Preço Por</th>
+                                <th scope="col">Avaliações</th>
+                                <th scope="col">Notas</th>
+                                <th scope="col">Foto</th>
+                                <!-- Apagar -->
+                                <th scope="col"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in resultados %}
+                            <tr>
+                                <!-- Posição -->
+                                <th class="posicao" scope="row">{{ item.0 }}</th>
+                                <!-- Titulo -->
+                                <td class="titulo"><a style="color: #212529;" href="{{ item.7 }}" target="_blank">{{ item.1 }}</a></td>
+                                <!-- Preço De -->
+                                <td class="preco-de">{{ item.2 }}</td>
+                                <!-- Preço Por -->
+                                <td class="preco-por">{{ item.3 }}</td>
+                                <!-- Avaliações -->
+                                <td class="avaliacoes">{{ item.4 }}</td>
+                                <!-- Notas -->
+                                <td class="notas">{{ item.5 }}</td>
+                                <!-- Foto -->
+                                <td class="foto"><img src="{{ item.6 }}" alt="Imagem" width="100" height="100"></td>
+                                <!-- Apagar -->
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+        </script>
+
+    <script>
+        function somarValoresItem3() {
+            var preco_por = document.getElementsByClassName("preco-por");
+            var valores = [];
+
+            // Obtendo os valores e armazenando na lista
+            for (var i = 0; i < preco_por.length; i++) {
+                var valor = parseFloat(preco_por[i].innerText.replace("R$", ""));
+                valores.push(valor);
+            }
+
+            // Ordenando a lista de valores
+            valores.sort(function (a, b) {
+                return a - b;
+            });
+
+            // Calculando a média
+            var soma = 0;
+            for (var j = 0; j < valores.length; j++) {
+                soma += valores[j];
+            }
+            var media = soma / valores.length;
+
+            // Calculando a mediana
+            var mediana;
+            if (valores.length % 2 === 0) {
+                var meio = valores.length / 2;
+                mediana = (valores[meio - 1] + valores[meio]) / 2;
+            } else {
+                var meio = Math.floor(valores.length / 2);
+                mediana = valores[meio];
+            }
+
+            // Coletando o maior e o menor preço
+            var maiorPreco = valores[valores.length - 1];
+            var menorPreco = valores[0];
+
+            // Arredondando a média, mediana, maior preço e menor preço para 2 decimais
+            media = media.toFixed(2);
+            mediana = mediana.toFixed(2);
+            maiorPreco = maiorPreco.toFixed(2);
+            menorPreco = menorPreco.toFixed(2);
+
+            // Exibindo os resultados
+            document.getElementById("media").value = media;
+            document.getElementById("mediana").value = mediana;
+            document.getElementById("maior-preco").value = maiorPreco;
+            document.getElementById("menor-preco").value = menorPreco;
+        }
+    </script>
+</body>
+
+</html>
