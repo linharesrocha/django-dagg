@@ -16,6 +16,10 @@ a {
     margin-bottom: 50px;
 }
 
+.card {
+    margin-bottom: 20px;
+}
+
 #header-titulo {
     text-align: center;
     color: whitesmoke;
