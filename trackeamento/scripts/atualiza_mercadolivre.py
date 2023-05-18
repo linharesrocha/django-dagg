@@ -17,8 +17,7 @@ from mercadolivre.scripts.config import reflash
 
 
 def start_atualiza_mercadolivre():
-    slack = True
-    main(slack)
+    main()
     
     
 def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
@@ -149,29 +148,22 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 pagina_full = None
                 return posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full
 
-def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente):
+
+def slack_notificao(nome, sku, termo, pag_antiga, pag_nova):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C030X3UMR3M'
-
-    if str(concorrente) == '1':
-        concorrente = 'Anúncio Concorrente'
-    else:
-        concorrente = 'Anúncio Dagg'
     
-    message = f'{nome} - {sku} - {concorrente}\nMudou da página {pag_antiga} para a página {pag_nova}.'
+    message = f'MERCADO LIVRE!\n{nome} TERMO: {termo} SKU: {sku}\nMudou da página {pag_antiga} para a página {pag_nova}.'
     
     try:
-        response = client.chat_postMessage(
-            channel=SLACK_CHANNEL_ID,
-            text=message
-        )
+        client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
     except SlackApiError as e:
         print("Error sending message: {}".format(e))
         
 
-def main(slack):
+def main():
     # Django Utils
     import os
     import django
@@ -252,25 +244,15 @@ def main(slack):
         novo_registro_meli.criacao_anuncio = criacao_anuncio
         
         # Atualiza variacao
-        # ultimo_registro_pagina = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).last().pagina
+        ultimo_registro_pagina_normal = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).filter(termo_busca=termo_busca).last().pagina
+        ultimo_registro_pagina_full = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).filter(termo_busca=termo_busca).last().pagina_full
         
-        # envia_notificacao = False
-        # if ultimo_registro_pagina == None:
-        #     novo_registro_meli.variacao = 'Manteve'
-        # elif pagina < ultimo_registro_pagina:
-        #     novo_registro_meli.variacao = 'Melhorou' 
-        #     envia_notificacao = True
-        # elif pagina > ultimo_registro_pagina:
-        #     novo_registro_meli.variacao = 'Piorou'
-        #     envia_notificacao = True
-        # else:
-        #     novo_registro_meli.variacao = 'Manteve'
+        if ultimo_registro_pagina_normal != None:
+            if pagina_normal < ultimo_registro_pagina_normal or pagina_normal > ultimo_registro_pagina_normal:
+                slack_notificao(titulo, mlb_anuncio, termo_busca, ultimo_registro_pagina_normal, pagina_normal)
         
-        # # Verifica se o script foi rodado a partir do crontab e não do usuário
-        # if slack == True:
-        #     # Verifica se houve mudança de página
-        #     if envia_notificacao == True:
-        #         pass
-        
+        if ultimo_registro_pagina_full != None:
+            if pagina_full < ultimo_registro_pagina_full or pagina_full > ultimo_registro_pagina_full:
+                slack_notificao(titulo, mlb_anuncio, termo_busca, ultimo_registro_pagina_full, pagina_full)
         
         novo_registro_meli.save()
