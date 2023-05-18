@@ -247,11 +247,11 @@ def main():
         ultimo_registro_pagina_normal = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).filter(termo_busca=termo_busca).last().pagina
         ultimo_registro_pagina_full = MetricasMercadoLivre.objects.filter(mlb_anuncio=mlb_anuncio).filter(termo_busca=termo_busca).last().pagina_full
         
-        if ultimo_registro_pagina_normal != None or pagina_normal != None:
+        if ultimo_registro_pagina_normal != None and pagina_normal != None:
             if pagina_normal < ultimo_registro_pagina_normal or pagina_normal > ultimo_registro_pagina_normal:
                 slack_notificao(titulo, mlb_anuncio, termo_busca, ultimo_registro_pagina_normal, pagina_normal)
         
-        if ultimo_registro_pagina_full != None or pagina_full != None:
+        if ultimo_registro_pagina_full != None and pagina_full != None:
             if pagina_full < ultimo_registro_pagina_full or pagina_full > ultimo_registro_pagina_full:
                 slack_notificao(titulo, mlb_anuncio, termo_busca, ultimo_registro_pagina_full, pagina_full)
         
