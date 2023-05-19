@@ -112,10 +112,8 @@ def main(slack):
             anuncio_track_novo.variacao = 'Manteve'
         
         # Verifica se o script foi rodado a partir do crontab e não do usuário
-        if slack == True:
-            # Verifica se houve mudança de página
-            if envia_notificacao == True:
-                slack_notificao(trackeamento['nome'], sku_netshoes, ultimo_registro_pagina, pagina_atual, trackeamento['anuncio_concorrente'], termo)
+        if slack == True and envia_notificacao == True:
+            slack_notificao(trackeamento['nome'], sku_netshoes, ultimo_registro_pagina, pagina_atual, trackeamento['anuncio_concorrente'], termo)
         
         anuncio_track_novo.save()
         
