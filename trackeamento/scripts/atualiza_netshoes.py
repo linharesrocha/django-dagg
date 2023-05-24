@@ -20,11 +20,19 @@ def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente, pesquisa):
     SLACK_CHANNEL_ID='C030X3UMR3M'
 
     if concorrente == True:
+        if int(pag_antiga) > int(pag_nova):
+            icon = ':x:'
+        else:
+            icon = ':white_check_mark:'
         concorrente = 'Anúncio Concorrente'
     else:
+        if int(pag_antiga) > int(pag_nova):
+            icon = ':white_check_mark:'
+        else:
+            icon = ':x:'
         concorrente = 'Anúncio Dagg'
     
-    message = f'NETSHOES!\n{nome} - {sku} - {concorrente}\nPesquisa: {pesquisa}\nMudou da página {pag_antiga} para a página {pag_nova}.'
+    message = f'NETSHOES! {icon}\n{nome} - {sku} - {concorrente}\nPesquisa: {pesquisa}\nMudou da página {pag_antiga} para a página {pag_nova}.'
     
     try:
         response = client.chat_postMessage(

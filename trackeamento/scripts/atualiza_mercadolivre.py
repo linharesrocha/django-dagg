@@ -155,7 +155,12 @@ def slack_notificao(nome, sku, termo, pag_antiga, pag_nova):
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C030X3UMR3M'
     
-    message = f'MERCADO LIVRE!\n{nome} - {sku}\nPesquisa: {termo}\nMudou da página {pag_antiga} para a página {pag_nova}.'
+    if int(pag_antiga) > int(pag_nova):
+        icon = ':white_check_mark:'
+    else:
+        icon = ':x:'
+    
+    message = f'MERCADO LIVRE! {icon}\n{nome} - {sku}\nPesquisa: {termo}\nMudou da página {pag_antiga} para a página {pag_nova}.'
     
     try:
         client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
