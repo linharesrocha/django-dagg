@@ -102,11 +102,7 @@ def main(slack):
         anuncio_track_novo.posicao = posicao_anuncio
         anuncio_track_novo.anuncio_concorrente = trackeamento['anuncio_concorrente']
         anuncio_track_novo.nome = trackeamento['nome'] 
-        if posicao_anuncio <= 42:
-            pagina_atual = 1
-        else:
-            pagina_atual = (posicao_anuncio - 1) // 42 + 1
-        
+        pagina_atual = (posicao_anuncio - 1) // 42 + 1 if posicao_anuncio else None
         anuncio_track_novo.pagina = pagina_atual
         
         # Atualiza variacao
