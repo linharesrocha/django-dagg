@@ -149,18 +149,23 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 return posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full
 
 
-def slack_notificao(nome, sku, termo, pag_antiga, pag_nova):
+def slack_notificao(nome, sku, termo, pag_antiga, pag_nova, opcao_pesquisa):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C030X3UMR3M'
+    
+    if opcao_pesquisa == 'normal':
+        option = ''
+    elif opcao_pesquisa == 'full':
+        option = ' FULL'
     
     if int(pag_antiga) > int(pag_nova):
         icon = ':white_check_mark:'
     else:
         icon = ':x:'
     
-    message = f'MERCADO LIVRE! {icon}\n{nome} - {sku}\nPesquisa: {termo}\nMudou da página {pag_antiga} para a página {pag_nova}.'
+    message = f'MERCADO LIVRE{option}! {icon}\n{nome} - {sku}\nPesquisa: {termo}\nMudou da página {pag_antiga} para a página {pag_nova}.'
     
     try:
         client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
@@ -254,10 +259,10 @@ def main():
         
         if ultimo_registro_pagina_normal != None and pagina_normal != None:
             if pagina_normal < ultimo_registro_pagina_normal or pagina_normal > ultimo_registro_pagina_normal:
-                slack_notificao(titulo, mlb_anuncio, termo_busca, ultimo_registro_pagina_normal, pagina_normal)
+                slack_notificao(titulo, mlb_anuncio, termo_busca, ultimo_registro_pagina_normal, pagina_normal, 'normal')
         
         if ultimo_registro_pagina_full != None and pagina_full != None:
             if pagina_full < ultimo_registro_pagina_full or pagina_full > ultimo_registro_pagina_full:
-                slack_notificao(titulo, mlb_anuncio, termo_busca, ultimo_registro_pagina_full, pagina_full)
+                slack_notificao(titulo, mlb_anuncio, termo_busca, ultimo_registro_pagina_full, pagina_full, 'full')
         
         novo_registro_meli.save()
