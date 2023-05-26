@@ -158,7 +158,7 @@ def slack_notificao(nome, sku, termo, pag_antiga, pag_nova, opcao_pesquisa):
     if opcao_pesquisa == 'normal':
         option = ''
     elif opcao_pesquisa == 'full':
-        option = ' FULL'
+        option = ' FILTRO FULL'
     
     if int(pag_antiga) > int(pag_nova):
         icon = ':white_check_mark:'
