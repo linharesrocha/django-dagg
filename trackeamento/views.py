@@ -197,8 +197,9 @@ def gerar_grafico(sku_netshoes):
     paginas = [0 if pagina is None else pagina for pagina in paginas]
 
     plt.clf()
-    sns.set(style=None, rc=None)
+    sns.set(style="whitegrid")
     sns.lineplot(x=datas, y=paginas)
+    plt.yticks(range(int(min(paginas)), int(max(paginas))+1))
     sns.set(rc={'figure.figsize':(50, 50)})
     plt.xlabel('Data')
     plt.ylabel('Página')
