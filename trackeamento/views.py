@@ -198,7 +198,7 @@ def gerar_grafico(sku_netshoes):
 
     plt.clf()
     sns.set(style="whitegrid")
-    sns.scatterplot(x=datas, y=paginas)
+    sns.lineplot(x=datas, y=paginas)
     plt.yticks(range(int(min(paginas)), int(max(paginas))+1))
     sns.set(rc={'figure.figsize':(50, 50)})
     plt.xlabel('Data')
