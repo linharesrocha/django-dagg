@@ -22,8 +22,8 @@ def start_atualiza_mercadolivre():
     
 def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     # Teste
-    # termo_busca = 'chinelo nuvem'
-    # mlb_anuncio = 'MLB2691941243'
+    # termo_busca = 'garrafa'
+    # mlb_anuncio = 'MLB1765218110'
     # posicao_anuncio_normal = None
     # pagina_normal = None
     
@@ -38,7 +38,7 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     # Primeira página
     start_time = time.time()
     print('BUSCA NORMAL')
-    response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}')
+    response = requests.get(f'https://lista.mercadolivre.com.br/{termo_busca}', headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'})
     print(f'Página: {pagina_normal}')
     print(f'URL: https://lista.mercadolivre.com.br/{termo_busca}')
     print(f'Response: {response.url}')
