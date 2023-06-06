@@ -49,6 +49,10 @@ def main(pesquisa, quantidade):
         # Preço
         price = anuncio.find(class_='product-card__content--price')
         price_1 = price.find('p').text.replace('R$', '').replace(',', '.').replace(' ', '').strip()
+        if len(price_1) > 6:
+            first_dot = price_1.find('.')
+            price_1 = price_1[:first_dot] + price_1[first_dot+1:]
+        
         price_list.append(price_1)
 
         # Link

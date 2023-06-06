@@ -6,8 +6,10 @@ from .scripts import pesquisa_netshoes, pesquisa_decathlon
 def index(request):
     return render(request, 'index.html')
 
+
 def painel_mercado_netshoes(request):    
     return render(request, 'netshoes/painel-mercado-netshoes.html')
+
 
 def pesquisa_mercado_netshoes(request):
     if request.method == 'POST':
