@@ -22,8 +22,8 @@ def start_atualiza_mercadolivre():
     
 def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     # Teste
-    # termo_busca = 'garrafa'
-    # mlb_anuncio = 'MLB1765218110'
+    #termo_busca = 'rasqueadeira pet'
+    #mlb_anuncio = 'MLB330035785757850832957857'
     # posicao_anuncio_normal = None
     # pagina_normal = None
     
@@ -46,7 +46,7 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     # Página normal
     while True:
         # Request
-        soup = BeautifulSoup(response.content, 'html.parser')
+        soup = BeautifulSoup(response.content, 'html.parser')        
         items = soup.find_all(class_='ui-search-layout__item')
         
         # Armazena mlb dos anúncios
@@ -101,7 +101,7 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
     # Página Full
     while True:
         # Request
-        soup = BeautifulSoup(response.content, 'html.parser')
+        soup = BeautifulSoup(response.content, 'html.parser')     
         items = soup.find_all(class_='ui-search-layout__item')
         
         # Armazena mlb dos anúncios
@@ -122,7 +122,7 @@ def posicao_produtos_mercadolivre(termo_busca, mlb_anuncio):
                 break
         
         # Caso o anúncio seja encontrado ou a página ser maior que 20
-        if mlb_found or pagina_full > 10:
+        if mlb_found or pagina_full > 20:
             if posicao_anuncio_full == None:
                 pagina_full = None
             end_time = time.time()
@@ -225,7 +225,7 @@ def main():
             taxa_conversao_total = 0
             vende_a_cada_visita = 0
         
-            
+
         # Visita Diaria / Vendas Diaria / Taxa Conversao Diaria
         visitas_diaria = requests.get(f"https://api.mercadolibre.com/items/{mlb_anuncio}/visits/time_window?last=1&unit=day", headers=header).json().get('total_visits')
         vendas_diaria = requests.get(f'https://api.mercadolibre.com/orders/search?seller=195279505&item={mlb_anuncio}&order.status=paid&order.date_created.from={data_ontem}T00:00:00.000-00:00', headers=header).json().get('paging').get('total')

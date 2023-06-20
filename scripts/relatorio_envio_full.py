@@ -2,6 +2,7 @@ import pyodbc
 import pandas as pd
 import warnings
 from scripts.connect_to_database import get_connection
+from scripts.planilha_campanha import carrega_tabela_pedidos
 from openpyxl.styles import PatternFill
 from collections import Counter
 from openpyxl.worksheet.filters import (
