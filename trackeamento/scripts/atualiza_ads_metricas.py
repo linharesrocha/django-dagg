@@ -235,8 +235,8 @@ def envia_slack():
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    #SLACK_CHANNEL_ID='C030X3UMR3M'
-    SLACK_CHANNEL_ID='C045HEE4G7L'
+    SLACK_CHANNEL_ID='C030X3UMR3M'
+    #SLACK_CHANNEL_ID='C045HEE4G7L'
     
     message = f'MERCADO ADS! :money_mouth_face:'
     
