@@ -26,8 +26,6 @@ def main():
     sete_dias_atras = hoje - timedelta(days=7)
     date_from = sete_dias_atras.strftime("%Y-%m-%d")
     date_to = ontem.strftime("%Y-%m-%d")
-    date_from_br = sete_dias_atras.strftime("%d-%m-%Y")
-    date_to_br = ontem.strftime("%d-%m-%Y")
 
     print(date_from, date_to)
 
@@ -118,6 +116,9 @@ def main():
             novo_registro_ads.save()
             
 def envia_slack():
+    hoje = datetime.now().date()
+    hoje_formatado = hoje.strftime("%d-%m-%Y")
+    
     metricas = MetricasAds.objects.all()
     
     data = {
@@ -188,7 +189,7 @@ def envia_slack():
         
     # Send file
     try:
-        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=f'metricas_ads.xlsx', title='Métricas Ads')
+        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=f'metricas_ads.xlsx', title=f'{hoje_formatado} - Métricas Ads')
     except SlackApiError as e:
         print("Error sending message: {}".format(e))
         
