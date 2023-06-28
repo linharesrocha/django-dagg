@@ -121,7 +121,7 @@ data = {
     'CLIQUES': clicks_anuncios,
     'CTR': ctr_anuncios,
     'CPC': cpc_anuncios,
-    'CVR': cvr_anuncios,
+    'TX CONV': cvr_anuncios,
     'CUSTO': cost_anuncios,
     'VENDAS_TOTAIS': sold_quantity_total_anuncios,
     'REC_TOTAL': amount_total_anuncios,
