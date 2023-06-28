@@ -8,7 +8,9 @@ from datetime import datetime, timedelta
 import pandas as pd
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-
+from openpyxl.styles import Alignment, PatternFill
+from time import sleep
+import psutil
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
@@ -170,14 +172,73 @@ def envia_slack():
     df['DESDE'] = pd.to_datetime(df['DESDE']).dt.strftime('%d-%m-%Y')
     df['ATÉ'] = pd.to_datetime(df['ATÉ']).dt.strftime('%d-%m-%Y')
     
-    df.to_excel(f'metricas_ads.xlsx', index=False)
+    path_metricas = f'{hoje_formatado}-metricas_ads.xlsx'
+    writer = pd.ExcelWriter(path_metricas, engine='openpyxl')
+    df.to_excel(writer, index=False)
+    worksheet = writer.sheets['Sheet1']
+
+    # Adicionando filtros
+    worksheet.auto_filter.ref = "A1:S1"
     
+    # Alterando tamanho das colunas
+    worksheet.column_dimensions['A'].width = '11.16'
+    worksheet.column_dimensions['B'].width = '10.44'
+    worksheet.column_dimensions['C'].width = '17.59'
+    worksheet.column_dimensions['D'].width = '10.44'
+    worksheet.column_dimensions['E'].width = '14.87'
+    worksheet.column_dimensions['F'].width = '59.44'
+    worksheet.column_dimensions['G'].width = '11.44'
+    worksheet.column_dimensions['H'].width = '16.73'
+    worksheet.column_dimensions['I'].width = '13.02'
+    worksheet.column_dimensions['J'].width = '8.87'
+    worksheet.column_dimensions['K'].width = '9.02'
+    worksheet.column_dimensions['L'].width = '13.44'
+    worksheet.column_dimensions['M'].width = '10.86'
+    worksheet.column_dimensions['N'].width = '20.3'
+    worksheet.column_dimensions['O'].width = '15.44'
+    worksheet.column_dimensions['P'].width = '11.44'
+    worksheet.column_dimensions['Q'].width = '20.3'
+    worksheet.column_dimensions['R'].width = '16.26'
+    worksheet.column_dimensions['S'].width = '10.02'
+    
+    # Congelando painel
+    worksheet.freeze_panes = 'A2'
+    
+    # Define a formatação de centralização
+    alignment = Alignment(horizontal='center', vertical='center')
+    for row in worksheet.iter_rows():
+        for cell in row:
+            cell.alignment = alignment
+            
+    # Atualiza cores do cabeçalho
+    cor_header = 'F79646'
+    for i, row in enumerate(worksheet.iter_rows(min_row=1, max_row=1)):
+        if i == 0:
+            fill = PatternFill(start_color=cor_header, end_color=cor_header, fill_type='solid')
+        for cell in row:
+            cell.fill = fill
+            
+    # Adicionar o cifrão brasileiro às células das colunas
+    columns = ['G', 'K', 'M', 'O', 'P']
+    for col_letter in columns:
+        for cell in worksheet[col_letter][1:]:
+            cell.number_format = 'R$ #,##0.00'
+            
+    # Definir o formato de porcentagem para as colunas
+    columns = ['J', 'L', 'R']
+    for col_letter in columns:
+        for cell in worksheet[col_letter][1:]:
+            cell.number_format = '0.0%'
+            cell.value /= 100
+            
+    writer._save()
+        
     # Envia slack
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    #SLACK_CHANNEL_ID='C030X3UMR3M'
-    SLACK_CHANNEL_ID='C045HEE4G7L'
+    SLACK_CHANNEL_ID='C030X3UMR3M'
+    #SLACK_CHANNEL_ID='C045HEE4G7L'
     
     message = f'MERCADO ADS! :money_mouth_face:'
     
@@ -189,12 +250,12 @@ def envia_slack():
         
     # Send file
     try:
-        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=f'metricas_ads.xlsx', title=f'{hoje_formatado} - Métricas Ads')
+        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=path_metricas, filename=path_metricas)
     except SlackApiError as e:
         print("Error sending message: {}".format(e))
         
     # Remove arquivo
     try:
-        os.remove(f'metricas_ads.xlsx')
-    except:
-        pass
+        os.remove(path_metricas)
+    except Exception as e:
+        print(e)
