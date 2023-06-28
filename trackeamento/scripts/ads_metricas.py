@@ -96,7 +96,10 @@ for index, id in enumerate(ids_list):
         cost_anuncios.append(response[0]['cost'])
         cpc_anuncios.append(response[0]['cpc'])
         ctr_anuncios.append(response[0]['ctr'])
-        cvr_anuncios.append(round(response[0]['sold_quantity_total'] / response[0]['clicks'] * 100, 1))
+        try:
+            cvr_anuncios.append(round(response[0]['sold_quantity_total'] / response[0]['clicks'] * 100, 1))
+        except ZeroDivisionError:
+            cvr_anuncios.append(0)
         sold_quantity_total_anuncios.append(response[0]['sold_quantity_total'])
         amount_total_anuncios.append(response[0]['amount_total'])
         advertising_fee_anuncios.append(response[0]['advertising_fee'])
@@ -132,4 +135,4 @@ data = {
 df = pd.DataFrame(data)
 
 
-df.to_excel('test.xlsx', index=False)
+df.to_excel('27.xlsx', index=False)
