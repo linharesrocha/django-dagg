@@ -8,7 +8,10 @@ from datetime import datetime, timedelta
 import pandas as pd
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from openpyxl.styles import Alignment, PatternFill
+from openpyxl.styles import Alignment, PatternFill, Font
+from openpyxl.utils import get_column_letter
+
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
@@ -209,7 +212,7 @@ def envia_slack():
             cell.alignment = alignment
             
     # Atualiza cores do cabeçalho
-    cor_header = 'F79646'
+    cor_header = 'FCD668'
     for i, row in enumerate(worksheet.iter_rows(min_row=1, max_row=1)):
         if i == 0:
             fill = PatternFill(start_color=cor_header, end_color=cor_header, fill_type='solid')
@@ -217,17 +220,29 @@ def envia_slack():
             cell.fill = fill
             
     # Adicionar o cifrão brasileiro às células das colunas
-    columns = ['G', 'K', 'M', 'O', 'P']
+    columns = ['G', 'K', 'M', 'O']
     for col_letter in columns:
         for cell in worksheet[col_letter][1:]:
             cell.number_format = 'R$ #,##0.00'
             
     # Definir o formato de porcentagem para as colunas
-    columns = ['J', 'L', 'R']
+    columns = ['J', 'L', 'P']
     for col_letter in columns:
         for cell in worksheet[col_letter][1:]:
             cell.number_format = '0.0%'
             cell.value /= 100
+            
+     # Definir o formato de porcentagem para as colunas
+    columns = ['R']
+    for col_letter in columns:
+        for cell in worksheet[col_letter][1:]:
+            cell.number_format = '0.0%'
+            
+    # Percorra cada célula na coluna S
+    for linha in worksheet.iter_rows(min_row=2, min_col=19, max_col=19):  # coluna S é a coluna 19
+        for celula in linha:
+            valor_celula = celula.value
+            celula.value = '=HYPERLINK("{0}", "{1}")'.format(valor_celula, 'LINK')
             
     writer._save()
         
@@ -235,8 +250,8 @@ def envia_slack():
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    SLACK_CHANNEL_ID='C030X3UMR3M'
-    #SLACK_CHANNEL_ID='C045HEE4G7L'
+    #SLACK_CHANNEL_ID='C030X3UMR3M'
+    SLACK_CHANNEL_ID='C045HEE4G7L'
     
     message = f'MERCADO ADS! :money_mouth_face:'
     
