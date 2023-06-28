@@ -1,9 +1,13 @@
 import requests
 from pathlib import Path
 import sys
+from dotenv import load_dotenv
+import os
 from datetime import datetime
 from datetime import datetime, timedelta
 import pandas as pd
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -113,5 +117,83 @@ def main():
             novo_registro_ads.share_anuncio = share
             novo_registro_ads.save()
             
-            
-main()
+def envia_slack():
+    metricas = MetricasAds.objects.all()
+    
+    data = {
+        'DESDE': [],
+        'ATÉ': [],
+        'CAMPANHA': [],
+        'ACOS': [],
+        'MLB': [],
+        'TÍTULO': [],
+        'PREÇO': [],
+        'IMPRESSÕES': [],
+        'CLIQUES': [],
+        'CTR': [],
+        'CPC': [],
+        'TX CONV': [],
+        'CUSTO': [],
+        'VENDAS_TOTAIS': [],
+        'REC_TOTAL': [],
+        'ACOS2': [],
+        'PED VENDA ORG': [],
+        '% PUB/ORG': [],
+        'LINK': []
+    }
+    
+    for metrica in metricas:
+        data['DESDE'].append(metrica.desde)
+        data['ATÉ'].append(metrica.ate)
+        data['CAMPANHA'].append(metrica.nome_campanha)
+        data['ACOS'].append(metrica.acos_campanha)
+        data['MLB'].append(metrica.mlb_anuncio)
+        data['TÍTULO'].append(metrica.titulo_anuncio)
+        data['PREÇO'].append(metrica.preco_anuncio)
+        data['IMPRESSÕES'].append(metrica.impressions_anuncio)
+        data['CLIQUES'].append(metrica.clicks_anuncio)
+        data['CTR'].append(metrica.ctr_anuncio)
+        data['CPC'].append(metrica.cpc_anuncio)
+        data['TX CONV'].append(metrica.cvr_anuncio)
+        data['CUSTO'].append(metrica.cost_anuncio)
+        data['VENDAS_TOTAIS'].append(metrica.sold_quantity_total_anuncio)
+        data['REC_TOTAL'].append(metrica.amount_total_anuncio)
+        data['ACOS2'].append(metrica.advertising_fee_anuncio)
+        data['PED VENDA ORG'].append(metrica.organic_orders_quantity_anuncio)
+        data['% PUB/ORG'].append(metrica.share_anuncio)
+        data['LINK'].append(metrica.link_anuncio)
+        
+    df = pd.DataFrame(data)
+    
+    # Converter as colunas "DESDE" e "ATÉ" para o formato desejado
+    df['DESDE'] = pd.to_datetime(df['DESDE']).dt.strftime('%d-%m-%Y')
+    df['ATÉ'] = pd.to_datetime(df['ATÉ']).dt.strftime('%d-%m-%Y')
+    
+    df.to_excel(f'metricas_ads.xlsx', index=False)
+    
+    # Envia slack
+    load_dotenv()
+
+    client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+    #SLACK_CHANNEL_ID='C030X3UMR3M'
+    SLACK_CHANNEL_ID='C045HEE4G7L'
+    
+    message = f'MERCADO ADS! :money_mouth_face:'
+    
+    # Send message
+    try:
+        client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+        
+    # Send file
+    try:
+        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=f'metricas_ads.xlsx', title='Métricas Ads')
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+        
+    # Remove arquivo
+    try:
+        os.remove(f'metricas_ads.xlsx')
+    except:
+        pass
