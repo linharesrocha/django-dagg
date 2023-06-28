@@ -9,8 +9,6 @@ import pandas as pd
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from openpyxl.styles import Alignment, PatternFill
-from time import sleep
-import psutil
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
@@ -237,8 +235,8 @@ def envia_slack():
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    SLACK_CHANNEL_ID='C030X3UMR3M'
-    #SLACK_CHANNEL_ID='C045HEE4G7L'
+    #SLACK_CHANNEL_ID='C030X3UMR3M'
+    SLACK_CHANNEL_ID='C045HEE4G7L'
     
     message = f'MERCADO ADS! :money_mouth_face:'
     
