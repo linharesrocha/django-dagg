@@ -9,6 +9,7 @@ from django.contrib.messages import constants
 from django.contrib import messages
 from scripts.connect_to_database import get_connection
 import pyodbc
+import pandas as pd
 
 
 def index(request):
@@ -91,4 +92,44 @@ def alterar_ean(request):
         return redirect('index-ferramentas')
     except:
         messages.add_message(request, constants.ERROR, 'Erro!')
+        return redirect('index-ferramentas')
+    
+def remover_mlb(request):
+    mlb_vinculacao = str(request.POST.get('mlb-vinculacao'))
+    
+    if not mlb_vinculacao.startswith('MLB'):
+        messages.add_message(request, constants.ERROR, 'MLB Inválido!')
+        return redirect('index-ferramentas')
+    
+    try:
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        cursor = conexao.cursor()
+    
+        comando = f'''
+        SELECT * FROM ECOM_SKU
+        WHERE ORIGEM_ID IN('8','9','10')
+        AND SKU = '{mlb_vinculacao}'
+        '''
+        
+        df = pd.read_sql(comando, conexao)
+        
+        if len(df) <= 0:
+            messages.add_message(request, constants.ERROR, 'MLB não encontrado!')
+            return redirect('index-ferramentas')
+
+        
+        comando = f'''
+        DELETE * FROM ECOM_SKU
+        WHERE ORIGEM_ID IN('8','9','10')
+        AND SKU = '{mlb_vinculacao}'
+        '''
+        
+        cursor.execute(comando)
+        conexao.commit()
+        
+        messages.add_message(request, constants.SUCCESS, 'MLB Removido!')
+        return redirect('index-ferramentas')
+    except:
+        messages.add_message(request, constants.INFO, 'Erro no servidor!')
         return redirect('index-ferramentas')

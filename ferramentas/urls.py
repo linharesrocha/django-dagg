@@ -6,5 +6,6 @@ urlpatterns = [
      path('baixar_fotos/', views.baixar_fotos),
      path('remover_fotos/', views.remover_fotos),
      path('remover_catalogo_requerido/', views.remover_catalogo_requerido, name='remover-catalogo-requerido'),
-     path('alterar_ean/', views.alterar_ean, name='alterar-ean')  
+     path('alterar_ean/', views.alterar_ean, name='alterar-ean'),
+     path('remover_mlb/', views.remover_mlb, name='remover-mlb')
 ]
