@@ -120,7 +120,7 @@ def remover_mlb(request):
 
         
         comando = f'''
-        DELETE * FROM ECOM_SKU
+        DELETE FROM ECOM_SKU
         WHERE ORIGEM_ID IN('8','9','10')
         AND SKU = '{mlb_vinculacao}'
         '''
