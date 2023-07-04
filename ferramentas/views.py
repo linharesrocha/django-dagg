@@ -133,3 +133,46 @@ def remover_mlb(request):
     except:
         messages.add_message(request, constants.INFO, 'Erro no servidor!')
         return redirect('index-ferramentas')
+    
+def alterar_custo(request):
+    if request.method == 'POST':
+        # Coleta id
+        codid = request.POST.get('codid-custo')
+        
+        # Verifica se o produto existe no banco de dados
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        cursor = conexao.cursor()
+        
+        comando = f'''
+        SELECT CODID FROM MATERIAIS
+        WHERE CODID = {codid}
+        '''
+        check_codid_exists = pd.read_sql(comando, conexao)
+        if len(check_codid_exists) <= 0:
+            messages.add_message(request, constants.ERROR, 'CODID não existe no Aton!')
+            return redirect('index-ferramentas')
+        
+        # Retorna imagem
+        if 'btn-visualizar' in request.POST:
+            connection = get_connection()
+            
+        
+            comando = f'''
+            SELECT TOP 1 URL FROM MATERIAIS_IMAGENS
+            WHERE CODID = {codid}
+            '''
+            
+            df_url_imagem = pd.read_sql(comando, conexao)
+            
+            # Verifica se tem imagem
+            if len(df_url_imagem) <= 0:
+                messages.add_message(request, constants.ERROR, 'CODID não tem imagem!')
+                return redirect('index-ferramentas')
+            
+            url_imagem = df_url_imagem['URL'][0]
+            
+            if not url_imagem.startswith('http://') and not url_imagem.startswith('https://'):
+                url_imagem = 'https://' + url_imagem
+            
+            return render(request, 'index-ferramentas.html', {'url_imagem': url_imagem, 'codid_custo': codid})

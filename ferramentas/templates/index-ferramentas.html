@@ -156,6 +156,45 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Alterar Custo</h5>
+                    {% if url_imagem %}
+                        <div class="text-center">
+                            <img src="{{ url_imagem }}" style="margin-top: 10px; margin-bottom: 10px;" class="img-fluid" alt="imagem_produto" width="150" height="150">
+                        </div>
+                    {% endif %}
+                    <form action="{% url 'alterar-custo' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">CODID</span>
+                                    {% if codid_custo %}
+                                        <input type="number" name="codid-custo" id="codid-custo" class="form-control" min="1" value="{{ codid_custo }}" required>
+                                    {% else %}
+                                        <input type="number" name="codid-custo" id="codid-custo" class="form-control" min="1" required>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: orange!important;" id="btn-alterar-custo" type="submit"
+                                    value="btn-alterar" name="btn-alterar" class="btn btn-secondary">Alterar</button>
+                            </div>
+                            <div class="col text-center">
+                                <button style="background-color: gray!important;" id="btn-visualizar-produto" type="submit"
+                                    value="btn-visualizar" name="btn-visualizar" class="btn btn-secondary">Visualizar</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <body>
