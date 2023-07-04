@@ -10,6 +10,10 @@ from django.contrib import messages
 from scripts.connect_to_database import get_connection
 import pyodbc
 import pandas as pd
+import os
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+from dotenv import load_dotenv
 
 
 def index(request):
@@ -159,16 +163,16 @@ def alterar_custo(request):
         
         custo = str(check_codid_exists['VLR_CUSTO'][0]).replace('.', ',')
         
+        comando = f'''
+        SELECT TOP 1 URL FROM MATERIAIS_IMAGENS
+        WHERE CODID = {codid}
+        '''
+            
+        df_url_imagem = pd.read_sql(comando, conexao)
+        
         
         # Retorna imagem
         if 'btn-visualizar' in request.POST:
-            comando = f'''
-            SELECT TOP 1 URL FROM MATERIAIS_IMAGENS
-            WHERE CODID = {codid}
-            '''
-            
-            df_url_imagem = pd.read_sql(comando, conexao)
-            
             # Verifica se tem imagem
             if len(df_url_imagem) <= 0:
                 messages.add_message(request, constants.ERROR, 'CODID não tem imagem!')
@@ -199,10 +203,44 @@ def alterar_custo(request):
                 cursor.execute(comando)
                 cursor.commit()
                 
+                load_dotenv()
+
+                client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+                SLACK_CHANNEL_ID='C030X3UMR3M'
+
+                novo_custo = str(novo_custo).replace('.', ',')
+                message = f'ALTERAÇÃO DE CUSTO! :currency_exchange:\nCODID: {codid} alterado de R$ {custo} para R$ {novo_custo}\n'
                 
-                
+                try:
+                    client.chat_postMessage(channel=SLACK_CHANNEL_ID,text=message)
+                except SlackApiError as e:
+                    print("Error sending message: {}".format(e))
+                    
+                    
+                # Verifica se tem imagem
+                if len(df_url_imagem) > 0:
+                    url_imagem = df_url_imagem['URL'][0]
+            
+                    if not url_imagem.startswith('http://') and not url_imagem.startswith('https://'):
+                        url_imagem = 'https://' + url_imagem
+                        
+                    # Baixa a imagem para upload no slack
+                    response = requests.get(url_imagem)
+                    if response.status_code == 200:
+                        with open(f'imagem.jpg', 'wb') as arquivo:
+                            arquivo.write(response.content)
+                        
+                        # Envia para o slack
+                        try:
+                            client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=f'imagem.jpg')
+                        except SlackApiError as e:
+                            print("Error sending message: {}".format(e))
+                            
+                        # Remove imagem
+                        os.remove('imagem.jpg')
+                                
                 messages.add_message(request, constants.SUCCESS, 'Custo alterado!')
-                return render(request, 'index-ferramentas.html', {'codid_custo': codid, 'custo': custo})
+                return render(request, 'index-ferramentas.html', {'codid_custo': codid})
             except:
                 messages.add_message(request, constants.INFO, 'Erro no servidor!')
                 return redirect('index-ferramentas')
