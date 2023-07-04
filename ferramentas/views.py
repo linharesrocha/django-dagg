@@ -139,6 +139,10 @@ def alterar_custo(request):
         # Coleta id
         codid = request.POST.get('codid-custo')
         
+        if str(codid).strip() == '':
+            messages.add_message(request, constants.ERROR, 'Campo CODID vazio!')
+            return redirect('index-ferramentas')
+        
         # Verifica se o produto existe no banco de dados
         connection = get_connection()
         conexao = pyodbc.connect(connection)
@@ -158,9 +162,6 @@ def alterar_custo(request):
         
         # Retorna imagem
         if 'btn-visualizar' in request.POST:
-            connection = get_connection()
-            
-        
             comando = f'''
             SELECT TOP 1 URL FROM MATERIAIS_IMAGENS
             WHERE CODID = {codid}
@@ -179,3 +180,29 @@ def alterar_custo(request):
                 url_imagem = 'https://' + url_imagem
             
             return render(request, 'index-ferramentas.html', {'url_imagem': url_imagem, 'codid_custo': codid, 'custo': custo})
+        
+        if 'btn-alterar' in request.POST:
+            novo_custo = str(request.POST.get('novo-custo')).strip()
+            novo_custo = novo_custo.replace(',', '.')
+            
+            if novo_custo == '':
+                messages.add_message(request, constants.ERROR, 'Campo NOVO CUSTO vazio!')
+                return redirect('index-ferramentas')
+            
+            try:
+                comando = f'''
+                UPDATE MATERIAIS
+                SET VLR_CUSTO = '{novo_custo}'
+                WHERE CODID = {codid}
+                '''
+                
+                cursor.execute(comando)
+                cursor.commit()
+                
+                
+                
+                messages.add_message(request, constants.SUCCESS, 'Custo alterado!')
+                return render(request, 'index-ferramentas.html', {'codid_custo': codid, 'custo': custo})
+            except:
+                messages.add_message(request, constants.INFO, 'Erro no servidor!')
+                return redirect('index-ferramentas')
