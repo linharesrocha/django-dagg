@@ -145,13 +145,16 @@ def alterar_custo(request):
         cursor = conexao.cursor()
         
         comando = f'''
-        SELECT CODID FROM MATERIAIS
+        SELECT CODID, VLR_CUSTO FROM MATERIAIS
         WHERE CODID = {codid}
         '''
         check_codid_exists = pd.read_sql(comando, conexao)
         if len(check_codid_exists) <= 0:
             messages.add_message(request, constants.ERROR, 'CODID não existe no Aton!')
             return redirect('index-ferramentas')
+        
+        custo = str(check_codid_exists['VLR_CUSTO'][0]).replace('.', ',')
+        
         
         # Retorna imagem
         if 'btn-visualizar' in request.POST:
@@ -175,4 +178,4 @@ def alterar_custo(request):
             if not url_imagem.startswith('http://') and not url_imagem.startswith('https://'):
                 url_imagem = 'https://' + url_imagem
             
-            return render(request, 'index-ferramentas.html', {'url_imagem': url_imagem, 'codid_custo': codid})
+            return render(request, 'index-ferramentas.html', {'url_imagem': url_imagem, 'codid_custo': codid, 'custo': custo})

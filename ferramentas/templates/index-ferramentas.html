@@ -165,6 +165,9 @@
                         <div class="text-center">
                             <img src="{{ url_imagem }}" style="margin-top: 10px; margin-bottom: 10px;" class="img-fluid" alt="imagem_produto" width="150" height="150">
                         </div>
+                        <div class="div">
+                            <p class="text-center">Custo: R$ {{ custo }}</p>
+                        </div>
                     {% endif %}
                     <form action="{% url 'alterar-custo' %}" method="post">
                         <div class="row">
@@ -176,6 +179,10 @@
                                     {% else %}
                                         <input type="number" name="codid-custo" id="codid-custo" class="form-control" min="1" required>
                                     {% endif %}
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 120px;" class="input-group-text">NOVO CUSTO</span>
+                                    <input type="number" name="novo-custo id="novo-custo" class="form-control" min="0">
                                 </div>
                             </div>
                         </div>
