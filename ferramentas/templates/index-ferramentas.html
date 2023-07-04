@@ -166,7 +166,8 @@
                             <img src="{{ url_imagem }}" style="margin-top: 10px; margin-bottom: 10px;" class="img-fluid" alt="imagem_produto" width="150" height="150">
                         </div>
                         <div class="div">
-                            <p class="text-center">Custo: R$ {{ custo }}</p>
+                            <p style="margin-bottom: 1px;" class="text-center">ID: {{ codid_custo }}</p>
+                            <p class="text-center">Custo Atual: R$ {{ custo }}</p>
                         </div>
                     {% endif %}
                     <form action="{% url 'alterar-custo' %}" method="post">
