@@ -138,6 +138,43 @@ def remover_mlb(request):
         messages.add_message(request, constants.INFO, 'Erro no servidor!')
         return redirect('index-ferramentas')
     
+def remover_sku_netshoes(request):
+    if request.method == 'POST':
+        sku_lojista = str(request.POST.get('sku-netshoes-vinculacao'))
+        loja = str(request.POST.get('loja'))
+        
+        try:
+            connection = get_connection()
+            conexao = pyodbc.connect(connection)
+            cursor = conexao.cursor()
+            
+            comando = f'''
+            SELECT * FROM ECOM_SKU
+            WHERE ORIGEM_ID = '{loja}'
+            AND SKU = '{sku_lojista}'
+            '''
+            
+            df = pd.read_sql(comando, conexao)
+            
+            if len(df) <= 0:
+                messages.add_message(request, constants.ERROR, 'SKU não encontrado!')
+                return redirect('index-ferramentas')
+            
+            comando = f'''
+            DELETE FROM ECOM_SKU
+            WHERE ORIGEM_ID = '{loja}'
+            AND SKU = '{sku_lojista}'
+            '''
+            
+            cursor.execute(comando)
+            cursor.commit()
+            
+            messages.add_message(request, constants.SUCCESS, 'SKU Removido!')
+            return redirect('index-ferramentas')
+        except:
+            messages.add_message(request, constants.INFO, 'Erro no servidor!')
+            return redirect('index-ferramentas')
+    
 def alterar_custo(request):
     if request.method == 'POST':
         # Coleta id

@@ -207,6 +207,41 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Remover vinculação Netshoes</h5>
+                    <form action="{% url 'remover-sku-netshoes' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">SKU</span>
+                                    <input type="text" name="sku-netshoes-vinculacao" id="sku-netshoes-vinculacao"
+                                        class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 10px;" class="row">
+                            <div class="col">
+                                <select class="form-select" name="loja" required>
+                                    <option value="" disabled selected>LOJA</option>
+                                    <option value="2">MADZ</option>
+                                    <option value="3">LEAL</option>
+                                    <option value="4">PISSTE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: red!important;" id="btn-remover-sku-netshoes"
+                                    type="submit" class="btn btn-secondary">Remover</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

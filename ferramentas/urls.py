@@ -8,5 +8,6 @@ urlpatterns = [
      path('remover_catalogo_requerido/', views.remover_catalogo_requerido, name='remover-catalogo-requerido'),
      path('alterar_ean/', views.alterar_ean, name='alterar-ean'),
      path('remover_mlb/', views.remover_mlb, name='remover-mlb'),
+     path('remover_sku_netshoes/', views.remover_sku_netshoes, name='remover-sku-netshoes'),
      path('alterar_custo/', views.alterar_custo, name='alterar-custo'),
 ]
