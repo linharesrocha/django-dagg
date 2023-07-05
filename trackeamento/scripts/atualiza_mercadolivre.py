@@ -153,7 +153,7 @@ def slack_notificao(nome, sku, termo, pag_antiga, pag_nova, opcao_pesquisa):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    SLACK_CHANNEL_ID='C030X3UMR3M'
+    SLACK_CHANNEL_ID='C05FN11JCUB'
     
     if opcao_pesquisa == 'normal':
         option = ''

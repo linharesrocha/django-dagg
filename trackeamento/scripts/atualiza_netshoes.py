@@ -17,7 +17,7 @@ def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente, pesquisa):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    SLACK_CHANNEL_ID='C030X3UMR3M'
+    SLACK_CHANNEL_ID='C05FN0ZF0UB'
 
     if concorrente == True:
         if int(pag_antiga) > int(pag_nova):
