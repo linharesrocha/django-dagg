@@ -74,19 +74,20 @@ def main():
         
         # Envia para o slack
         for index, row in df_interno_finalizados.iterrows():
-            cod_interno = row['COD_INTERNO'].strip()
+            cod_interno = row['COD_INTERNO']
+            cod_interno_strip = cod_interno.strip()
             descricao = row['DESCRICAO'].strip()
             vlr_custo_antigo = str(row['VLR_CUSTO_ANTIGO']).strip()
             
             comando = f'''
             SELECT VLR_CUSTO
             FROM MATERIAIS
-            WHERE COD_INTERNO = '{cod_interno}'
+            WHERE COD_INTERNO = '{cod_interno_strip}'
             '''
             
             vlr_custo_novo = str(pd.read_sql(comando, conexao).values[0][0]).strip()
             
-            message = f'ALTERAÇÃO DE CUSTO! :currency_exchange:\nDESCRIÇÃO: {descricao}\nCOD_INTERNO: {cod_interno}\nAlterado de R$ {vlr_custo_antigo} para R$ {vlr_custo_novo}\n'
+            message = f'ALTERAÇÃO DE CUSTO! :currency_exchange:\nDESCRIÇÃO: {descricao}\nCOD_INTERNO: {cod_interno_strip}\nAlterado de R$ {vlr_custo_antigo} para R$ {vlr_custo_novo}\n'
                 
             try:
                 client.chat_postMessage(channel=SLACK_CHANNEL_ID,text=message)
@@ -97,7 +98,7 @@ def main():
             comando = f'''
             SELECT TOP 1 URL, B.COD_INTERNO FROM MATERIAIS_IMAGENS A
             LEFT JOIN MATERIAIS B ON A.CODID = B.CODID
-            WHERE B.COD_INTERNO = '{cod_interno}'
+            WHERE B.COD_INTERNO = '{cod_interno_strip}'
             '''
                 
             df_url_imagem = pd.read_sql(comando, conexao)
