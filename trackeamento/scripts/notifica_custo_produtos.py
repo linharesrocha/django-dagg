@@ -11,7 +11,6 @@ import pyodbc
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-from scripts.connect_to_database import get_connection
 
 
 def main():
@@ -22,6 +21,7 @@ def main():
     django.setup()
     
     from trackeamento.models import PedidosCompra
+    from scripts.connect_to_database import get_connection
     
     dados = {
         'COD_INTERNO': [],
