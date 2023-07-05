@@ -60,3 +60,9 @@ class MetricasAds(models.Model):
     advertising_fee_anuncio = models.FloatField(blank=True, null=True)
     organic_orders_quantity_anuncio = models.IntegerField(blank=True, null=True)
     share_anuncio = models.FloatField(blank=True, null=True)
+    
+class PedidosCompra(models.Model):
+    id = models.AutoField(primary_key=True)
+    descricao = models.CharField(max_length=255)
+    cod_interno = models.CharField(max_length=255)
+    vlr_custo_antigo = models.FloatField(blank=True, null=True)
