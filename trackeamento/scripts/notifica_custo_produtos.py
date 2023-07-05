@@ -6,17 +6,23 @@ import os
 import pandas as pd
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+import pyodbc
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-sys.path.append(str(BASE_DIR))
 
 from scripts.connect_to_database import get_connection
-import pyodbc
-from trackeamento.models import PedidosCompra
 
 
 def main():
+    import django
+    
+    sys.path.append(str(BASE_DIR))
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dagg.settings')
+    django.setup()
+    
+    from trackeamento.models import PedidosCompra
+    
     dados = {
         'COD_INTERNO': [],
         'DESCRICAO': [],
