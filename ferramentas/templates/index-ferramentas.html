@@ -247,21 +247,60 @@
         <div class="col">
             <div class="card" style="width: 22rem">
                 <div class="card-body">
-                    <h5 class="card-title  text-center">Cria planilha SQL</h5>
+                    <div class="row">
+                        <div class="col-8">
+                            <h5 class="card-title  text-center">Cria planilha SQL</h5>
+                        </div>
+                        <div class="col-4">
+                            <button style="background-color: rgb(72, 72, 207)!important; margin-bottom: 20px;" data-bs-toggle="modal" data-bs-target="#modalAjuda" type="submit" class="btn btn-secondary">Ajuda</button>
+                        </div>
+                    </div>
                     <form action="{% url 'baixar-planilha-via-sql' %}" method="post">
                         <div class="row">
                             <div class="col">
-                                <textarea class="form-control" name="sql-comando" id="sql-comando" rows="6" required></textarea>
+                                <textarea class="form-control" name="sql-comando" id="sql-comando" rows="6"
+                                    required></textarea>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col text-center">
-                                <button style="background-color: green!important; margin-top: 20px;" id="btn-baixar-planilha" type="submit" class="btn btn-secondary">Baixar</button>
+                                <button style="background-color: green!important; margin-top: 20px; width: 100px;"
+                                    id="btn-baixar-planilha" type="submit" class="btn btn-secondary">Baixar</button>
                             </div>
                         </div>
                         {% csrf_token %}
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAjudaLabel">Ajuda Comando</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h3>Algoritmo</h3>
+                <p>SELECT <-- sempre tem que ter</p>
+                <p>COLUNAS <-- nome das colunas ou asterisco para pegar todas</p>
+                <p>FROM <-- sempre tem que ter</p>
+                <p>MATERIAIS <-- nome da tabela de produtos</p>
+                <p>WHERE <-- caso você queira filtrar valores</p>
+                <h3>Exemplos</h3>
+                <p>SELECT * FROM MATERIAIS</p>
+                <hr>
+                <p>SELECT * FROM MATERIAIS WHERE VLR_CUSTO > 50</p>
+                <hr>
+                <p>SELECT * FROM MATERIAIS WHERE VLR_CUSTO > 50 AND INATIVO = 'N'</p>
+                <hr>
+                <p>SELECT CODID, COD_INTERNO, DESCRICAO FROM MATERIAIS</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
@@ -281,6 +320,14 @@
             event.preventDefault(); // Cancela o envio do formulário se o usuário clicar em "Cancelar"
         }
     });
+</script>
+
+<script>
+    var myModal = document.getElementById('myModal')
+
+    myModal.addEventListener('shown.bs.modal', function () {
+        myInput.focus()
+    })
 </script>
 
 </html>
