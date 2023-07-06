@@ -297,8 +297,12 @@ def baixar_planilha_via_sql(request):
         comando = f'''
         {sql_comando}
         '''
-        
-        df_temp = pd.read_sql(comando, conexao)
+
+        try:
+            df_temp = pd.read_sql(comando, conexao)
+        except Exception as e:
+            messages.add_message(request, constants.ERROR, f'Erro no comando SQL: {e}')
+            return redirect('index-ferramentas')
         
         excel_bytes = BytesIO()
         df_temp.to_excel(excel_bytes, index=False)
