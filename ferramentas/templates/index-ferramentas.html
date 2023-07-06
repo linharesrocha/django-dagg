@@ -243,6 +243,28 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Cria planilha SQL</h5>
+                    <form action="{% url 'baixar-planilha-via-sql' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <textarea class="form-control" name="sql-comando" id="sql-comando" rows="6" required></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: green!important; margin-top: 20px;" id="btn-baixar-planilha" type="submit" class="btn btn-secondary">Baixar</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <body>

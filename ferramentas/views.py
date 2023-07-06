@@ -11,6 +11,7 @@ from scripts.connect_to_database import get_connection
 import pyodbc
 import pandas as pd
 import os
+from io import BytesIO
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
@@ -281,3 +282,29 @@ def alterar_custo(request):
             except:
                 messages.add_message(request, constants.INFO, 'Erro no servidor!')
                 return redirect('index-ferramentas')
+            
+def baixar_planilha_via_sql(request):
+    if request.method == 'POST':
+        sql_comando = str(request.POST.get('sql-comando')).strip()
+        
+        if not sql_comando.startswith('SELECT'):
+            messages.add_message(request, constants.ERROR, 'Comando SQL inválido!')
+            return redirect('index-ferramentas')
+        
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        
+        comando = f'''
+        {sql_comando}
+        '''
+        
+        df_temp = pd.read_sql(comando, conexao)
+        
+        excel_bytes = BytesIO()
+        df_temp.to_excel(excel_bytes, index=False)
+        excel_bytes.seek(0)
+        bytes_data = excel_bytes.getvalue()
+        
+        response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="nome_temporario.xlsx"'
+        return response

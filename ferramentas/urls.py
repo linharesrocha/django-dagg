@@ -10,4 +10,5 @@ urlpatterns = [
      path('remover_mlb/', views.remover_mlb, name='remover-mlb'),
      path('remover_sku_netshoes/', views.remover_sku_netshoes, name='remover-sku-netshoes'),
      path('alterar_custo/', views.alterar_custo, name='alterar-custo'),
+     path('baixar_planilha_via_sql/', views.baixar_planilha_via_sql, name='baixar-planilha-via-sql'),
 ]
