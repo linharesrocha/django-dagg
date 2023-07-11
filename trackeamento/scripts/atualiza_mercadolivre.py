@@ -229,7 +229,11 @@ def main():
         # Visita Diaria / Vendas Diaria / Taxa Conversao Diaria
         visitas_diaria = requests.get(f"https://api.mercadolibre.com/items/{mlb_anuncio}/visits/time_window?last=1&unit=day", headers=header).json().get('total_visits')
         vendas_diaria = requests.get(f'https://api.mercadolibre.com/orders/search?seller=195279505&item={mlb_anuncio}&order.status=paid&order.date_created.from={data_ontem}T00:00:00.000-00:00', headers=header).json().get('paging').get('total')
-        taxa_conversao_diaria = round((vendas_diaria / visitas_diaria) * 100, 2)
+        try:
+            taxa_conversao_diaria = round((vendas_diaria / visitas_diaria) * 100, 2)
+        except ZeroDivisionError:
+            taxa_conversao_diaria = 0
+
 
         # Posição do Anúncio
         posicao_anuncio_normal, pagina_normal, posicao_anuncio_full, pagina_full = posicao_produtos_mercadolivre(termo_busca, mlb_anuncio)
