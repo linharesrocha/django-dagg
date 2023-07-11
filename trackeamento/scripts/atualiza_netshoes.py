@@ -129,8 +129,8 @@ def main(slack):
     # remove todos os dados de 3 dias atrás
     try:
         data_atual = datetime.now().date()
-        data_tres_dias_atras = data_atual - timedelta(days=3)
-        registros_para_remover = PosicaoNetshoes.objects.filter(ultima_atualizacao__lt=data_tres_dias_atras)
+        data_dois_dias_atras = data_atual - timedelta(days=2)
+        registros_para_remover = PosicaoNetshoes.objects.filter(ultima_atualizacao__lte=data_dois_dias_atras)
         registros_para_remover.delete()
     except:
         print('Não foi possível remover os registros de três dias atrás')
