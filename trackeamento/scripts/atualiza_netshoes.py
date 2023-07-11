@@ -3,6 +3,7 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 from pathlib import Path
+from datetime import datetime, timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -124,4 +125,12 @@ def main(slack):
             slack_notificao(trackeamento['nome'], sku_netshoes, ultimo_registro_pagina, pagina_atual, trackeamento['anuncio_concorrente'], termo)
         
         anuncio_track_novo.save()
-        
+    
+    # remove todos os dados de 3 dias atrás
+    try:
+        data_atual = datetime.now().date()
+        data_tres_dias_atras = data_atual - timedelta(days=3)
+        registros_para_remover = PosicaoNetshoes.objects.filter(ultima_atualizacao__lt=data_tres_dias_atras)
+        registros_para_remover.delete()
+    except:
+        print('Não foi possível remover os registros de três dias atrás')
