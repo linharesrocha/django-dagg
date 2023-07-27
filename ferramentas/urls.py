@@ -11,4 +11,5 @@ urlpatterns = [
      path('remover_sku_netshoes/', views.remover_sku_netshoes, name='remover-sku-netshoes'),
      path('alterar_custo/', views.alterar_custo, name='alterar-custo'),
      path('baixar_planilha_via_sql/', views.baixar_planilha_via_sql, name='baixar-planilha-via-sql'),
+     path('gerar_ean_aleatorio/', views.gerar_ean_aleatorio, name='gerar-ean-aleatorio'),
 ]

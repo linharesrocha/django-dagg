@@ -7,6 +7,7 @@ import zipfile
 from ferramentas.scripts import catalogo_requerido
 from django.contrib.messages import constants
 from django.contrib import messages
+import random
 from scripts.connect_to_database import get_connection
 import pyodbc
 import pandas as pd
@@ -312,3 +313,53 @@ def baixar_planilha_via_sql(request):
         response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = f'attachment; filename="nome_temporario.xlsx"'
         return response
+    
+def gerar_ean_aleatorio(request):
+    if request.method == 'POST':
+        def calcular_digito_verificador(ean_base):
+            soma = 0
+            for i, digito in enumerate(reversed(ean_base)):
+                multiplicador = 3 if i % 2 == 0 else 1
+                soma += int(digito) * multiplicador
+            return str((10 - soma % 10) % 10)
+
+        def gerar_ean_brasileiro(codigo_produto):
+            if len(codigo_produto) != 9 or not codigo_produto.isdigit():
+                raise ValueError("O código do produto deve ter exatamente 9 dígitos numéricos.")
+
+            ean_base = '789' + codigo_produto
+            digito_verificador = calcular_digito_verificador(ean_base)
+
+            ean_completo = ean_base + digito_verificador
+
+            return ean_completo
+        
+        try:
+            connection = get_connection()
+            conexao = pyodbc.connect(connection)
+            cursor = conexao.cursor()
+    
+            comando = f'''
+            SELECT EAN
+            FROM PUBLICA_PRODUTO
+            WHERE FLAG = '-9'
+            '''
+            
+            df_ean = pd.read_sql(comando, conexao)
+            df_ean_list = df_ean['EAN'].tolist()
+            df_ean_stripped_list = [item.strip() for item in df_ean_list]
+            
+        except:
+            messages.add_message(request, constants.ERROR, 'Erro ao tentar acessar o Banco de Dados!')
+            return redirect('index-ferramentas')
+        
+        while True:
+            codigo_produto_aleatorio = ''.join(random.choices('0123456789', k=9))
+            ean_valido_brasileiro = gerar_ean_brasileiro(codigo_produto_aleatorio)
+            
+            if ean_valido_brasileiro not in df_ean_stripped_list:
+                break
+        
+        return render(request, 'index-ferramentas.html', {'ean_gerado': ean_valido_brasileiro})
+            
+

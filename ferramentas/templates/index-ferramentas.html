@@ -134,21 +134,24 @@
         <div class="col">
             <div class="card" style="width: 22rem">
                 <div class="card-body">
-                    <h5 class="card-title  text-center">Remover vinculação MLB</h5>
-                    <form action="{% url 'remover-mlb' %}" method="post">
+                    <h5 class="card-title text-center">Gerar EAN</h5>
+                    <form action="{% url 'gerar-ean-aleatorio' %}" method="post">
                         <div class="row">
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 80px;" class="input-group-text">MLB</span>
-                                    <input type="text" name="mlb-vinculacao" id="mlb-vinculacao" class="form-control"
-                                        required>
+                                    <span style="width: 80px;" class="input-group-text">EAN</span>
+                                    {% if ean_gerado %}
+                                    <input type="number" name="ean-gerado" id="ean-gerado" class="form-control" value="{{ ean_gerado }}" readonly>
+                                    {% else %}
+                                    <input type="number" name="ean-gerado" id="ean-gerado" class="form-control" readonly>
+                                    {% endif %}
+                                    <button type="button" id="btn-copiar" class="btn btn-secondary">Copiar</button>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col text-center">
-                                <button style="background-color: red!important;" id="btn-remover-mlb" type="submit"
-                                    value="Gerar Excel" class="btn btn-secondary">Remover</button>
+                                <button style="background-color: green!important;" id="btn-gerar-ean" type="submit" value="Gerar Ean" class="btn btn-secondary">Gerar</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -273,6 +276,31 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Remover vinculação MLB</h5>
+                    <form action="{% url 'remover-mlb' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">MLB</span>
+                                    <input type="text" name="mlb-vinculacao" id="mlb-vinculacao" class="form-control"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: red!important;" id="btn-remover-mlb" type="submit"
+                                    value="Gerar Excel" class="btn btn-secondary">Remover</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -328,6 +356,14 @@
     myModal.addEventListener('shown.bs.modal', function () {
         myInput.focus()
     })
+</script>
+
+<script>
+    document.getElementById("btn-copiar").addEventListener("click", function() {
+        var inputElement = document.getElementById("ean-gerado");
+        inputElement.select();
+        document.execCommand("copy");
+    });
 </script>
 
 </html>
