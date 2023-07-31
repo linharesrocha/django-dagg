@@ -28,6 +28,7 @@ def main():
     vendas_totais_list = []
     tipo_de_anuncio_list = []
     data_criacao_list = []
+    logistic_type_list = []
 
     # Obtem lista MLB
     comando = f'''
@@ -41,7 +42,7 @@ def main():
     contador = 1
     for mlb in df_mlbs['SKU']:
         print(f'{str(contador)}/{str(len(df_mlbs))}')
-        
+            
         # MLB
         mlbs_list.append(mlb)
         
@@ -54,12 +55,12 @@ def main():
         data_criacao_list.append(data_criacao)
         vendas_totais_list.append(response['sold_quantity'])
         tipo_de_anuncio_list.append(response['listing_type_id'].replace('gold_pro', 'Premium').replace('gold_special', 'Clássico'))
+        logistic_type_list.append(response['shipping']['logistic_type'].replace('xd_drop_off', 'normal'))
         
         # Vísitas
         visitas_list.append(requests.get(f"https://api.mercadolibre.com/visits/items?ids={mlb}", headers=header).json().get(mlb))
         
-        contador += 1
-        
+        contador += 1    
     
     # Transformar listas em um dicionário
     dados = {
@@ -68,6 +69,7 @@ def main():
         "VISITAS": visitas_list,
         "V_TOTAIS": vendas_totais_list,
         "TIPO_ANUNCIO": tipo_de_anuncio_list,
+        "LOGISTICA": logistic_type_list,
         "DATA_CRIACAO": data_criacao_list
     }
 
