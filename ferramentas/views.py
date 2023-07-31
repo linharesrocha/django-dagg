@@ -100,45 +100,49 @@ def alterar_ean(request):
         messages.add_message(request, constants.ERROR, 'Erro!')
         return redirect('index-ferramentas')
     
-def remover_mlb(request):
-    mlb_vinculacao = str(request.POST.get('mlb-vinculacao'))
+def remover_mlb(request):    
+    valores_textarea = request.POST.get('mlb-remover-aton')
+    valores_list = valores_textarea.split('\n')
+    valores_list = [valor.strip() for valor in valores_list]
+    valores_list = [item for item in valores_list if item != '']
     
-    if not mlb_vinculacao.startswith('MLB'):
-        messages.add_message(request, constants.ERROR, 'MLB Inválido!')
-        return redirect('index-ferramentas')
-    
-    try:
-        connection = get_connection()
-        conexao = pyodbc.connect(connection)
-        cursor = conexao.cursor()
-    
-        comando = f'''
-        SELECT * FROM ECOM_SKU
-        WHERE ORIGEM_ID IN('8','9','10')
-        AND SKU = '{mlb_vinculacao}'
-        '''
-        
-        df = pd.read_sql(comando, conexao)
-        
-        if len(df) <= 0:
-            messages.add_message(request, constants.ERROR, 'MLB não encontrado!')
+    for mlb_vinculacao in valores_list:
+        if not mlb_vinculacao.startswith('MLB'):
+            messages.add_message(request, constants.ERROR, f'MLB: {mlb_vinculacao} Inválido!')
             return redirect('index-ferramentas')
+        
+        try:
+            connection = get_connection()
+            conexao = pyodbc.connect(connection)
+            cursor = conexao.cursor()
+        
+            comando = f'''
+            SELECT * FROM ECOM_SKU
+            WHERE ORIGEM_ID IN('8','9','10')
+            AND SKU = '{mlb_vinculacao}'
+            '''
+            
+            df = pd.read_sql(comando, conexao)
+            
+            if len(df) <= 0:
+                messages.add_message(request, constants.ERROR, f'MLB: {mlb_vinculacao} não encontrado!')
+                return redirect('index-ferramentas')
 
-        
-        comando = f'''
-        DELETE FROM ECOM_SKU
-        WHERE ORIGEM_ID IN('8','9','10')
-        AND SKU = '{mlb_vinculacao}'
-        '''
-        
-        cursor.execute(comando)
-        conexao.commit()
-        
-        messages.add_message(request, constants.SUCCESS, 'MLB Removido!')
-        return redirect('index-ferramentas')
-    except:
-        messages.add_message(request, constants.INFO, 'Erro no servidor!')
-        return redirect('index-ferramentas')
+            
+            comando = f'''
+            DELETE FROM ECOM_SKU
+            WHERE ORIGEM_ID IN('8','9','10')
+            AND SKU = '{mlb_vinculacao}'
+            '''
+            
+            cursor.execute(comando)
+            conexao.commit()
+        except:
+            messages.add_message(request, constants.INFO, 'Erro no servidor!')
+            return redirect('index-ferramentas')
+    
+    messages.add_message(request, constants.SUCCESS, f'{str(len(valores_list))} MLBs Removidos!')
+    return redirect('index-ferramentas')
     
 def remover_sku_netshoes(request):
     if request.method == 'POST':

@@ -141,9 +141,11 @@
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">EAN</span>
                                     {% if ean_gerado %}
-                                    <input type="number" name="ean-gerado" id="ean-gerado" class="form-control" value="{{ ean_gerado }}" readonly>
+                                    <input type="number" name="ean-gerado" id="ean-gerado" class="form-control"
+                                        value="{{ ean_gerado }}" readonly>
                                     {% else %}
-                                    <input type="number" name="ean-gerado" id="ean-gerado" class="form-control" readonly>
+                                    <input type="number" name="ean-gerado" id="ean-gerado" class="form-control"
+                                        readonly>
                                     {% endif %}
                                     <button type="button" id="btn-copiar" class="btn btn-secondary">Copiar</button>
                                 </div>
@@ -151,7 +153,8 @@
                         </div>
                         <div class="row">
                             <div class="col text-center">
-                                <button style="background-color: green!important;" id="btn-gerar-ean" type="submit" value="Gerar Ean" class="btn btn-secondary">Gerar</button>
+                                <button style="background-color: green!important;" id="btn-gerar-ean" type="submit"
+                                    value="Gerar Ean" class="btn btn-secondary">Gerar</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -255,7 +258,9 @@
                             <h5 class="card-title  text-center">Cria planilha SQL</h5>
                         </div>
                         <div class="col-4">
-                            <button style="background-color: rgb(72, 72, 207)!important; margin-bottom: 20px;" data-bs-toggle="modal" data-bs-target="#modalAjuda" type="submit" class="btn btn-secondary">Ajuda</button>
+                            <button style="background-color: rgb(72, 72, 207)!important; margin-bottom: 20px;"
+                                data-bs-toggle="modal" data-bs-target="#modalAjuda" type="submit"
+                                class="btn btn-secondary">Ajuda</button>
                         </div>
                     </div>
                     <form action="{% url 'baixar-planilha-via-sql' %}" method="post">
@@ -283,10 +288,10 @@
                     <form action="{% url 'remover-mlb' %}" method="post">
                         <div class="row">
                             <div class="col">
-                                <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 80px;" class="input-group-text">MLB</span>
-                                    <input type="text" name="mlb-vinculacao" id="mlb-vinculacao" class="form-control"
-                                        required>
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" class="form-label">MLBS</label>
+                                    <textarea class="form-control" name="mlb-remover-aton" id="mlb-remover-aton"
+                                        rows="4"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -302,6 +307,9 @@
             </div>
         </div>
     </div>
+    <div class="col">
+
+    </div>
 </div>
 
 <div class="modal fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
@@ -314,18 +322,19 @@
             <div class="modal-body">
                 <h3>Algoritmo</h3>
                 <p>SELECT <-- sempre tem que ter</p>
-                <p>COLUNAS <-- nome das colunas ou asterisco para pegar todas</p>
-                <p>FROM <-- sempre tem que ter</p>
-                <p>MATERIAIS <-- nome da tabela de produtos</p>
-                <p>WHERE <-- caso você queira filtrar valores</p>
-                <h3>Exemplos</h3>
-                <p>SELECT * FROM MATERIAIS</p>
-                <hr>
-                <p>SELECT * FROM MATERIAIS WHERE VLR_CUSTO > 50</p>
-                <hr>
-                <p>SELECT * FROM MATERIAIS WHERE VLR_CUSTO > 50 AND INATIVO = 'N'</p>
-                <hr>
-                <p>SELECT CODID, COD_INTERNO, DESCRICAO FROM MATERIAIS</p>
+                        <p>COLUNAS <-- nome das colunas ou asterisco para pegar todas</p>
+                                <p>FROM <-- sempre tem que ter</p>
+                                        <p>MATERIAIS <-- nome da tabela de produtos</p>
+                                                <p>WHERE <-- caso você queira filtrar valores</p>
+                                                        <h3>Exemplos</h3>
+                                                        <p>SELECT * FROM MATERIAIS</p>
+                                                        <hr>
+                                                        <p>SELECT * FROM MATERIAIS WHERE VLR_CUSTO > 50</p>
+                                                        <hr>
+                                                        <p>SELECT * FROM MATERIAIS WHERE VLR_CUSTO > 50 AND INATIVO =
+                                                            'N'</p>
+                                                        <hr>
+                                                        <p>SELECT CODID, COD_INTERNO, DESCRICAO FROM MATERIAIS</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -359,7 +368,7 @@
 </script>
 
 <script>
-    document.getElementById("btn-copiar").addEventListener("click", function() {
+    document.getElementById("btn-copiar").addEventListener("click", function () {
         var inputElement = document.getElementById("ean-gerado");
         inputElement.select();
         document.execCommand("copy");
