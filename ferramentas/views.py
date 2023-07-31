@@ -361,5 +361,3 @@ def gerar_ean_aleatorio(request):
                 break
         
         return render(request, 'index-ferramentas.html', {'ean_gerado': ean_valido_brasileiro})
-            
-

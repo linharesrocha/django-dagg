@@ -4,6 +4,7 @@ from scripts import planilha_campanha, produtos_sem_venda, comparativo_vendas_ne
 from datetime import datetime, date
 from django.contrib.messages import constants
 from django.contrib import messages
+from relatorios.scripts import produtos_mlb_stats_pedro
 
 
 def index(request):
@@ -123,4 +124,12 @@ def gerar_planilha_pedidos_dia(request):
     # Retorne a resposta HTTP com o arquivo Excel como anexo
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename={nome_planilha}.xlsx'
+    return response
+
+def gerar_mlbs_stats(request):
+    arquivo_excel = produtos_mlb_stats_pedro.main()
+    
+    # Crie uma resposta HTTP para retornar o arquivo ao usuário
+    response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="mlbs_stats.xlsx"'
     return response

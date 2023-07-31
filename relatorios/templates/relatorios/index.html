@@ -50,8 +50,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Todas as vendas no Aton</h5>
                         <form action="{% url 'excel_planilha_todas_as_vendas_aton' %}" method="post">
-                            <button type="submit" value="Gerar Excel"
-                                class="btn btn-secondary">Download</button>
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
@@ -113,10 +112,26 @@
                             </div>
                             <div class="row" style="margin-top: 18px;">
                                 <div class="col">
-                                    <button class="btn btn-secondary" type="submit"
-                                        style="text-align: left;" value="Download">Download</button>
+                                    <button class="btn btn-secondary" type="submit" style="text-align: left;"
+                                        value="Download">Download</button>
                                 </div>
                             </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6"></div>
+            <div class="col-6 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">MLBs Inativação</h5>
+                        <p class="card-text">Colunas: Nome, Visitas, Vendas, Tipo de Anúncio, Data de Criação</p>
+                        <p style="color: red;">PS: Para cada MLB, vai demorar no máximo 1 segundo a mais para gerar a planilha. Clique em Download e aguarde!</p>
+                        <form action="{% url 'excel_planilha_gerar_mlbs_stats' %}" method="post">
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
                         </form>
                     </div>
                 </div>
@@ -134,8 +149,7 @@
                         <h5 class="card-title">Dados Campanha</h5>
                         <p class="card-text">Realiza a coleta de dados de múltiplas tabelas do aton</p>
                         <form action="{% url 'excel_planilha_campanha' %}" method="post">
-                            <button type="submit" value="Gerar Excel"
-                                class="btn btn-secondary">Download</button>
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
@@ -147,8 +161,7 @@
                         <h5 style="padding-bottom: 16px;" class="card-title">Todas Vinculações de Produtos Aton com
                             Marketplaces</h5>
                         <form action="{% url 'excel_planilha_todas_vinculacoes_marketplace_aton' %}" method="post">
-                            <button type="submit" value="Gerar Excel"
-                                class="btn btn-secondary">Download</button>
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
@@ -166,13 +179,13 @@
                     <div class="card-body">
                         <h5 class="card-title">Relatório Envio Full</h5>
                         <br>
-                        <form action="{% url 'excel_planilha_envio_full' %}" enctype="multipart/form-data" method="post">
+                        <form action="{% url 'excel_planilha_envio_full' %}" enctype="multipart/form-data"
+                            method="post">
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">Selecione a planilha do Full</label>
                                 <input class="form-control" type="file" name="file" id="file">
                             </div>
-                            <button type="submit" value="Gerar Excel"
-                                class="btn btn-secondary">Download</button>
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>
                     </div>
