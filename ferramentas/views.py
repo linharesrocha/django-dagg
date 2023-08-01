@@ -454,27 +454,28 @@ def cadastrar_kit(request):
         
     # Validar se o segundo tem quantidade
     if codid_2_informado:
-        if qtd_codid_2 == 0 or qtd_codid_2 == '' or qtd_codid_2 == None:
+        if qtd_codid_2 == '0' or qtd_codid_2 == '' or qtd_codid_2 == None:
             messages.add_message(request, constants.ERROR, 'Informe a quantidade do CODID 2!')
             return redirect('index-ferramentas')
         
     # Validar se o terceiro tem quantidade
     if codid_3_informado:
-        if qtd_codid_3 == 0 or qtd_codid_3 == '' or qtd_codid_3 == None:
+        if qtd_codid_3 == '0' or qtd_codid_3 == '' or qtd_codid_3 == None:
             messages.add_message(request, constants.ERROR, 'Informe a quantidade do CODID 3!')
             return redirect('index-ferramentas')  
 
+
     # Validar se os CODID são iguais, não podem ser iguais
+    elif codid_2_informado:
+        if codid_1 == codid_2:
+            messages.add_message(request, constants.ERROR, 'CODID não podem ser iguais! Caso queira criar KIT do mesmo produto, aumente apenas a quantidade!')
+            return redirect('index-ferramentas')
+        
     if codid_3_informado:
         if codid_1 == codid_2 or codid_1 == codid_3 or codid_2 == codid_3:
             messages.add_message(request, constants.ERROR, 'CODID não podem ser iguais! Caso queira criar KIT do mesmo produto, aumente apenas a quantidade!')
             return redirect('index-ferramentas')
     
-    elif codid_2_informado:
-        if codid_1 == codid_2:
-            messages.add_message(request, constants.ERROR, 'CODID não podem ser iguais! Caso queira criar KIT do mesmo produto, aumente apenas a quantidade!')
-            return redirect('index-ferramentas')
-
 
     # Valida cada CODID
     for codid in lists_codid:
@@ -505,6 +506,7 @@ def cadastrar_kit(request):
         if coluna_desmembra == 'S':
             messages.add_message(request, constants.ERROR, f'CODID: {codid} é KIT!')
             return redirect('index-ferramentas')
+
 
     # Somar pesos
 
