@@ -12,4 +12,5 @@ urlpatterns = [
      path('alterar_custo/', views.alterar_custo, name='alterar-custo'),
      path('baixar_planilha_via_sql/', views.baixar_planilha_via_sql, name='baixar-planilha-via-sql'),
      path('gerar_ean_aleatorio/', views.gerar_ean_aleatorio, name='gerar-ean-aleatorio'),
+     path('inativar_produtos_aton/', views.inativar_produtos_aton, name='inativar-produtos-aton'),
 ]

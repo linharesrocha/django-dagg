@@ -298,7 +298,7 @@
                         <div class="row">
                             <div class="col text-center">
                                 <button style="background-color: red!important;" id="btn-remover-mlb" type="submit"
-                                    value="Gerar Excel" class="btn btn-secondary">Remover</button>
+                                    class="btn btn-secondary">Remover</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -307,8 +307,32 @@
             </div>
         </div>
     </div>
-    <div class="col">
-
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Inativar produtos Aton</h5>
+                    <form action="{% url 'inativar-produtos-aton' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" style="color: red;" class="form-label">Separar os CODID por quebra de linha!</label>
+                                    <textarea class="form-control" name="codid-inativar-produtos" id="codid-inativar-produtos"
+                                        rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: red!important;" id="btn-inativar-produtos" type="submit"
+                                    class="btn btn-secondary">Inativar</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

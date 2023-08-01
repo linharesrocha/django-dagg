@@ -367,3 +367,50 @@ def gerar_ean_aleatorio(request):
                 break
         
         return render(request, 'index-ferramentas.html', {'ean_gerado': ean_valido_brasileiro})
+    
+def inativar_produtos_aton(request):    
+    valores_textarea = request.POST.get('codid-inativar-produtos')
+    valores_list = valores_textarea.split('\n')
+    valores_list = [valor.strip() for valor in valores_list]
+    valores_list = [item for item in valores_list if item != '']
+    
+    contador = 0
+    for codid in valores_list:
+        if not codid.isdigit():
+            messages.add_message(request, constants.ERROR, f'CODID: {codid} Inválido!')
+            return redirect('index-ferramentas')
+        
+        try:
+            connection = get_connection()
+            conexao = pyodbc.connect(connection)
+            cursor = conexao.cursor()
+        
+            comando = f'''
+            SELECT CODID
+            FROM MATERIAIS
+            WHERE CODID = '{codid}'
+            AND INATIVO = 'N'
+            '''
+            
+            df = pd.read_sql(comando, conexao)
+            
+            if len(df) <= 0:
+                continue
+
+            
+            comando = f'''
+            UPDATE MATERIAIS
+            SET INATIVO = 'S'
+            WHERE CODID = '{codid}'
+            '''
+            
+            cursor.execute(comando)
+            conexao.commit()
+            
+            contador += 1
+        except:
+            messages.add_message(request, constants.INFO, 'Erro no servidor!')
+            return redirect('index-ferramentas')
+    
+    messages.add_message(request, constants.SUCCESS, f'{str(contador)} CODID inativdos!')
+    return redirect('index-ferramentas')
