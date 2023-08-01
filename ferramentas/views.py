@@ -106,6 +106,7 @@ def remover_mlb(request):
     valores_list = [valor.strip() for valor in valores_list]
     valores_list = [item for item in valores_list if item != '']
     
+    contador = 0
     for mlb_vinculacao in valores_list:
         if not mlb_vinculacao.startswith('MLB'):
             messages.add_message(request, constants.ERROR, f'MLB: {mlb_vinculacao} Inválido!')
@@ -125,8 +126,7 @@ def remover_mlb(request):
             df = pd.read_sql(comando, conexao)
             
             if len(df) <= 0:
-                messages.add_message(request, constants.ERROR, f'MLB: {mlb_vinculacao} não encontrado!')
-                return redirect('index-ferramentas')
+                continue
 
             
             comando = f'''
@@ -137,11 +137,13 @@ def remover_mlb(request):
             
             cursor.execute(comando)
             conexao.commit()
+            
+            contador += 1
         except:
             messages.add_message(request, constants.INFO, 'Erro no servidor!')
             return redirect('index-ferramentas')
     
-    messages.add_message(request, constants.SUCCESS, f'{str(len(valores_list))} MLBs Removidos!')
+    messages.add_message(request, constants.SUCCESS, f'{str(contador)} MLBs Removidos!')
     return redirect('index-ferramentas')
     
 def remover_sku_netshoes(request):
