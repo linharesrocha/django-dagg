@@ -620,6 +620,19 @@ SOBRE O PRODUTO:
         '''
     
     
+    # Verificar o ultimo codid aton
+    comando = f'''
+    SELECT TOP 1 CODID
+    FROM MATERIAIS
+    ORDER BY CODID DESC;
+    '''
     
-    # Criar descrição
+    df_last_codid = pd.read_sql(comando, conexao)
+    last_codid = int(df_last_codid['CODID'][0])
+    codid_kit = last_codid + 1
+    
+    # Cadastrar no aton
+    
+    
+    
     return redirect('index-ferramentas')
