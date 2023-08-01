@@ -554,7 +554,7 @@ def cadastrar_kit(request):
         if len(df_kit_check_cod_interno) <= 0:
             break
     
-    
+    # Cria nome do kit e descricao
     if codid_3_informado:
         nome_codid_3 = df['DESCRICAO'][2].strip()
         nome_codid_2 = df['DESCRICAO'][1].strip()
@@ -563,16 +563,64 @@ def cadastrar_kit(request):
         descricao_codid_2 = df['DESCRITIVO'][1].strip()
         descricao_codid_1 = df['DESCRITIVO'][0].strip()
         nome_kit = f'KIT {qtd_codid_1} {nome_codid_1} {qtd_codid_2} {nome_codid_2} {qtd_codid_3} {nome_codid_3}'
+        descritivo_kit = f'''
+        {nome_codid_1.title()} + {nome_codid_2.title()} + {nome_codid_3.title()}
+        
+        PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
+
+        Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
+
+        Todos os produtos são testados, analisados e possuem nota fiscal, garantindo mais confiabilidade com a melhor qualidade e preço, além disso caso haja alguma inconformidade com o produto basta nos acionar que resolveremos.
+
+        Nossos produtos estão a pronta entrega e sempre são despachados em até um dia útil, garantindo agilidade no processo de compra e uma boa experiência para o cliente.
+
+        Nós somos excelência em atendimentos aos nossos clientes, envie suas dúvidas ou perguntas, de preferência em nosso chat, atenderemos com agilidade e empenho para resolver da melhor maneira.
+
+        SOBRE O PRODUTO:
+        '''
     elif codid_2_informado:
         nome_codid_2 = df['DESCRICAO'][1].strip()
         nome_codid_1 = df['DESCRICAO'][0].strip()
         descricao_codid_2 = df['DESCRITIVO'][1].strip()
         descricao_codid_1 = df['DESCRITIVO'][0].strip()
         nome_kit = f'KIT {qtd_codid_1} {nome_codid_1} {qtd_codid_2} {nome_codid_2}'
+        descritivo_kit = f'''
+        {nome_codid_1.title()} + {nome_codid_2.title()}
+        
+        PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
+
+        Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
+
+        Todos os produtos são testados, analisados e possuem nota fiscal, garantindo mais confiabilidade com a melhor qualidade e preço, além disso caso haja alguma inconformidade com o produto basta nos acionar que resolveremos.
+
+        Nossos produtos estão a pronta entrega e sempre são despachados em até um dia útil, garantindo agilidade no processo de compra e uma boa experiência para o cliente.
+
+        Nós somos excelência em atendimentos aos nossos clientes, envie suas dúvidas ou perguntas, de preferência em nosso chat, atenderemos com agilidade e empenho para resolver da melhor maneira.
+
+        SOBRE O PRODUTO:
+        '''
     else:
         nome_codid_1 = df['DESCRICAO'][0].strip()
         descricao_codid_1 = df['DESCRITIVO'][0].strip()
-        nome_kit = f'KIT {qtd_codid_1} {nome_codid_1}'     
+        nome_kit = f'KIT {qtd_codid_1} {nome_codid_1}'
+        descritivo_kit = f'''
+        {nome_codid_1.title()}
+        
+        PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
 
+        Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
+
+        Todos os produtos são testados, analisados e possuem nota fiscal, garantindo mais confiabilidade com a melhor qualidade e preço, além disso caso haja alguma inconformidade com o produto basta nos acionar que resolveremos.
+
+        Nossos produtos estão a pronta entrega e sempre são despachados em até um dia útil, garantindo agilidade no processo de compra e uma boa experiência para o cliente.
+
+        Nós somos excelência em atendimentos aos nossos clientes, envie suas dúvidas ou perguntas, de preferência em nosso chat, atenderemos com agilidade e empenho para resolver da melhor maneira.
+
+        SOBRE O PRODUTO:
+        '''
+    
+    
+        
+        
     # Criar descrição
     return redirect('index-ferramentas')
