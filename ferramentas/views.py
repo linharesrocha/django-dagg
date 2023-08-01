@@ -11,6 +11,7 @@ import random
 from scripts.connect_to_database import get_connection
 import pyodbc
 import pandas as pd
+from datetime import datetime
 import os
 from io import BytesIO
 from slack_sdk import WebClient
@@ -477,10 +478,13 @@ def cadastrar_kit(request):
             return redirect('index-ferramentas')
     
 
-    # Valida cada CODID
+    # Valida cada CODID e também soma peso 
+    peso_kit_list = []
+    contador = 1
     for codid in lists_codid:
+        
         comando = f'''
-        SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA
+        SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO
         FROM MATERIAIS
         WHERE CODID = '{codid}'
         AND INATIVO = 'N'
@@ -492,7 +496,6 @@ def cadastrar_kit(request):
         if len(df) <= 0:
             messages.add_message(request, constants.ERROR, f'CODID: {codid} não existe no Aton!')
             return redirect('index-ferramentas')
-             
         
         # Valida se é PAI
         coluna_pai = df['COD_INTERNO'][0]
@@ -500,19 +503,76 @@ def cadastrar_kit(request):
             messages.add_message(request, constants.ERROR, f'CODID: {codid} é PAI!')
             return redirect('index-ferramentas')
         
-        
         # Valida se é KIT
         coluna_desmembra = df['DESMEMBRA'][0].strip()
         if coluna_desmembra == 'S':
             messages.add_message(request, constants.ERROR, f'CODID: {codid} é KIT!')
             return redirect('index-ferramentas')
+        
+        # Soma peso
+        if contador == 1:
+            peso_kit_list.append(df['PESO'][0] * int(qtd_codid_1))
 
+        elif contador == 2: 
+            peso_kit_list.append(df['PESO'][0] * int(qtd_codid_2))
 
-    # Somar pesos
+        elif contador == 3:
+            peso_kit_list.append(df['PESO'][0] * int(qtd_codid_3))
+
+        contador+= 1
+    
+    # Peso
+    peso_kit = round(sum(peso_kit_list), 2)
+        
+    # DF com os dados dos CODID
+    comando = f'''
+    SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO
+    FROM MATERIAIS
+    WHERE CODID IN ('{codid_1}', '{codid_2}', '{codid_3}')
+    '''
+    
+    df = pd.read_sql(comando, conexao)
+
 
     # Fazer kit cod interno
-
-    # Fazer nome
+    while True:
+        now = datetime.now()
+        DATE_TIME = now.strftime("%Y%m%d")
+        RANDOM = random.randint(0, 99)
+        INICIAL_KITDG = 'KITDG'
+        codigo_kit = INICIAL_KITDG + str(DATE_TIME) + str(RANDOM)
+        
+        # Verifica se existe no banco de dados
+        comando = f'''
+        SELECT CODID
+        FROM MATERIAIS
+        WHERE COD_INTERNO = '{codigo_kit}'
+        '''
+        
+        df_kit_check_cod_interno = pd.read_sql(comando, conexao)
+        
+        if len(df_kit_check_cod_interno) <= 0:
+            break
+    
+    
+    if codid_3_informado:
+        nome_codid_3 = df['DESCRICAO'][2].strip()
+        nome_codid_2 = df['DESCRICAO'][1].strip()
+        nome_codid_1 = df['DESCRICAO'][0].strip()
+        descricao_codid_3 = df['DESCRITIVO'][2].strip()
+        descricao_codid_2 = df['DESCRITIVO'][1].strip()
+        descricao_codid_1 = df['DESCRITIVO'][0].strip()
+        nome_kit = f'KIT {qtd_codid_1} {nome_codid_1} {qtd_codid_2} {nome_codid_2} {qtd_codid_3} {nome_codid_3}'
+    elif codid_2_informado:
+        nome_codid_2 = df['DESCRICAO'][1].strip()
+        nome_codid_1 = df['DESCRICAO'][0].strip()
+        descricao_codid_2 = df['DESCRITIVO'][1].strip()
+        descricao_codid_1 = df['DESCRITIVO'][0].strip()
+        nome_kit = f'KIT {qtd_codid_1} {nome_codid_1} {qtd_codid_2} {nome_codid_2}'
+    else:
+        nome_codid_1 = df['DESCRICAO'][0].strip()
+        descricao_codid_1 = df['DESCRITIVO'][0].strip()
+        nome_kit = f'KIT {qtd_codid_1} {nome_codid_1}'     
 
     # Criar descrição
     return redirect('index-ferramentas')
