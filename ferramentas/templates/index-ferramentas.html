@@ -38,6 +38,11 @@
         </div>
     </div>
     <div class="row">
+        <div class="col text-center">
+            <h2>Gerar</h2>
+        </div>
+    </div>
+    <div class="row">
         <div class="col">
             <div class="card" style="width: 22rem">
                 <div class="card-body">
@@ -81,59 +86,6 @@
         <div class="col">
             <div class="card" style="width: 22rem">
                 <div class="card-body">
-                    <h5 class="card-title  text-center">Catálogo Requirido</h5>
-                    <p class="card-text text-center">Remove a opção de todos os produtos que estão na aba de publicação.
-                    </p>
-                    <form style="margin-top: 10px;" action="{% url 'remover-catalogo-requerido' %}" method="post">
-                        <div class="row">
-                            <div class="col text-center">
-                                <button id="btn-remover-catalogo-requirido" type="submit" value="Gerar Excel"
-                                    class="btn btn-secondary">Remover</button>
-                            </div>
-                        </div>
-                        {% csrf_token %}
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="card" style="width: 22rem">
-                <div class="card-body">
-                    <h5 class="card-title  text-center">Alterar EAN</h5>
-                    <p class="card-text text-center">Altera o EAN do Produto apenas na parte de publicação.</p>
-                    <form action="{% url 'alterar-ean' %}" method="post">
-                        <div class="row">
-                            <div class="col">
-                                <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 80px;" class="input-group-text">AUTOID</span>
-                                    <input type="number" name="autoid" id="autoid" class="form-control" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 80px;" class="input-group-text">EAN</span>
-                                    <input type="number" name="ean" id="ean" class="form-control" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center">
-                                <button style="background-color: orange!important;" id="btn-baixar-fotos" type="submit"
-                                    value="Gerar Excel" class="btn btn-secondary">Alterar</button>
-                            </div>
-                        </div>
-                        {% csrf_token %}
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card" style="width: 22rem">
-                <div class="card-body">
                     <h5 class="card-title text-center">Gerar EAN</h5>
                     <form action="{% url 'gerar-ean-aleatorio' %}" method="post">
                         <div class="row">
@@ -161,6 +113,132 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <h5 class="card-title  text-center">Cria planilha SQL</h5>
+                        </div>
+                        <div class="col-4">
+                            <button style="background-color: rgb(72, 72, 207)!important; margin-bottom: 20px;"
+                                data-bs-toggle="modal" data-bs-target="#modalAjuda" type="submit"
+                                class="btn btn-secondary">Ajuda</button>
+                        </div>
+                    </div>
+                    <form action="{% url 'baixar-planilha-via-sql' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <textarea class="form-control" name="sql-comando" id="sql-comando" rows="6"
+                                    required></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: green!important; margin-top: 20px; width: 100px;"
+                                    id="btn-baixar-planilha" type="submit" class="btn btn-secondary">Baixar</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h2>Remover</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Remover vinculação Netshoes</h5>
+                    <form action="{% url 'remover-sku-netshoes' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">SKU</span>
+                                    <input type="text" name="sku-netshoes-vinculacao" id="sku-netshoes-vinculacao"
+                                        class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 10px;" class="row">
+                            <div class="col">
+                                <select class="form-select" name="loja" required>
+                                    <option value="" disabled selected>LOJA</option>
+                                    <option value="2">MADZ</option>
+                                    <option value="3">LEAL</option>
+                                    <option value="4">PISSTE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: red!important;" id="btn-remover-sku-netshoes"
+                                    type="submit" class="btn btn-secondary">Remover</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Catálogo Requirido</h5>
+                    <p class="card-text text-center">Remove a opção de todos os produtos que estão na aba de publicação.
+                    </p>
+                    <form style="margin-top: 10px;" action="{% url 'remover-catalogo-requerido' %}" method="post">
+                        <div class="row">
+                            <div class="col text-center">
+                                <button id="btn-remover-catalogo-requirido" type="submit" value="Gerar Excel"
+                                    class="btn btn-secondary">Remover</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Remover vinculação MLB</h5>
+                    <form action="{% url 'remover-mlb' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="exampleFormControlTextarea1" style="color: red;"
+                                        class="form-label">Separar os MLBS por quebra de linha!</label>
+                                    <textarea class="form-control" name="mlb-remover-aton" id="mlb-remover-aton"
+                                        rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: red!important;" id="btn-remover-mlb" type="submit"
+                                    class="btn btn-secondary">Remover</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h2>Alterar</h2>
         </div>
     </div>
     <div class="row">
@@ -216,89 +294,29 @@
         <div class="col">
             <div class="card" style="width: 22rem">
                 <div class="card-body">
-                    <h5 class="card-title  text-center">Remover vinculação Netshoes</h5>
-                    <form action="{% url 'remover-sku-netshoes' %}" method="post">
+                    <h5 class="card-title  text-center">Alterar EAN</h5>
+                    <p class="card-text text-center">Altera o EAN do Produto apenas na parte de publicação.</p>
+                    <form action="{% url 'alterar-ean' %}" method="post">
                         <div class="row">
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 80px;" class="input-group-text">SKU</span>
-                                    <input type="text" name="sku-netshoes-vinculacao" id="sku-netshoes-vinculacao"
-                                        class="form-control" required>
+                                    <span style="width: 80px;" class="input-group-text">AUTOID</span>
+                                    <input type="number" name="autoid" id="autoid" class="form-control" required>
                                 </div>
                             </div>
                         </div>
-                        <div style="margin-bottom: 10px;" class="row">
-                            <div class="col">
-                                <select class="form-select" name="loja" required>
-                                    <option value="" disabled selected>LOJA</option>
-                                    <option value="2">MADZ</option>
-                                    <option value="3">LEAL</option>
-                                    <option value="4">PISSTE</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center">
-                                <button style="background-color: red!important;" id="btn-remover-sku-netshoes"
-                                    type="submit" class="btn btn-secondary">Remover</button>
-                            </div>
-                        </div>
-                        {% csrf_token %}
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="card" style="width: 22rem">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-8">
-                            <h5 class="card-title  text-center">Cria planilha SQL</h5>
-                        </div>
-                        <div class="col-4">
-                            <button style="background-color: rgb(72, 72, 207)!important; margin-bottom: 20px;"
-                                data-bs-toggle="modal" data-bs-target="#modalAjuda" type="submit"
-                                class="btn btn-secondary">Ajuda</button>
-                        </div>
-                    </div>
-                    <form action="{% url 'baixar-planilha-via-sql' %}" method="post">
                         <div class="row">
                             <div class="col">
-                                <textarea class="form-control" name="sql-comando" id="sql-comando" rows="6"
-                                    required></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col text-center">
-                                <button style="background-color: green!important; margin-top: 20px; width: 100px;"
-                                    id="btn-baixar-planilha" type="submit" class="btn btn-secondary">Baixar</button>
-                            </div>
-                        </div>
-                        {% csrf_token %}
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card" style="width: 22rem">
-                <div class="card-body">
-                    <h5 class="card-title  text-center">Remover vinculação MLB</h5>
-                    <form action="{% url 'remover-mlb' %}" method="post">
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="exampleFormControlTextarea1" style="color: red;" class="form-label">Separar os MLBS por quebra de linha!</label>
-                                    <textarea class="form-control" name="mlb-remover-aton" id="mlb-remover-aton"
-                                        rows="4"></textarea>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">EAN</span>
+                                    <input type="number" name="ean" id="ean" class="form-control" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col text-center">
-                                <button style="background-color: red!important;" id="btn-remover-mlb" type="submit"
-                                    class="btn btn-secondary">Remover</button>
+                                <button style="background-color: orange!important;" id="btn-baixar-fotos" type="submit"
+                                    value="Gerar Excel" class="btn btn-secondary">Alterar</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -316,22 +334,28 @@
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                    <label for="exampleFormControlTextarea1" style="color: red;" class="form-label">Separar os CODID por quebra de linha!</label>
-                                    <textarea class="form-control" name="codid-inativar-produtos" id="codid-inativar-produtos"
-                                        rows="4"></textarea>
+                                    <label for="exampleFormControlTextarea1" style="color: red;"
+                                        class="form-label">Separar os CODID por quebra de linha!</label>
+                                    <textarea class="form-control" name="codid-inativar-produtos"
+                                        id="codid-inativar-produtos" rows="4"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col text-center">
-                                <button style="background-color: red!important;" id="btn-inativar-produtos" type="submit"
-                                    class="btn btn-secondary">Inativar</button>
+                                <button style="background-color: orange!important;" id="btn-inativar-produtos"
+                                    type="submit" class="btn btn-secondary">Inativar</button>
                             </div>
                         </div>
                         {% csrf_token %}
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h2>Outros</h2>
         </div>
     </div>
 </div>
@@ -398,5 +422,11 @@
         document.execCommand("copy");
     });
 </script>
+
+<style>
+    h2 {
+        margin-bottom: 40px;
+    }
+</style>
 
 </html>
