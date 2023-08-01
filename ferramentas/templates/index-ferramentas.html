@@ -83,6 +83,67 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Cadastrar KIT</h5>
+                    <form action="{% url 'cadastrar-kit' %}" method="post">
+                        <div class="row">
+                            <div class="col-7">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">CODID</span>
+                                    <input type="number" name="codid1-kit" id="codid1-kit" min="1" step="1"
+                                        class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">QTD</span>
+                                    <input type="number" name="qtd-codid1-kit" id="qtd-codid1-kit" min="1" step="1" value="1"
+                                        class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-7">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">CODID</span>
+                                    <input type="number" name="codid2-kit" id="codid2-kit" min="1" step="1"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">QTD</span>
+                                    <input type="number" name="qtd-codid2-kit" id="qtd-codid2-kit" min="0" step="1" value="0"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-7">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">CODID</span>
+                                    <input type="number" name="codid3-kit" id="codid3-kit" min="1" step="1"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">QTD</span>
+                                    <input type="number" name="qtd-codid3-kit" id="qtd-codid3-kit" min="0" step="1" value="0"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col text-center">
+                            <button style="background-color: green!important;" id="btn-cadastrar-kit" type="submit" class="btn btn-secondary">Cadastrar</button>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col">

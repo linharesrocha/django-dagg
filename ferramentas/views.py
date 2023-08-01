@@ -414,3 +414,103 @@ def inativar_produtos_aton(request):
     
     messages.add_message(request, constants.SUCCESS, f'{str(contador)} CODID inativdos!')
     return redirect('index-ferramentas')
+
+def cadastrar_kit(request):
+    connection = get_connection()
+    conexao = pyodbc.connect(connection)
+    cursor = conexao.cursor()
+
+    # Coleta CODID's
+    codid_1 = request.POST.get('codid1-kit')
+    codid_2 = request.POST.get('codid2-kit')
+    codid_3 = request.POST.get('codid3-kit')
+    
+    qtd_codid_1 = request.POST.get('qtd-codid1-kit')
+    qtd_codid_2 = request.POST.get('qtd-codid2-kit')
+    qtd_codid_3 = request.POST.get('qtd-codid3-kit')
+
+    # Validar se o segundo foi informado
+    codid_2_informado = True
+    if codid_2 == '' or codid_2 == None:
+        codid_2_informado = False
+        
+    # Validar se o terceiro foi informado
+    codid_3_informado = True
+    if codid_3 == '' or codid_3 == None:
+        codid_3_informado = False
+        
+    # Valida se o segundo não foi informado mas o primeiro e o terceiro sim
+    if not codid_2_informado and codid_3_informado:
+        messages.add_message(request, constants.ERROR, 'Passe o CODID3 para o CODID2!')
+        return redirect('index-ferramentas')
+        
+    # Criar lista de CODID
+    if codid_3_informado:
+        lists_codid = [codid_1, codid_2, codid_3]
+    elif codid_2_informado:
+        lists_codid = [codid_1, codid_2]
+    else:
+        lists_codid = [codid_1]
+        
+    # Validar se o segundo tem quantidade
+    if codid_2_informado:
+        if qtd_codid_2 == 0 or qtd_codid_2 == '' or qtd_codid_2 == None:
+            messages.add_message(request, constants.ERROR, 'Informe a quantidade do CODID 2!')
+            return redirect('index-ferramentas')
+        
+    # Validar se o terceiro tem quantidade
+    if codid_3_informado:
+        if qtd_codid_3 == 0 or qtd_codid_3 == '' or qtd_codid_3 == None:
+            messages.add_message(request, constants.ERROR, 'Informe a quantidade do CODID 3!')
+            return redirect('index-ferramentas')  
+
+    # Validar se os CODID são iguais, não podem ser iguais
+    if codid_3_informado:
+        if codid_1 == codid_2 or codid_1 == codid_3 or codid_2 == codid_3:
+            messages.add_message(request, constants.ERROR, 'CODID não podem ser iguais! Caso queira criar KIT do mesmo produto, aumente apenas a quantidade!')
+            return redirect('index-ferramentas')
+    
+    elif codid_2_informado:
+        if codid_1 == codid_2:
+            messages.add_message(request, constants.ERROR, 'CODID não podem ser iguais! Caso queira criar KIT do mesmo produto, aumente apenas a quantidade!')
+            return redirect('index-ferramentas')
+
+
+    # Valida cada CODID
+    for codid in lists_codid:
+        comando = f'''
+        SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA
+        FROM MATERIAIS
+        WHERE CODID = '{codid}'
+        AND INATIVO = 'N'
+        '''
+        
+        df = pd.read_sql(comando, conexao)  
+        
+        # Verifica se existe no banco de dados
+        if len(df) <= 0:
+            messages.add_message(request, constants.ERROR, f'CODID: {codid} não existe no Aton!')
+            return redirect('index-ferramentas')
+             
+        
+        # Valida se é PAI
+        coluna_pai = df['COD_INTERNO'][0]
+        if 'PAI' in coluna_pai:
+            messages.add_message(request, constants.ERROR, f'CODID: {codid} é PAI!')
+            return redirect('index-ferramentas')
+        
+        
+        # Valida se é KIT
+        coluna_desmembra = df['DESMEMBRA'][0].strip()
+        if coluna_desmembra == 'S':
+            messages.add_message(request, constants.ERROR, f'CODID: {codid} é KIT!')
+            return redirect('index-ferramentas')
+
+    # Somar pesos
+
+    # Fazer kit cod interno
+
+    # Fazer nome
+
+    # Criar descrição
+    return redirect('index-ferramentas')
