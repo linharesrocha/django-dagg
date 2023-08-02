@@ -644,13 +644,10 @@ def copiar_atributos(request):
         conexao = pyodbc.connect(connection)
         cursor = conexao.cursor()
         
-        codid_1 = request.POST.get('codid1-atributo')
-        codid_2 = request.POST.get('codid2-atributo')
+        codid_1 = str(request.POST.get('codid1-atributo'))
+        codid_2 = str(request.POST.get('codid2-atributo'))
         marketplace = str(request.POST.get('marketplace'))
         list_codid = [codid_1, codid_2]
-        
-        # Verifica a loja
-        
         
         # Verifica se os CODID são os mesmos
         if codid_1 == codid_2:
