@@ -421,8 +421,7 @@ def cadastrar_kit(request):
     conexao = pyodbc.connect(connection)
     cursor = conexao.cursor()
     
-    DESCRICAO_INICIAL = '''
-PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
+    DESCRICAO_INICIAL = '''PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
 
 Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
 
@@ -432,8 +431,7 @@ Nossos produtos estão a pronta entrega e sempre são despachados em até um dia
 
 Nós somos excelência em atendimentos aos nossos clientes, envie suas dúvidas ou perguntas, de preferência em nosso chat, atenderemos com agilidade e empenho para resolver da melhor maneira.
 
-SOBRE O PRODUTO:
-    '''
+SOBRE O PRODUTO:'''
 
     # Coleta CODID's
     codid_1 = request.POST.get('codid1-kit')
@@ -541,7 +539,7 @@ SOBRE O PRODUTO:
         contador+= 1
     
     # Peso
-    peso_kit = round(sum(peso_kit_list), 2)
+    peso_kit = str(round(sum(peso_kit_list), 2))
         
     # DF com os dados dos CODID
     comando = f'''
@@ -554,6 +552,12 @@ SOBRE O PRODUTO:
     
     # Copiar NCM
     ncm_kit = df['CLASS_FISCAL'][0]
+    
+    # Obter data do cadastro
+    data_atual = datetime.now()
+    data_alvo = data_atual.replace(hour=0, minute=0, second=0, microsecond=0)
+    data_formatada_kit = str(data_alvo.strftime('%Y-%m-%d %H:%M:%S'))
+
 
     # Fazer kit cod interno
     while True:
@@ -584,8 +588,7 @@ SOBRE O PRODUTO:
         descricao_codid_2 = df['DESCRITIVO'][1].strip()
         descricao_codid_1 = df['DESCRITIVO'][0].strip()
         nome_kit = f'KIT {qtd_codid_1} {nome_codid_1} + {qtd_codid_2} {nome_codid_2} + {qtd_codid_3} {nome_codid_3}'
-        descritivo_kit = f'''
-{nome_codid_1.title()} + {nome_codid_2.title()} + {nome_codid_3.title()}
+        descritivo_kit = f'''{nome_codid_1.title()} + {nome_codid_2.title()} + {nome_codid_3.title()}
 
 {DESCRICAO_INICIAL}
         '''
@@ -595,8 +598,7 @@ SOBRE O PRODUTO:
         descricao_codid_2 = df['DESCRITIVO'][1].strip()
         descricao_codid_1 = df['DESCRITIVO'][0].strip()
         nome_kit = f'KIT {qtd_codid_1} {nome_codid_1} + {qtd_codid_2} {nome_codid_2}'
-        descritivo_kit = f'''
-{nome_codid_1.title()} + {nome_codid_2.title()}
+        descritivo_kit = f'''{nome_codid_1.title()} + {nome_codid_2.title()}
 
 {DESCRICAO_INICIAL}
         '''
@@ -604,28 +606,63 @@ SOBRE O PRODUTO:
         nome_codid_1 = df['DESCRICAO'][0].strip()
         descricao_codid_1 = df['DESCRITIVO'][0].strip()
         nome_kit = f'KIT {qtd_codid_1} {nome_codid_1}'
-        descritivo_kit = f'''
-{nome_codid_1.title()}
+        descritivo_kit = f'''{nome_codid_1.title()}
 
 {DESCRICAO_INICIAL}
         '''
-    
-    
-    # Verificar o ultimo codid aton
-    comando = f'''
-    SELECT TOP 1 CODID
-    FROM MATERIAIS
-    ORDER BY CODID DESC;
-    '''
-    
-    df_last_codid = pd.read_sql(comando, conexao)
-    last_codid = int(df_last_codid['CODID'][0])
-    codid_kit = last_codid + 1
+
     
     # Cadastrar no aton
-    
-    return redirect('index-ferramentas')
+    # Defina as colunas e os valores
+    colunas = [
+        'COD_INTERNO', 'COD_BARRAS', 'COD_FABRICANTE', 'TIPO_MATERIAL',
+        'TIPO_ITEM', 'DESCRICAO', 'DESCRICAONF', 'DESCRITIVO', 'LOCACAO', 'UNIDADE_ENT',
+        'UNIDADE_SAI', 'EMBALAGEM', 'FORMATO', 'PESO', 'COR', 'MEDIDA', 'TAMANHO',
+        'OUTROS', 'GRUPO', 'SUBGRUPO', 'FABRICANTE', 'FORNECEDOR', 'ALIQ_II', 'ALIQ_IPI',
+        'ALIQ_ICMS', 'CLASS_FISCAL_ID', 'CLASS_FISCAL', 'IVAD', 'IVAF', 'ESTOQUE_PADRAO',
+        'ESTOQUE', 'EST_MIN', 'EST_MAX', 'DESCONTO_MAX', 'VLR_CUSTO', 'VLR_CUSTO_MEDIO',
+        'PORC_GARANTIA', 'VLR_IPI', 'REAJ1', 'REAJ2', 'REAJ3', 'VLR_VENDA', 'VLR_VENDA2',
+        'VLR_VENDA3', 'SEL', 'MAQ', 'ORIGEM_TRIB', 'SIT_TRIBUTARIA', 'COD_COMISSAO',
+        'CENTROCUSTO', 'PA', 'INATIVO', 'OP', 'EXERCITO', 'CIVIL', 'FEDERAL', 'COD_EXERCITO',
+        'COD_CIVIL', 'COD_FEDERAL', 'FOTOPATH', 'DESMEMBRA', 'TABELAIMPOSTO', 'EMBQUANT',
+        'NAOMOVESTOQUE', 'PISCOFINS', 'CSTPIS', 'CSTCOFINS', 'CSTIPI', 'PIS', 'COFINS',
+        'CODANP', 'MOEDA', 'COMPRIMENTO', 'ALTURA', 'LARGURA', 'CEST', 'nFCI', 'OBSI',
+        'ID_SKU', 'SKU', 'VLR_SITE1', 'VLR_SITE2', 'TRANSPORTADORA', 'VALIDO', 'SKYHUB',
+        'SKYHUB_STATUS', 'GARANTIA', 'CROSSDOCK', 'CATEGORIA', 'EANTRIB', 'OPENHUB', 'SEMGTIN',
+        'MARGEM_MIN', 'MARGEM_MAX', 'PAI', 'VLR_BASE', 'VLR_VENDA4', 'LOGISTICA', 'DTCADASTRO',
+        'SABOR', 'GENERO', 'IDVARIACAO', 'ARMAZEM', 'VOLUMES', 'PRODUTO_PADRAO', 'MARCA',
+        'COD_INTERNO_PAI', 'ECOM_CATEGORIA', 'IMPSKU', 'EMPRESA_FAT', 'CODANVISA', 'EMP',
+        'REAJ4', 'REQUER_SERIE'
+    ]
 
+    valores = [
+        codigo_kit, None, None, 'VENDA', '00', nome_kit, None, descritivo_kit, None, None,
+        'UN', None, 2, peso_kit, None, None, None, None, None, None, None, None, 0, 0, 0, None, ncm_kit, 0, 0,
+        1, 0, 0, 0, 0, 0, 0, None, 0, 0, 0, 0, 0, 0, 0, 'False', 0, 0, '00', 0, None, None, 'N', 'N',
+        'N', 'N', 'N', None, None, None, None, 'S', 1, 0, 'N', None, None, None, None, 0, 0, None, 1, 0, 0, 0,
+        None, None, None, None, None, 0, 0, None, 'N', 'N', 'N', 3, 0, None, '', 0, 'S', 0, 0, 0,
+        0, 0, None, data_formatada_kit, None, None, 0, 0, 0, None, None, None, None, 0, 0, None,
+        0, 0, 'N'
+    ]
+
+    # Crie a consulta INSERT
+    query = f"INSERT INTO MATERIAIS ({', '.join(colunas)}) VALUES ({', '.join(['?' for _ in colunas])})"
+
+
+    try:
+        # Confirmar as alterações e fechar a conexão
+        cursor.execute(query, valores)
+        conexao.commit()
+        conexao.close()
+        messages.add_message(request, constants.SUCCESS, f'{nome_kit} cadastrado com sucesso!')
+        return redirect('index-ferramentas')
+    except Exception as e:
+        print('='*100)
+        print(e)
+        print('='*100)
+        messages.add_message(request, constants.ERROR, 'Erro ao tentar cadastrar o KIT!')
+        conexao.close()
+        return redirect('index-ferramentas')
 
 def copiar_atributos(request):    
     if request.method == 'POST':
