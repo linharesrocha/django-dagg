@@ -420,6 +420,20 @@ def cadastrar_kit(request):
     connection = get_connection()
     conexao = pyodbc.connect(connection)
     cursor = conexao.cursor()
+    
+    DESCRICAO_INICIAL = '''
+PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
+
+Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
+
+Todos os produtos são testados, analisados e possuem nota fiscal, garantindo mais confiabilidade com a melhor qualidade e preço, além disso caso haja alguma inconformidade com o produto basta nos acionar que resolveremos.
+
+Nossos produtos estão a pronta entrega e sempre são despachados em até um dia útil, garantindo agilidade no processo de compra e uma boa experiência para o cliente.
+
+Nós somos excelência em atendimentos aos nossos clientes, envie suas dúvidas ou perguntas, de preferência em nosso chat, atenderemos com agilidade e empenho para resolver da melhor maneira.
+
+SOBRE O PRODUTO:
+    '''
 
     # Coleta CODID's
     codid_1 = request.POST.get('codid1-kit')
@@ -481,10 +495,11 @@ def cadastrar_kit(request):
     # Valida cada CODID e também soma peso 
     peso_kit_list = []
     contador = 1
+    dimensao_codids = []
     for codid in lists_codid:
         
         comando = f'''
-        SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO
+        SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, COMPRIMENTO, LARGURA, ALTURA
         FROM MATERIAIS
         WHERE CODID = '{codid}'
         AND INATIVO = 'N'
@@ -508,6 +523,10 @@ def cadastrar_kit(request):
         if coluna_desmembra == 'S':
             messages.add_message(request, constants.ERROR, f'CODID: {codid} é KIT!')
             return redirect('index-ferramentas')
+        
+        # Coleta dimensão e armazena como dicionario em uma lista
+        dimensao = {'CODID':codid ,'COMPRIMENTO': df['COMPRIMENTO'][0], 'LARGURA': df['LARGURA'][0], 'ALTURA': df['ALTURA'][0]}
+        dimensao_codids.append(dimensao)
         
         # Soma peso
         if contador == 1:
@@ -568,17 +587,7 @@ def cadastrar_kit(request):
         descritivo_kit = f'''
 {nome_codid_1.title()} + {nome_codid_2.title()} + {nome_codid_3.title()}
 
-PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
-
-Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
-
-Todos os produtos são testados, analisados e possuem nota fiscal, garantindo mais confiabilidade com a melhor qualidade e preço, além disso caso haja alguma inconformidade com o produto basta nos acionar que resolveremos.
-
-Nossos produtos estão a pronta entrega e sempre são despachados em até um dia útil, garantindo agilidade no processo de compra e uma boa experiência para o cliente.
-
-Nós somos excelência em atendimentos aos nossos clientes, envie suas dúvidas ou perguntas, de preferência em nosso chat, atenderemos com agilidade e empenho para resolver da melhor maneira.
-
-SOBRE O PRODUTO:
+{DESCRICAO_INICIAL}
         '''
     elif codid_2_informado:
         nome_codid_2 = df['DESCRICAO'][1].strip()
@@ -589,17 +598,7 @@ SOBRE O PRODUTO:
         descritivo_kit = f'''
 {nome_codid_1.title()} + {nome_codid_2.title()}
 
-PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
-
-Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
-
-Todos os produtos são testados, analisados e possuem nota fiscal, garantindo mais confiabilidade com a melhor qualidade e preço, além disso caso haja alguma inconformidade com o produto basta nos acionar que resolveremos.
-
-Nossos produtos estão a pronta entrega e sempre são despachados em até um dia útil, garantindo agilidade no processo de compra e uma boa experiência para o cliente.
-
-Nós somos excelência em atendimentos aos nossos clientes, envie suas dúvidas ou perguntas, de preferência em nosso chat, atenderemos com agilidade e empenho para resolver da melhor maneira.
-
-SOBRE O PRODUTO:
+{DESCRICAO_INICIAL}
         '''
     else:
         nome_codid_1 = df['DESCRICAO'][0].strip()
@@ -608,17 +607,7 @@ SOBRE O PRODUTO:
         descritivo_kit = f'''
 {nome_codid_1.title()}
 
-PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
-
-Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
-
-Todos os produtos são testados, analisados e possuem nota fiscal, garantindo mais confiabilidade com a melhor qualidade e preço, além disso caso haja alguma inconformidade com o produto basta nos acionar que resolveremos.
-
-Nossos produtos estão a pronta entrega e sempre são despachados em até um dia útil, garantindo agilidade no processo de compra e uma boa experiência para o cliente.
-
-Nós somos excelência em atendimentos aos nossos clientes, envie suas dúvidas ou perguntas, de preferência em nosso chat, atenderemos com agilidade e empenho para resolver da melhor maneira.
-
-SOBRE O PRODUTO:
+{DESCRICAO_INICIAL}
         '''
     
     
