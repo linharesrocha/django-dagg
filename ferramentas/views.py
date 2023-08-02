@@ -526,13 +526,15 @@ def cadastrar_kit(request):
         
     # DF com os dados dos CODID
     comando = f'''
-    SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO
+    SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, CLASS_FISCAL
     FROM MATERIAIS
     WHERE CODID IN ('{codid_1}', '{codid_2}', '{codid_3}')
     '''
     
     df = pd.read_sql(comando, conexao)
-
+    
+    # Copiar NCM
+    ncm_kit = df['CLASS_FISCAL'][0]
 
     # Fazer kit cod interno
     while True:
