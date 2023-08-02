@@ -421,6 +421,9 @@ def cadastrar_kit(request):
     conexao = pyodbc.connect(connection)
     cursor = conexao.cursor()
     
+    descricao_codid_2 = None
+    descricao_codid_3 = None
+    
     DESCRICAO_INICIAL = '''PRONTA ENTREGA - COM NOTA FISCAL - TESTADO - COM GARANTIA
 
 Temos o cuidado de embalar os produtos individualmente, com material de proteção de alta qualidade, certificando que ele chegue até ao seu destino intacto, minimizando possíveis danos durante o transporte.
@@ -613,8 +616,6 @@ SOBRE O PRODUTO:'''
     else:
         nome_codid_1 = df['DESCRICAO'][0].strip()
         descricao_codid_1 = df['DESCRITIVO'][0].strip()
-        descricao_codid_2 = None
-        descricao_codid_3 = None
         nome_kit = f'KIT {qtd_codid_1} {nome_codid_1}'
         descritivo_kit = f'''{nome_codid_1.title()}
 
@@ -744,7 +745,7 @@ SOBRE O PRODUTO:'''
         
         ------------------------------------------------------------------------------------------------------------------------
         
-        DESCRICAO - CODID {codid_3}
+        DESCRIÇÃO - CODID {codid_3}
         
         {descricao_codid_3}
         '''
