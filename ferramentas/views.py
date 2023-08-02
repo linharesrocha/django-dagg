@@ -495,7 +495,6 @@ SOBRE O PRODUTO:'''
     contador = 1
     dimensao_codids = []
     for codid in lists_codid:
-        
         comando = f'''
         SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, COMPRIMENTO, LARGURA, ALTURA
         FROM MATERIAIS
@@ -537,6 +536,15 @@ SOBRE O PRODUTO:'''
             peso_kit_list.append(df['PESO'][0] * int(qtd_codid_3))
 
         contador+= 1
+
+    if len(dimensao_codids) == 1:
+        dimensao1 = {'CODID':None ,'COMPRIMENTO': None, 'LARGURA': None, 'ALTURA': None}
+        dimensao2 = {'CODID':None ,'COMPRIMENTO': None, 'LARGURA': None, 'ALTURA': None}
+        dimensao_codids.append(dimensao1)
+        dimensao_codids.append(dimensao2)
+    elif len(dimensao_codids) == 2:
+        dimensao1 = {'CODID':None ,'COMPRIMENTO': None, 'LARGURA': None, 'ALTURA': None}
+        dimensao_codids.append(dimensao1)
     
     # Peso
     peso_kit = str(round(sum(peso_kit_list), 2))
@@ -605,6 +613,8 @@ SOBRE O PRODUTO:'''
     else:
         nome_codid_1 = df['DESCRICAO'][0].strip()
         descricao_codid_1 = df['DESCRITIVO'][0].strip()
+        descricao_codid_2 = None
+        descricao_codid_3 = None
         nome_kit = f'KIT {qtd_codid_1} {nome_codid_1}'
         descritivo_kit = f'''{nome_codid_1.title()}
 
@@ -653,9 +663,6 @@ SOBRE O PRODUTO:'''
         # Confirmar as alterações e fechar a conexão
         cursor.execute(query, valores)
         conexao.commit()
-        conexao.close()
-        messages.add_message(request, constants.SUCCESS, f'{nome_kit} cadastrado com sucesso!')
-        return redirect('index-ferramentas')
     except Exception as e:
         print('='*100)
         print(e)
@@ -663,7 +670,100 @@ SOBRE O PRODUTO:'''
         messages.add_message(request, constants.ERROR, 'Erro ao tentar cadastrar o KIT!')
         conexao.close()
         return redirect('index-ferramentas')
+    
+    # Obtem o ultimo CODID cadastrado
+    comando = f'''
+    SELECT TOP 1 CODID
+    FROM MATERIAIS
+    ORDER BY CODID DESC;
+    '''
+    
+    df_codid = pd.read_sql(comando, conexao)
+    codid_kit = df_codid['CODID'][0]
+    
+    
+    # Cria os produtos agregagos na composição
+    try:
+        contador = 1
+        for codid in lists_codid:
+            if contador == 1:
+                valores = [
+                    (str(codid), str(codid_kit), str(qtd_codid_1), 0, 'UN', 1, 0, 0, 50)
+                ]
+            elif contador == 2:
+                valores = [
+                    (str(codid), str(codid_kit), str(qtd_codid_2), 0, 'UN', 1, 0, 0, 50)
+                ]
+            elif contador == 3:
+                valores = [
+                    (str(codid), str(codid_kit), str(qtd_codid_3), 0, 'UN', 1, 0, 0, 50)
+                ]
 
+            # Crie a consulta INSERT
+            query = """
+            INSERT INTO MATERIAIS_AGREGADOS (CODID_AGREG, CODID, QUANT, PERCENTUAL, UNI_CODIGO, FATOR, CALCULO, QUANTNF, VALOR_AGREG)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """
+            
+            # Execute a consulta INSERT com os valores fornecidos
+            cursor.executemany(query, valores)
+
+            # Confirme a transação e feche a conexão
+            conexao.commit()
+            
+            contador += 1
+        conexao.close()
+    except Exception as e:
+        print(e)
+        messages.add_message(request, constants.ERROR, 'Erro ao tentar cadastrar os produtos agregados na composição!')
+        return redirect('index-ferramentas')
+    
+    try:
+        novo_conteudo = f'''
+        COMPRIMENTO | LARGURA | ALTURA - CODID {codid_1}
+        CODID {codid_1} | {dimensao_codids[0]['COMPRIMENTO']} | {dimensao_codids[0]['LARGURA']} | {dimensao_codids[0]['ALTURA']}
+        
+        COMPRIMENTO | LARGURA | ALTURA - CODID {codid_2}
+        CODID {codid_2} | {dimensao_codids[1]['COMPRIMENTO']} | {dimensao_codids[1]['LARGURA']} | {dimensao_codids[1]['ALTURA']}
+        
+        COMPRIMENTO | LARGURA | ALTURA - CODID {codid_3}
+        
+        CODID {codid_3} | {dimensao_codids[2]['COMPRIMENTO']} | {dimensao_codids[2]['LARGURA']} | {dimensao_codids[2]['ALTURA']}
+        
+        ------------------------------------------------------------------------------------------------------------------------
+        
+        DESCRIÇÃO - CODID {codid_1}
+        
+        {descricao_codid_1}
+    
+        ------------------------------------------------------------------------------------------------------------------------
+        
+        DESCRIÇÃO - CODID {codid_2}
+        
+        {descricao_codid_2}
+        
+        ------------------------------------------------------------------------------------------------------------------------
+        
+        DESCRICAO - CODID {codid_3}
+        
+        {descricao_codid_3}
+        '''
+        arquivo_txt = "arquivo-kit-tmp.txt"
+
+        with open(arquivo_txt, 'w') as file:
+            file.write(novo_conteudo)
+            
+        with open(arquivo_txt, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='text/plain')
+            response['Content-Disposition'] = 'attachment; filename="TMP-KIT-CADASTRADO-SUCESSO.txt"'
+
+        os.remove(arquivo_txt)
+        return response
+    except Exception as e:
+        print(e)
+        messages.add_message(request, constants.ERROR, 'Erro ao tentar enviar o arquivo com as descrições e dimensões! Mas o KIT foi cadastrado!')
+        return redirect('index-ferramentas')
+    
 def copiar_atributos(request):    
     if request.method == 'POST':
         connection = get_connection()
