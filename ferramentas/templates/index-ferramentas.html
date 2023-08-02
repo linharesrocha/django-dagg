@@ -177,6 +177,59 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Copiar Atributos</h5>
+                    <p class="card-text text-center">Os atributos do primeiro CODID serão copiados para o segundo CODID</p>
+                    <form action="{% url 'copiar-atributos' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">CODID</span>
+                                    <input type="number" name="codid1-atributo" id="codid1-atributo" class="form-control" min="1" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">CODID</span>
+                                    <input type="number" name="codid2-atributo" id="codid2-atributo" class="form-control" min="1" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 10px;" class="row">
+                            <div class="col">
+                                <select class="form-select" name="marketplace" required>
+                                    <option value="" disabled selected>MARKETPLACE</option>
+                                    <option value="Mercado Livre">Mercado Livre</option>
+                                    <option value="NetShoes">NetShoes</option>
+                                    <option value="Decathlon">Decathlon</option>
+                                    <option value="SkyHub">SkyHub</option>
+                                    <option value="IntegraCommerce">IntegraCommerce</option>
+                                    <option value="Shopee">Shopee</option>
+                                    <option value="CNova">CNova</option>
+                                    <option value="AliExpress">AliExpress</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: green!important;" id="btn-baixar-fotos" type="submit"
+                                    value="Gerar Excel" class="btn btn-secondary">Copiar</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+
+        </div>
         <div class="col align-self-end">
             <div class="card" style="width: 22rem">
                 <div class="card-body">

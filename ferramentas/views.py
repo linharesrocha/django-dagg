@@ -635,6 +635,74 @@ SOBRE O PRODUTO:
     
     # Cadastrar no aton
     
-    
-    
     return redirect('index-ferramentas')
+
+
+def copiar_atributos(request):    
+    if request.method == 'POST':
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        cursor = conexao.cursor()
+        
+        codid_1 = request.POST.get('codid1-atributo')
+        codid_2 = request.POST.get('codid2-atributo')
+        marketplace = str(request.POST.get('marketplace'))
+        list_codid = [codid_1, codid_2]
+        
+        # Verifica a loja
+        
+        
+        # Verifica se os CODID são os mesmos
+        if codid_1 == codid_2:
+            messages.add_message(request, constants.ERROR, 'CODID não podem ser iguais!')
+            return redirect('index-ferramentas')
+        
+        # Verifica se os CODID são válidos
+        for codid in list_codid:
+            comando = f'''
+            SELECT CODID
+            FROM MATERIAIS
+            WHERE CODID = '{codid}'
+            AND INATIVO = 'N'
+            '''
+            
+            df = pd.read_sql(comando, conexao)  
+            
+            # Verifica se existe no banco de dados
+            if len(df) <= 0:
+                messages.add_message(request, constants.ERROR, f'CODID: {codid} não existe no Aton!')
+                return redirect('index-ferramentas')
+            
+        # Válida se o CODID1 tem atributos no marketplace
+        comando = f'''
+        SELECT * 
+        FROM MATERIAIS_ESPECIFICACOES
+        WHERE CODID = '{codid_1}'
+        AND API = '{marketplace}'
+        '''
+        
+        df_check_codid_1 = pd.read_sql(comando, conexao)
+        if len(df_check_codid_1) <= 0:
+            messages.add_message(request, constants.ERROR, f'CODID: {codid_1} não tem atributos no marketplace {marketplace}!')
+            return redirect('index-ferramentas')
+        else:
+            cursor.execute(comando)
+            resultados = cursor.fetchall()
+            
+
+        # Inserir os resultados copiados na tabela com CODID = 11
+        for resultado in resultados:
+            # Adaptar a inserção de acordo com a estrutura da sua tabela
+            insercao = f"""
+            INSERT INTO MATERIAIS_ESPECIFICACOES (CODID, TIPO, VALOR, PRODUTO, SKU, API, IDTIPO, TIPODADO, ALLOW_VARIATIONS, VALOR_ID, QTY_UNID)
+            VALUES ('{str(codid_2)}', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """
+            cursor.execute(insercao, resultado.TIPO, resultado.VALOR, resultado.PRODUTO, resultado.SKU, resultado.API, resultado.IDTIPO, resultado.TIPODADO, resultado.ALLOW_VARIATIONS, resultado.VALOR_ID, resultado.QTY_UNID)
+
+
+        # Confirmar as alterações e fechar a conexão
+        conexao.commit()
+        conexao.close()
+        
+        messages.add_message(request, constants.SUCCESS, f'Atributos do CODID {codid_1} [{marketplace}] copiados para o CODID {codid_2}!')
+        return redirect('index-ferramentas')

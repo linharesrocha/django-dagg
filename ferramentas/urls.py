@@ -14,4 +14,5 @@ urlpatterns = [
      path('gerar_ean_aleatorio/', views.gerar_ean_aleatorio, name='gerar-ean-aleatorio'),
      path('inativar_produtos_aton/', views.inativar_produtos_aton, name='inativar-produtos-aton'),
      path('cadastrar_kit/', views.cadastrar_kit, name='cadastrar-kit'),
+     path('copiar_atributos/', views.copiar_atributos, name='copiar-atributos'),
 ]
