@@ -1,5 +1,4 @@
 from django.shortcuts import redirect
-from django.http import HttpResponse
 from django.contrib.messages import constants
 from django.contrib import messages
 import random
@@ -7,7 +6,6 @@ from scripts.connect_to_database import get_connection
 import pyodbc
 import pandas as pd
 from datetime import datetime
-import os
 
 def main(request):
     def calcular_digito_verificador(ean_base):
@@ -191,15 +189,19 @@ SOBRE O PRODUTO:'''
         
     # DF com os dados dos CODID
     comando = f'''
-    SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, CLASS_FISCAL, ECOM_CATEGORIA
-    FROM MATERIAIS
-    WHERE CODID IN ('{codid_1}', '{codid_2}', '{codid_3}')
+    SELECT A.CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, CLASS_FISCAL, ECOM_CATEGORIA, MARCA, B.URL,
+    FROM MATERIAIS A
+    LEFT JOIN MATERIAIS_IMAGENS B ON A.CODID = B.CODID
+    WHERE A.CODID IN ('{codid_1}', '{codid_2}', '{codid_3}')
     '''
     
     df = pd.read_sql(comando, conexao)
     
     # Copiar NCM
     ncm_kit = df['CLASS_FISCAL'][0]
+    
+    # Marca
+    marca_kit = str(df['MARCA'][0]).strip()
     
     ecom_categoria_kit = str(df['ECOM_CATEGORIA'][0]).strip()
     
@@ -291,7 +293,7 @@ SOBRE O PRODUTO:'''
         1, 0, 0, 0, 0, valor_custo_kit, 0, None, 0, 0, 0, 0, 0, 0, 0, 'False', 0, 0, '00', 0, None, None, 'N', 'N',
         'N', 'N', 'N', None, None, None, None, 'S', 1, 0, 'N', None, None, None, None, 0, 0, None, 1, 0, 0, 0,
         None, None, None, None, None, 0, 0, None, 'N', 'N', 'N', 3, 0, None, ean_valido_brasileiro, 0, 'S', 0, 0, 0,
-        0, 0, None, data_formatada_kit, None, None, 0, 0, 0, None, None, None, ecom_categoria_kit, 0, 0, None,
+        0, 0, None, data_formatada_kit, None, None, 0, 0, 0, None, marca_kit, None, ecom_categoria_kit, 0, 0, None,
         0, 0, 'N'
     ]
 
