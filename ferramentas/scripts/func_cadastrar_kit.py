@@ -365,6 +365,7 @@ SOBRE O PRODUTO:'''
     SELECT *
     FROM MATERIAIS_IMAGENS
     WHERE CODID IN('{codid_1}', '{codid_2}', '{codid_3}')
+    AND CODID != 0
     ORDER BY CODID ASC, IMG_IDX ASC
     '''
     
@@ -386,6 +387,7 @@ SOBRE O PRODUTO:'''
             
             # Iterar sobre as linhas do DataFrame e executar o INSERT para cada linha
             for index, row in df_photos.iterrows():
+                print(index)
                 cursor.execute(
                     "INSERT INTO MATERIAIS_IMAGENS (CODID, URL, PATH_PUBLIC, IMAGEM_FILENAME, "
                     "IMAGEM_IDML, IMAGEM_IDSHOPEE, IMG_IDX, IMAGEM_IDNUVEMSHOP, URL_ALIEXPRESS) "
