@@ -191,7 +191,7 @@ SOBRE O PRODUTO:'''
         
     # DF com os dados dos CODID
     comando = f'''
-    SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, CLASS_FISCAL
+    SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, CLASS_FISCAL, ECOM_CATEGORIA
     FROM MATERIAIS
     WHERE CODID IN ('{codid_1}', '{codid_2}', '{codid_3}')
     '''
@@ -200,6 +200,8 @@ SOBRE O PRODUTO:'''
     
     # Copiar NCM
     ncm_kit = df['CLASS_FISCAL'][0]
+    
+    ecom_categoria_kit = str(df['ECOM_CATEGORIA'][0]).strip()
     
     # Obter data do cadastro
     data_atual = datetime.now()
@@ -289,7 +291,7 @@ SOBRE O PRODUTO:'''
         1, 0, 0, 0, 0, valor_custo_kit, 0, None, 0, 0, 0, 0, 0, 0, 0, 'False', 0, 0, '00', 0, None, None, 'N', 'N',
         'N', 'N', 'N', None, None, None, None, 'S', 1, 0, 'N', None, None, None, None, 0, 0, None, 1, 0, 0, 0,
         None, None, None, None, None, 0, 0, None, 'N', 'N', 'N', 3, 0, None, ean_valido_brasileiro, 0, 'S', 0, 0, 0,
-        0, 0, None, data_formatada_kit, None, None, 0, 0, 0, None, None, None, None, 0, 0, None,
+        0, 0, None, data_formatada_kit, None, None, 0, 0, 0, None, None, None, ecom_categoria_kit, 0, 0, None,
         0, 0, 'N'
     ]
 
