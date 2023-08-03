@@ -14,8 +14,10 @@ import pandas as pd
 from datetime import datetime
 import os
 from io import BytesIO
+import io
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from .models import ArquivoAton
 from dotenv import load_dotenv
 
 
@@ -507,3 +509,61 @@ def copiar_atributos(request):
         
         messages.add_message(request, constants.SUCCESS, f'Atributos do CODID {codid_1} [{marketplace}] copiados para o CODID {codid_2}!')
         return redirect('index-ferramentas')
+    
+def atualizar_aton(request):
+    if request.method == 'POST':
+        # Caso a requisição seja para enviar arquivo
+        if 'btn-enviar-arquivos-aton' in request.POST:
+            arquivos_enviados = request.FILES.getlist('formFile')
+            
+            # Confere se tem 3 itens
+            if len(arquivos_enviados) != 3:
+                messages.add_message(request, constants.ERROR, 'Erro! Você deve enviar 3 arquivos! Ambar.exe, AtonECom.exe, AtonPublica.exe')
+                return redirect('index-ferramentas')
+
+            list_upload_check = ['Ambar.exe', 'AtonECom.exe', 'AtonPublica.exe']
+            pasta_atualizacao = os.path.join('ferramentas', 'atualizacao-aton')
+            
+            for arquivo_enviado in arquivos_enviados:
+                if arquivo_enviado.name not in list_upload_check:
+                    messages.add_message(request, constants.ERROR, f'Arquivo {arquivo_enviado.name} não permitido! Arquivos permitidos: Ambar.exe, AtonECom.exe, AtonPublica.exe')
+                    return redirect('index-ferramentas')
+                else:
+                    list_upload_check.remove(arquivo_enviado.name)
+                    
+                    # Remove caso o arquivo já exista
+                    caminho_arquivo = os.path.join(pasta_atualizacao, arquivo_enviado.name)
+                    if os.path.exists(caminho_arquivo):
+                        os.remove(caminho_arquivo)
+                    
+                
+                novo_arquivo = ArquivoAton(arquivo=arquivo_enviado)
+                novo_arquivo.save()
+            
+            messages.add_message(request, constants.SUCCESS, 'Arquivos enviados com sucesso!')
+            return redirect('index-ferramentas')
+        elif 'btn-baixar-arquivos-aton' in request.POST:
+            # Lista de arquivos permitidos
+            list_upload_check = ['Ambar.exe', 'AtonECom.exe', 'AtonPublica.exe']
+            pasta_atualizacao = os.path.join('ferramentas', 'atualizacao-aton')
+
+            # Verificar se os arquivos permitidos existem
+            arquivos_faltantes = [arquivo for arquivo in list_upload_check if not os.path.exists(os.path.join(pasta_atualizacao, arquivo))]
+            if arquivos_faltantes:
+                messages.add_message(request, constants.ERROR, f'Alguns arquivos estão faltando: {", ".join(arquivos_faltantes)}')
+                return redirect('index-ferramentas')
+
+            # Criação do arquivo ZIP em memória
+            buffer = io.BytesIO()
+            with zipfile.ZipFile(buffer, 'w') as zip_file:
+                for arquivo in list_upload_check:
+                    caminho_arquivo = os.path.join(pasta_atualizacao, arquivo)
+                    zip_file.write(caminho_arquivo, arquivo)
+
+            # Preparar a resposta HTTP com o arquivo ZIP
+            response = HttpResponse(content_type='application/zip')
+            response['Content-Disposition'] = 'attachment; filename="arquivos_aton.zip"'
+            response.write(buffer.getvalue())
+
+            return response
+    return redirect('index-ferramentas')

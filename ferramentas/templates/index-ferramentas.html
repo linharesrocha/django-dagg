@@ -472,6 +472,36 @@
             <h2>Outros</h2>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Atualizar Aton</h5>
+                    <p class="card-text text-center" style="color: gray;">Você pode compartilhar os seus arquivos do Aton ou baixar o compartilhamento mais recente.</p>
+                    <form action="{%  url 'atualizar-aton' %}" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="mb-3">
+                                    <label for="formFile" class="form-label">Enviar arquivos Aton</label>
+                                    <input class="form-control" type="file" id="formFile" name="formFile" accept=".exe" multiple>
+                                  </div>
+                                <button style="background-color: orange!important;" id="btn-enviar-arquivos-aton" name="btn-enviar-arquivos-aton" type="submit"
+                                class="btn btn-secondary">Enviar arquivos</button>
+                            </div>
+                        </div>
+                        <div style="margin-top: 30px;" class="row">
+                            <div class="col text-center">
+                                <p>--------------</p>
+                                <button style="background-color: green!important;" id="btn-baixar-arquivos-aton" name="btn-baixar-arquivos-aton" type="submit"
+                                    class="btn btn-secondary">Baixar arquivos Aton</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="modalAjuda" tabindex="-1" aria-labelledby="modalAjudaLabel" aria-hidden="true">
