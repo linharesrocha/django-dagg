@@ -495,11 +495,12 @@ SOBRE O PRODUTO:'''
 
     # Valida cada CODID e também soma peso 
     peso_kit_list = []
+    dimensao_codids_list = []
+    vlr_custo_list = []
     contador = 1
-    dimensao_codids = []
     for codid in lists_codid:
         comando = f'''
-        SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, COMPRIMENTO, LARGURA, ALTURA
+        SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, COMPRIMENTO, LARGURA, ALTURA, VLR_CUSTO
         FROM MATERIAIS
         WHERE CODID = '{codid}'
         AND INATIVO = 'N'
@@ -526,31 +527,37 @@ SOBRE O PRODUTO:'''
         
         # Coleta dimensão e armazena como dicionario em uma lista
         dimensao = {'CODID':codid ,'COMPRIMENTO': df['COMPRIMENTO'][0], 'LARGURA': df['LARGURA'][0], 'ALTURA': df['ALTURA'][0]}
-        dimensao_codids.append(dimensao)
+        dimensao_codids_list.append(dimensao)
         
         # Soma peso
         if contador == 1:
             peso_kit_list.append(df['PESO'][0] * int(qtd_codid_1))
+            vlr_custo_list.append(df['VLR_CUSTO'][0] * int(qtd_codid_1))
 
         elif contador == 2: 
             peso_kit_list.append(df['PESO'][0] * int(qtd_codid_2))
+            vlr_custo_list.append(df['VLR_CUSTO'][0] * int(qtd_codid_2))
 
         elif contador == 3:
             peso_kit_list.append(df['PESO'][0] * int(qtd_codid_3))
+            vlr_custo_list.append(df['VLR_CUSTO'][0] * int(qtd_codid_3))
 
         contador+= 1
 
-    if len(dimensao_codids) == 1:
+    if len(dimensao_codids_list) == 1:
         dimensao1 = {'CODID':None ,'COMPRIMENTO': None, 'LARGURA': None, 'ALTURA': None}
         dimensao2 = {'CODID':None ,'COMPRIMENTO': None, 'LARGURA': None, 'ALTURA': None}
-        dimensao_codids.append(dimensao1)
-        dimensao_codids.append(dimensao2)
-    elif len(dimensao_codids) == 2:
+        dimensao_codids_list.append(dimensao1)
+        dimensao_codids_list.append(dimensao2)
+    elif len(dimensao_codids_list) == 2:
         dimensao1 = {'CODID':None ,'COMPRIMENTO': None, 'LARGURA': None, 'ALTURA': None}
-        dimensao_codids.append(dimensao1)
+        dimensao_codids_list.append(dimensao1)
     
     # Peso
     peso_kit = str(round(sum(peso_kit_list), 2))
+    
+    # Vlr Custo
+    valor_custo_kit = str(round(sum(vlr_custo_list), 2))
         
     # DF com os dados dos CODID
     comando = f'''
@@ -649,7 +656,7 @@ SOBRE O PRODUTO:'''
     valores = [
         codigo_kit, None, None, 'VENDA', '00', nome_kit, None, descritivo_kit, None, None,
         'UN', None, 2, peso_kit, None, None, None, None, None, None, None, None, 0, 0, 0, None, ncm_kit, 0, 0,
-        1, 0, 0, 0, 0, 0, 0, None, 0, 0, 0, 0, 0, 0, 0, 'False', 0, 0, '00', 0, None, None, 'N', 'N',
+        1, 0, 0, 0, 0, valor_custo_kit, 0, None, 0, 0, 0, 0, 0, 0, 0, 'False', 0, 0, '00', 0, None, None, 'N', 'N',
         'N', 'N', 'N', None, None, None, None, 'S', 1, 0, 'N', None, None, None, None, 0, 0, None, 1, 0, 0, 0,
         None, None, None, None, None, 0, 0, None, 'N', 'N', 'N', 3, 0, None, '', 0, 'S', 0, 0, 0,
         0, 0, None, data_formatada_kit, None, None, 0, 0, 0, None, None, None, None, 0, 0, None,
@@ -722,14 +729,14 @@ SOBRE O PRODUTO:'''
     try:
         novo_conteudo = f'''
         COMPRIMENTO | LARGURA | ALTURA - CODID {codid_1}
-        CODID {codid_1} | {dimensao_codids[0]['COMPRIMENTO']} | {dimensao_codids[0]['LARGURA']} | {dimensao_codids[0]['ALTURA']}
+        CODID {codid_1} | {dimensao_codids_list[0]['COMPRIMENTO']} | {dimensao_codids_list[0]['LARGURA']} | {dimensao_codids_list[0]['ALTURA']}
         
         COMPRIMENTO | LARGURA | ALTURA - CODID {codid_2}
-        CODID {codid_2} | {dimensao_codids[1]['COMPRIMENTO']} | {dimensao_codids[1]['LARGURA']} | {dimensao_codids[1]['ALTURA']}
+        CODID {codid_2} | {dimensao_codids_list[1]['COMPRIMENTO']} | {dimensao_codids_list[1]['LARGURA']} | {dimensao_codids_list[1]['ALTURA']}
         
         COMPRIMENTO | LARGURA | ALTURA - CODID {codid_3}
         
-        CODID {codid_3} | {dimensao_codids[2]['COMPRIMENTO']} | {dimensao_codids[2]['LARGURA']} | {dimensao_codids[2]['ALTURA']}
+        CODID {codid_3} | {dimensao_codids_list[2]['COMPRIMENTO']} | {dimensao_codids_list[2]['LARGURA']} | {dimensao_codids_list[2]['ALTURA']}
         
         ------------------------------------------------------------------------------------------------------------------------
         
