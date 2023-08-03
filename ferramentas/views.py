@@ -522,6 +522,7 @@ def atualizar_aton(request):
                 return redirect('index-ferramentas')
 
             list_upload_check = ['Ambar.exe', 'AtonECom.exe', 'AtonPublica.exe']
+            pasta_atualizacao = os.path.join('ferramentas', 'atualizacao-aton')
             
             for arquivo_enviado in arquivos_enviados:
                 if arquivo_enviado.name not in list_upload_check:
@@ -531,8 +532,7 @@ def atualizar_aton(request):
                     list_upload_check.remove(arquivo_enviado.name)
                     
                     # Remove caso o arquivo já exista
-                    caminho_arquivo = 'ferramentas\\atualizacao-aton\\' + arquivo_enviado.name
-                    
+                    caminho_arquivo = os.path.join(pasta_atualizacao, arquivo_enviado.name)
                     if os.path.exists(caminho_arquivo):
                         os.remove(caminho_arquivo)
                     
@@ -557,7 +557,7 @@ def atualizar_aton(request):
             buffer = io.BytesIO()
             with zipfile.ZipFile(buffer, 'w') as zip_file:
                 for arquivo in list_upload_check:
-                    caminho_arquivo = 'ferramentas\\atualizacao-aton\\' + arquivo
+                    caminho_arquivo = os.path.join(pasta_atualizacao, arquivo)
                     zip_file.write(caminho_arquivo, arquivo)
 
             # Preparar a resposta HTTP com o arquivo ZIP
