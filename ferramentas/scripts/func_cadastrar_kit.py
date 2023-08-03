@@ -189,10 +189,9 @@ SOBRE O PRODUTO:'''
         
     # DF com os dados dos CODID
     comando = f'''
-    SELECT A.CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, CLASS_FISCAL, ECOM_CATEGORIA, MARCA, B.URL,
-    FROM MATERIAIS A
-    LEFT JOIN MATERIAIS_IMAGENS B ON A.CODID = B.CODID
-    WHERE A.CODID IN ('{codid_1}', '{codid_2}', '{codid_3}')
+    SELECT CODID, COD_INTERNO, INATIVO, DESMEMBRA, PESO, DESCRICAO, DESCRITIVO, CLASS_FISCAL, ECOM_CATEGORIA, MARCA
+    FROM MATERIAIS
+    WHERE CODID IN ('{codid_1}', '{codid_2}', '{codid_3}')
     '''
     
     df = pd.read_sql(comando, conexao)
@@ -361,7 +360,48 @@ SOBRE O PRODUTO:'''
         messages.add_message(request, constants.ERROR, 'Erro ao tentar cadastrar os produtos agregados na composição!')
         return redirect('index-ferramentas')
     
+    # Adiciona imagens
+    comando = f'''
+    SELECT *
+    FROM MATERIAIS_IMAGENS
+    WHERE CODID IN('{codid_1}', '{codid_2}', '{codid_3}')
+    ORDER BY CODID ASC, IMG_IDX ASC
+    '''
     
+    connection = get_connection()
+    conexao = pyodbc.connect(connection)
+    cursor = conexao.cursor()
+    
+    df_photos = pd.read_sql(comando, conexao)
+    
+    if len(df_photos) > 0:
+        try:
+            df_photos['IMG_IDX'] = range(0, len(df_photos))
+            df_photos['CODID'] = codid_kit
+            df_photos = df_photos.drop(columns=['AUTOID'])
+            df_photos['IMAGEM_IDML'] = None
+            df_photos['IMAGEM_IDSHOPEE'] = None
+            df_photos['IMAGEM_IDNUVEMSHOP'] = None
+            df_photos['URL_ALIEXPRESS'] = None
+            
+            # Iterar sobre as linhas do DataFrame e executar o INSERT para cada linha
+            for index, row in df_photos.iterrows():
+                cursor.execute(
+                    "INSERT INTO MATERIAIS_IMAGENS (CODID, URL, PATH_PUBLIC, IMAGEM_FILENAME, "
+                    "IMAGEM_IDML, IMAGEM_IDSHOPEE, IMG_IDX, IMAGEM_IDNUVEMSHOP, URL_ALIEXPRESS) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    tuple(row)
+                )
+
+            # Commit das alterações e fechar a conexão
+            conexao.commit()
+            conexao.close()
+        except:
+            messages.add_message(request, constants.ERROR, 'Erro ao tentar cadastrar as imagens! Mas o KIT foi cadastrado')
+            return redirect('index-ferramentas')
+    
+    
+    # TXT INFO Message
     novo_conteudo = f'''
     COMPRIMENTO | LARGURA | ALTURA - CODID {codid_1}
     CODID {codid_1} | {dimensao_codids_list[0]['COMPRIMENTO']} | {dimensao_codids_list[0]['LARGURA']} | {dimensao_codids_list[0]['ALTURA']}
