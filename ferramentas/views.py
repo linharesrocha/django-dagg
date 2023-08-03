@@ -417,6 +417,24 @@ def inativar_produtos_aton(request):
     return redirect('index-ferramentas')
 
 def cadastrar_kit(request):
+    def calcular_digito_verificador(ean_base):
+        soma = 0
+        for i, digito in enumerate(reversed(ean_base)):
+            multiplicador = 3 if i % 2 == 0 else 1
+            soma += int(digito) * multiplicador
+        return str((10 - soma % 10) % 10)
+
+    def gerar_ean_brasileiro(codigo_produto):
+        if len(codigo_produto) != 9 or not codigo_produto.isdigit():
+            raise ValueError("O código do produto deve ter exatamente 9 dígitos numéricos.")
+
+        ean_base = '789' + codigo_produto
+        digito_verificador = calcular_digito_verificador(ean_base)
+
+        ean_completo = ean_base + digito_verificador
+        
+        return ean_completo
+    
     connection = get_connection()
     conexao = pyodbc.connect(connection)
     cursor = conexao.cursor()
@@ -559,6 +577,11 @@ SOBRE O PRODUTO:'''
     # Vlr Custo
     valor_custo_kit = str(round(sum(vlr_custo_list), 2))
     
+    # EAN
+    codigo_produto_aleatorio = ''.join(random.choices('0123456789', k=9))
+    ean_valido_brasileiro = str(gerar_ean_brasileiro(codigo_produto_aleatorio))
+    print(ean_valido_brasileiro)
+    
     # Verifica porcentagem
     valor_agregado_kit1 = None
     valor_agregado_kit2 = None
@@ -668,18 +691,19 @@ SOBRE O PRODUTO:'''
     ]
 
     valores = [
-        codigo_kit, None, None, 'VENDA', '00', nome_kit, None, descritivo_kit, None, None,
+        codigo_kit, ean_valido_brasileiro, None, 'VENDA', '00', nome_kit, None, descritivo_kit, None, None,
         'UN', None, 2, peso_kit, None, None, None, None, None, None, None, None, 0, 0, 0, None, ncm_kit, 0, 0,
         1, 0, 0, 0, 0, valor_custo_kit, 0, None, 0, 0, 0, 0, 0, 0, 0, 'False', 0, 0, '00', 0, None, None, 'N', 'N',
         'N', 'N', 'N', None, None, None, None, 'S', 1, 0, 'N', None, None, None, None, 0, 0, None, 1, 0, 0, 0,
-        None, None, None, None, None, 0, 0, None, 'N', 'N', 'N', 3, 0, None, '', 0, 'S', 0, 0, 0,
+        None, None, None, None, None, 0, 0, None, 'N', 'N', 'N', 3, 0, None, ean_valido_brasileiro, 0, 'S', 0, 0, 0,
         0, 0, None, data_formatada_kit, None, None, 0, 0, 0, None, None, None, None, 0, 0, None,
         0, 0, 'N'
     ]
 
+
     # Crie a consulta INSERT
     query = f"INSERT INTO MATERIAIS ({', '.join(colunas)}) VALUES ({', '.join(['?' for _ in colunas])})"
-
+    
 
     try:
         # Confirmar as alterações e fechar a conexão
@@ -843,7 +867,6 @@ def copiar_atributos(request):
             VALUES ('{str(codid_2)}', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
             cursor.execute(insercao, resultado.TIPO, resultado.VALOR, resultado.PRODUTO, resultado.SKU, resultado.API, resultado.IDTIPO, resultado.TIPODADO, resultado.ALLOW_VARIATIONS, resultado.VALOR_ID, resultado.QTY_UNID)
-
 
         # Confirmar as alterações e fechar a conexão
         conexao.commit()
