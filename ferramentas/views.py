@@ -558,6 +558,20 @@ SOBRE O PRODUTO:'''
     
     # Vlr Custo
     valor_custo_kit = str(round(sum(vlr_custo_list), 2))
+    
+    # Verifica porcentagem
+    valor_agregado_kit1 = None
+    valor_agregado_kit2 = None
+    valor_agregado_kit3 = None
+    if len(vlr_custo_list) == 1:
+        valor_agregado_kit1 = 100
+    elif len(vlr_custo_list) == 2:
+        valor_agregado_kit1 = round((vlr_custo_list[0] / sum(vlr_custo_list)) * 100, 2)
+        valor_agregado_kit2 = round((vlr_custo_list[1] / sum(vlr_custo_list)) * 100, 2)
+    elif len(vlr_custo_list) == 3:
+        valor_agregado_kit1 = round((vlr_custo_list[0] / sum(vlr_custo_list)) * 100, 2)
+        valor_agregado_kit2 = round((vlr_custo_list[1] / sum(vlr_custo_list)) * 100, 2)
+        valor_agregado_kit3 = round((vlr_custo_list[2] / sum(vlr_custo_list)) * 100, 2)
         
     # DF com os dados dos CODID
     comando = f'''
@@ -696,15 +710,15 @@ SOBRE O PRODUTO:'''
         for codid in lists_codid:
             if contador == 1:
                 valores = [
-                    (str(codid), str(codid_kit), str(qtd_codid_1), 0, 'UN', 1, 0, 0, 50)
+                    (str(codid), str(codid_kit), str(qtd_codid_1), 0, 'UN', 1, 0, 0, valor_agregado_kit1)
                 ]
             elif contador == 2:
                 valores = [
-                    (str(codid), str(codid_kit), str(qtd_codid_2), 0, 'UN', 1, 0, 0, 50)
+                    (str(codid), str(codid_kit), str(qtd_codid_2), 0, 'UN', 1, 0, 0, valor_agregado_kit2)
                 ]
             elif contador == 3:
                 valores = [
-                    (str(codid), str(codid_kit), str(qtd_codid_3), 0, 'UN', 1, 0, 0, 50)
+                    (str(codid), str(codid_kit), str(qtd_codid_3), 0, 'UN', 1, 0, 0, valor_agregado_kit3)
                 ]
 
             # Crie a consulta INSERT
