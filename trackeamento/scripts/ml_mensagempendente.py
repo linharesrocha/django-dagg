@@ -1,5 +1,3 @@
-import pyodbc
-import warnings
 from pathlib import Path
 import sys
 import os
@@ -11,14 +9,8 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
 from mercadolivre.scripts.config import reflash
-from scripts.connect_to_database import get_connection
 
 def main():    
-    # Banco de dados Aton
-    warnings.filterwarnings('ignore')
-    connection = get_connection()
-    conexao = pyodbc.connect(connection)
-    
     # Obtem access token ML
     ACCESS_TOKEN = reflash.refreshToken()
     
