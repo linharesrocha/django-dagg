@@ -1,0 +1,18 @@
+{
+    "inventory_id": "UXML71448",
+    "total": 6,
+    "available_quantity": 5,
+    "not_available_quantity": 1,
+    "not_available_detail": [
+        {
+            "status": "transfer",
+            "quantity": 1
+        }
+    ],
+    "external_references": [
+        {
+            "type": "item",
+            "id": "MLB2835251564"
+        }
+    ]
+}

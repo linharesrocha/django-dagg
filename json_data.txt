@@ -1,0 +1,100 @@
+{
+    "paging": {
+        "limit": 10,
+        "offset": 0,
+        "total": 2
+    },
+    "conversation_status": {
+        "path": "/packs/2000006231503046/sellers/195279505",
+        "status": "active",
+        "substatus": null,
+        "status_date": "2023-08-10T19:54:55Z",
+        "status_update_allowed": false,
+        "claim_ids": [],
+        "shipping_id": null
+    },
+    "messages": [
+        {
+            "id": "97be918ee56d452f83dc819cc3894967",
+            "site_id": "MLB",
+            "client_id": null,
+            "from": {
+                "user_id": 84088882
+            },
+            "to": {
+                "user_id": 195279505
+            },
+            "status": "available",
+            "subject": null,
+            "text": "Tudo bem ",
+            "message_date": {
+                "received": "2023-08-10T20:31:48Z",
+                "available": "2023-08-10T20:31:48Z",
+                "notified": "2023-08-10T20:31:48Z",
+                "created": "2023-08-10T20:31:48Z",
+                "read": "2023-08-10T20:34:37Z"
+            },
+            "message_moderation": {
+                "is_automatic": false,
+                "status": "clean",
+                "reason": "",
+                "source": "online",
+                "moderation_date": "2023-08-10T20:31:47Z"
+            },
+            "message_attachments": null,
+            "message_resources": [
+                {
+                    "id": "2000006231503046",
+                    "name": "packs"
+                },
+                {
+                    "id": "195279505",
+                    "name": "sellers"
+                }
+            ],
+            "conversation_first_message": false
+        },
+        {
+            "id": "5482e8ad7979476a946adc13bdf56d78",
+            "site_id": "MLB",
+            "client_id": null,
+            "from": {
+                "user_id": 195279505
+            },
+            "to": {
+                "user_id": 84088882
+            },
+            "status": "available",
+            "subject": null,
+            "text": "Ol\u00e1, tudo bem?",
+            "message_date": {
+                "received": "2023-08-10T19:54:55Z",
+                "available": "2023-08-10T19:54:55Z",
+                "notified": "2023-08-10T19:54:55Z",
+                "created": "2023-08-10T19:54:55Z",
+                "read": "2023-08-10T20:31:38Z"
+            },
+            "message_moderation": {
+                "is_automatic": false,
+                "status": "clean",
+                "reason": "",
+                "source": "online",
+                "moderation_date": "2023-08-10T19:54:55Z"
+            },
+            "message_attachments": null,
+            "message_resources": [
+                {
+                    "id": "2000006231503046",
+                    "name": "packs"
+                },
+                {
+                    "id": "195279505",
+                    "name": "sellers"
+                }
+            ],
+            "conversation_first_message": false
+        }
+    ],
+    "seller_max_message_length": 350,
+    "buyer_max_message_length": 3500
+}
