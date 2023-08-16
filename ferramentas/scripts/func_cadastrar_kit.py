@@ -203,12 +203,6 @@ SOBRE O PRODUTO:'''
     marca_kit = str(df['MARCA'][0]).strip()
     
     ecom_categoria_kit = str(df['ECOM_CATEGORIA'][0]).strip()
-    
-    # Obter data do cadastro
-    data_atual = datetime.now()
-    data_alvo = data_atual.replace(hour=0, minute=0, second=0, microsecond=0)
-    data_formatada_kit = str(data_alvo.strftime('%Y-%m-%d %H:%M:%S'))
-
 
     # Fazer kit cod interno
     while True:
@@ -292,7 +286,7 @@ SOBRE O PRODUTO:'''
         1, 0, 0, 0, 0, valor_custo_kit, 0, None, 0, 0, 0, 0, 0, 0, 0, 'False', 0, 0, '00', 0, None, None, 'N', 'N',
         'N', 'N', 'N', None, None, None, None, 'S', 1, 0, 'N', None, None, None, None, 0, 0, None, 1, 0, 0, 0,
         None, None, None, None, None, 0, 0, None, 'N', 'N', 'N', 3, 0, None, ean_valido_brasileiro, 0, 'S', 0, 0, 0,
-        0, 0, None, data_formatada_kit, None, None, 0, 0, 0, None, marca_kit, None, ecom_categoria_kit, 0, 0, None,
+        0, 0, None, None, None, None, 0, 0, 0, None, marca_kit, None, ecom_categoria_kit, 0, 0, None,
         0, 0, 'N'
     ]
 
@@ -309,7 +303,7 @@ SOBRE O PRODUTO:'''
         print('='*100)
         print(e)
         print('='*100)
-        messages.add_message(request, constants.ERROR, 'Erro ao tentar cadastrar o KIT!')
+        messages.add_message(request, constants.ERROR, f'Erro ao tentar cadastrar o KIT! {e}')
         conexao.close()
         return redirect('index-ferramentas')
     
@@ -387,7 +381,6 @@ SOBRE O PRODUTO:'''
             
             # Iterar sobre as linhas do DataFrame e executar o INSERT para cada linha
             for index, row in df_photos.iterrows():
-                print(index)
                 cursor.execute(
                     "INSERT INTO MATERIAIS_IMAGENS (CODID, URL, PATH_PUBLIC, IMAGEM_FILENAME, "
                     "IMAGEM_IDML, IMAGEM_IDSHOPEE, IMG_IDX, IMAGEM_IDNUVEMSHOP, URL_ALIEXPRESS) "
@@ -398,8 +391,8 @@ SOBRE O PRODUTO:'''
             # Commit das alterações e fechar a conexão
             conexao.commit()
             conexao.close()
-        except:
-            messages.add_message(request, constants.ERROR, 'Erro ao tentar cadastrar as imagens! Mas o KIT foi cadastrado')
+        except Exception as e:
+            messages.add_message(request, constants.ERROR, f'Erro ao tentar cadastrar as imagens! Mas o KIT foi cadastrado')
             return redirect('index-ferramentas')
     
     
