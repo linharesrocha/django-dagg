@@ -20,7 +20,7 @@ def main(file):
     conexao = pyodbc.connect(connection)
 
     comando = f'''
-    SELECT C.DESCRICAO, B.ESTOQUE, A.PRODMKTP_ID AS COD_ML
+    SELECT C.CODID, C.DESCRICAO, B.ESTOQUE, A.PRODMKTP_ID AS COD_ML
     FROM ECOM_SKU A
     LEFT JOIN ESTOQUE_MATERIAIS B ON A.MATERIAL_ID = B.MATERIAL_ID
     LEFT JOIN MATERIAIS C ON A.MATERIAL_ID = C.CODID
@@ -63,7 +63,7 @@ def main(file):
     df_completo['ENVIO'] = ''
     df_completo['SUGESTAO'] = ''
 
-    df_completo = df_completo[['COD_ML', 'ID_ANUNCIO', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'subtracao']]
+    df_completo = df_completo[['CODID', 'COD_ML', 'ID_ANUNCIO', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'subtracao']]
     
     # Escrever os dataframes em um arquivo Excel com duas abas
     output = BytesIO()
@@ -75,21 +75,21 @@ def main(file):
     worksheet = writer.sheets['ENVIO_FULL']
 
     # Adicione o meses
-    worksheet['L1'] = 'MESES'
-    worksheet['M1'] = '1'
+    worksheet['M1'] = 'MESES'
+    worksheet['N1'] = '1'
 
     # Adiciona a formula nas linhas
-    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=7, max_col=7):
+    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=8, max_col=8):
         for cell in row:
-            cell.value = f'=(C{cell.row}*$M$1)-J{cell.row}'
+            cell.value = f'=(D{cell.row}*$N$1)-K{cell.row}'
 
     # Alterando tamanho das colunas
-    worksheet.column_dimensions['F'].width = '65.43'
-    worksheet.column_dimensions['I'].width = '14.86'
-    worksheet.column_dimensions['A'].width = '11.43'
+    worksheet.column_dimensions['G'].width = '65.43'
+    worksheet.column_dimensions['H'].width = '14.86'
+    worksheet.column_dimensions['I'].width = '11.43'
 
     # Adicionando filtros
-    worksheet.auto_filter.ref = "A1:J1"
+    worksheet.auto_filter.ref = "A1:I1"
 
     # Filtrando valores maior 0 na coluna SUGESTAO
     filters = worksheet.auto_filter
@@ -99,10 +99,10 @@ def main(file):
     filters.filterColumn.append(col)
 
     # Escondendo coluna Resultado
-    worksheet.column_dimensions['J'].hidden = True
+    worksheet.column_dimensions['K'].hidden = True
     
     # Vendo valores duplicados
-    colunas_alvo = ["A", "F"] 
+    colunas_alvo = ["B", "G"] 
     for coluna in colunas_alvo:
         valores_coluna = [cell.value for cell in worksheet[coluna]]
         valores_duplicados = [valor for valor, frequencia in Counter(valores_coluna).items() if frequencia > 1]
