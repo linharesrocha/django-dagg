@@ -279,10 +279,13 @@ SOBRE O PRODUTO:'''
         'COD_INTERNO_PAI', 'ECOM_CATEGORIA', 'IMPSKU', 'EMPRESA_FAT', 'CODANVISA', 'EMP',
         'REAJ4', 'REQUER_SERIE'
     ]
+    
+    if len(nome_kit) > 120:
+        nome_kit = nome_kit[:120]
 
     valores = [
         codigo_kit, ean_valido_brasileiro, None, 'VENDA', '00', nome_kit, None, descritivo_kit, None, None,
-        'UN', None, 2, peso_kit, None, None, None, None, None, None, None, None, 0, 0, 0, None, ncm_kit, 0, 0,
+        'KIT', None, 2, peso_kit, None, None, None, None, None, None, None, None, 0, 0, 0, None, ncm_kit, 0, 0,
         1, 0, 0, 0, 0, valor_custo_kit, 0, None, 0, 0, 0, 0, 0, 0, 0, 'False', 0, 0, '00', 0, None, None, 'N', 'N',
         'N', 'N', 'N', None, None, None, None, 'S', 1, 0, 'N', None, None, None, None, 0, 0, None, 1, 0, 0, 0,
         None, None, None, None, None, 0, 0, None, 'N', 'N', 'N', 3, 0, None, ean_valido_brasileiro, 0, 'S', 0, 0, 0,
