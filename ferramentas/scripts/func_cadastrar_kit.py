@@ -358,45 +358,45 @@ SOBRE O PRODUTO:'''
         return redirect('index-ferramentas')
     
     # Adiciona imagens
-    comando = f'''
-    SELECT *
-    FROM MATERIAIS_IMAGENS
-    WHERE CODID IN('{codid_1}', '{codid_2}', '{codid_3}')
-    AND CODID != 0
-    ORDER BY CODID ASC, IMG_IDX ASC
-    '''
+    # comando = f'''
+    # SELECT *
+    # FROM MATERIAIS_IMAGENS
+    # WHERE CODID IN('{codid_1}', '{codid_2}', '{codid_3}')
+    # AND CODID != 0
+    # ORDER BY CODID ASC, IMG_IDX ASC
+    # '''
     
-    connection = get_connection()
-    conexao = pyodbc.connect(connection)
-    cursor = conexao.cursor()
+    # connection = get_connection()
+    # conexao = pyodbc.connect(connection)
+    # cursor = conexao.cursor()
     
-    df_photos = pd.read_sql(comando, conexao)
+    # df_photos = pd.read_sql(comando, conexao)
     
-    if len(df_photos) > 0:
-        try:
-            df_photos['IMG_IDX'] = range(0, len(df_photos))
-            df_photos['CODID'] = codid_kit
-            df_photos = df_photos.drop(columns=['AUTOID'])
-            df_photos['IMAGEM_IDML'] = None
-            df_photos['IMAGEM_IDSHOPEE'] = None
-            df_photos['IMAGEM_IDNUVEMSHOP'] = None
-            df_photos['URL_ALIEXPRESS'] = None
+    # if len(df_photos) > 0:
+    #     try:
+    #         df_photos['IMG_IDX'] = range(0, len(df_photos))
+    #         df_photos['CODID'] = codid_kit
+    #         df_photos = df_photos.drop(columns=['AUTOID'])
+    #         df_photos['IMAGEM_IDML'] = None
+    #         df_photos['IMAGEM_IDSHOPEE'] = None
+    #         df_photos['IMAGEM_IDNUVEMSHOP'] = None
+    #         df_photos['URL_ALIEXPRESS'] = None
             
-            # Iterar sobre as linhas do DataFrame e executar o INSERT para cada linha
-            for index, row in df_photos.iterrows():
-                cursor.execute(
-                    "INSERT INTO MATERIAIS_IMAGENS (CODID, URL, PATH_PUBLIC, IMAGEM_FILENAME, "
-                    "IMAGEM_IDML, IMAGEM_IDSHOPEE, IMG_IDX, IMAGEM_IDNUVEMSHOP, URL_ALIEXPRESS) "
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    tuple(row)
-                )
+    #         # Iterar sobre as linhas do DataFrame e executar o INSERT para cada linha
+    #         for index, row in df_photos.iterrows():
+    #             cursor.execute(
+    #                 "INSERT INTO MATERIAIS_IMAGENS (CODID, URL, PATH_PUBLIC, IMAGEM_FILENAME, "
+    #                 "IMAGEM_IDML, IMAGEM_IDSHOPEE, IMG_IDX, IMAGEM_IDNUVEMSHOP, URL_ALIEXPRESS) "
+    #                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    #                 tuple(row)
+    #             )
 
-            # Commit das alterações e fechar a conexão
-            conexao.commit()
-            conexao.close()
-        except Exception as e:
-            messages.add_message(request, constants.ERROR, f'Erro ao tentar cadastrar as imagens! Mas o KIT foi cadastrado')
-            return redirect('index-ferramentas')
+    #         # Commit das alterações e fechar a conexão
+    #         conexao.commit()
+    #         conexao.close()
+    #     except Exception as e:
+    #         messages.add_message(request, constants.ERROR, f'Erro ao tentar cadastrar as imagens! Mas o KIT foi cadastrado')
+    #         return redirect('index-ferramentas')
     
     
     # TXT INFO Message
