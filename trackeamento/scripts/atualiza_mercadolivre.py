@@ -2,7 +2,6 @@ import requests
 from pathlib import Path
 import sys
 from dotenv import load_dotenv
-from datetime import datetime
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 import os

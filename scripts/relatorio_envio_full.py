@@ -65,6 +65,36 @@ def main(file):
 
     df_completo = df_completo[['CODID', 'COD_ML', 'ID_ANUNCIO', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'subtracao']]
     
+    comando = f'''
+    SELECT CODID, COD_INTERNO
+    FROM MATERIAIS
+    '''
+    
+    # comando = f'''
+    # SELECT
+    #     A.CODID,
+    #     (SELECT SUM(B.QUANT) FROM PEDIDO_MATERIAIS_CLIENTE A1
+    #         LEFT JOIN PEDIDO_MATERIAIS_ITENS_CLIENTE B ON A1.PEDIDO = B.PEDIDO
+    #         WHERE CONVERT(DATE, A1.DATA) >= CONVERT(DATE, GETDATE() - 30)
+    #         AND A1.ARMAZEM IN ('0', '2')
+    #         AND A1.TIPO = 'PEDIDO'
+    #         AND A1.POSICAO != 'CANCELADO'
+    #         AND A1.ORIGEM = '8'
+    #         AND A.COD_INTERNO = B.COD_INTERNO) AS ATON_V30
+    # FROM MATERIAIS A
+    # WHERE A.COD_INTERNO NOT LIKE '%PAI'
+    # AND A.INATIVO = 'N'
+    # AND A.DESMEMBRA = 'N'
+    # '''
+    
+    # df_vendas_30 = pd.read_sql(comando, conexao)
+    
+    # # Altera para 0 os valores nulos
+    # df_vendas_30['ATON_V30'].fillna(0, inplace=True) 
+    
+    # Junta as duas planilhas
+    #df_completo = pd.merge(df_completo, df_vendas_30, on='CODID')
+    
     # Escrever os dataframes em um arquivo Excel com duas abas
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='openpyxl')
