@@ -1,16 +1,11 @@
 from pathlib import Path
 import sys
-import os
 import requests
-from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
-from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
 from mercadolivre.scripts.config import reflash
-import json
  
 # Obtem access token ML
 ACCESS_TOKEN = reflash.refreshToken()
