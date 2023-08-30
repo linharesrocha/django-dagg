@@ -18,7 +18,7 @@ ontem = datetime.now() - timedelta(days=5)
 data_anterior = ontem.strftime('%Y-%m-%d')
 
 message_seller = '''Olá, agradecemos por escolher nosso produto!
-Caso tenha um momento, ficaríamos muito felizes se pudesse compartilhar seu comentário sobre nosso produto no Mercado Livre. ^-^'''
+Chegará para você um e-mail do Mercado Livre e, caso tenha um momento, ficaríamos muito felizes se pudesse compartilhar seu comentário sobre nossa loja e o produto ^-^'''
 
 all_orders = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={data_anterior}T00:00:00.000-00:00", headers=header).json()
 total_orders = all_orders['paging']['total']
