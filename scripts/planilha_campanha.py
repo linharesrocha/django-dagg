@@ -264,7 +264,6 @@ def obtem_colunas_filtradas(data_completo, data):
     #print(diff_cols1)
 
 def gerar_excel(data):
-    
     excel_bytes = BytesIO()
     data.to_excel(excel_bytes, index=False)
   
