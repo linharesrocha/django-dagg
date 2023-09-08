@@ -114,13 +114,13 @@ worksheet.auto_filter.ref = "A1:T1"
 worksheet.freeze_panes = 'A2'
 
 writer._save()
-writer.close()
 
 # Envia slack
 load_dotenv()
 
 client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 SLACK_CHANNEL_ID='C05FN0ZF0UB'
+SLACK_CHANNEL_ID='C045HEE4G7L'
 
 message = f'NETSHOES MARGEM! :heavy_division_sign:'
 
@@ -135,6 +135,8 @@ try:
     client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
 except SlackApiError as e:
     print("Error sending message: {}".format(e))
+    
+writer.close()
     
 # Remove arquivo
 try:
