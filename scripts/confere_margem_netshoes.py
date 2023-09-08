@@ -11,6 +11,7 @@ from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 from pathlib import Path
 from datetime import datetime, timedelta
+from time import sleep
 
 # Filtrando Warnings
 warnings.filterwarnings('ignore')
@@ -98,8 +99,22 @@ df['EMPRESA'] = df['EMPRESA'].replace(2, 'RED PLACE')
 df['EMPRESA'] = df['EMPRESA'].replace(3, 'PISSTE')
 
 # Salve em excel com a data de ontem
-name_file_excel = 'confere_margem_netshoes_' + str(date.today() - timedelta(days=1)) + '.xlsx'
-df.to_excel(name_file_excel, index=False)
+name_file_excel = 'margem_netshoes_' + str(date.today() - timedelta(days=1)) + '.xlsx'
+
+
+writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
+df.to_excel(writer, sheet_name='NETSHOES', index=False)
+
+worksheet = writer.sheets['NETSHOES']
+
+# Adicionando filtros
+worksheet.auto_filter.ref = "A1:T1"
+
+# Congelando painel
+worksheet.freeze_panes = 'A2'
+
+writer._save()
+writer.close()
 
 # Envia slack
 load_dotenv()
