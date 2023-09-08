@@ -105,8 +105,7 @@ df.to_excel(name_file_excel, index=False)
 load_dotenv()
 
 client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-#SLACK_CHANNEL_ID='C05FN11JCUB'
-SLACK_CHANNEL_ID='C045HEE4G7L'
+SLACK_CHANNEL_ID='C05FN0ZF0UB'
 
 message = f'NETSHOES MARGEM! :heavy_division_sign:'
 
