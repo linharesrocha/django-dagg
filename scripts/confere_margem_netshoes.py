@@ -120,7 +120,6 @@ load_dotenv()
 
 client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 SLACK_CHANNEL_ID='C05FN0ZF0UB'
-SLACK_CHANNEL_ID='C045HEE4G7L'
 
 message = f'NETSHOES MARGEM! :heavy_division_sign:'
 
