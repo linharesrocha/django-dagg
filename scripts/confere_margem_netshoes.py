@@ -1,17 +1,13 @@
 import pyodbc
 import pandas as pd
 import warnings
-from datetime import datetime, date, timedelta
-from io import BytesIO
+from datetime import date, timedelta
 from dotenv import load_dotenv
 from connect_to_database import get_connection
 import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
-from pathlib import Path
-from datetime import datetime, timedelta
-from time import sleep
 
 # Filtrando Warnings
 warnings.filterwarnings('ignore')
@@ -59,7 +55,7 @@ df['TITULO'] = df['TITULO'].str.strip()
 df['COD_INTERNO'] = df['COD_INTERNO'].str.strip()
 df['PEDIDO'] = df['PEDIDO'].str.strip()
 
-df['QUANTIDADE_PED'] = df['PEDIDO'].value_counts().loc[df['PEDIDO']].values
+df['QUANTIDADE_PED'] = df.groupby(['EMPRESA', 'PEDIDO'])['PEDIDO'].transform('count')
 
 # Arrendonda coluna VLR_PEDIDO para 2 casas decimais
 df['VLR_PEDIDO'] = round(df['VLR_PEDIDO'], 2)
