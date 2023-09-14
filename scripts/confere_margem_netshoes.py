@@ -116,12 +116,12 @@ name_file_excel = 'margem_netshoes_' + str(date.today() - timedelta(days=1)) + '
 
 writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
 df.to_excel(writer, sheet_name='NETSHOES', index=False)
-#df.to_excel('teste-margem.xlsx', index=False)
+# df.to_excel('teste-margem.xlsx', index=False)
 
 worksheet = writer.sheets['NETSHOES']
 
 # Adicionando filtros
-worksheet.auto_filter.ref = "A1:T1"
+worksheet.auto_filter.ref = "A1:V1"
 
 # Congelando painel
 worksheet.freeze_panes = 'A2'
