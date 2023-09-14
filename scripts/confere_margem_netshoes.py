@@ -79,6 +79,9 @@ df['TARIFA_FIXA'] = df['VLR_PEDIDO'].apply(lambda x: TARIFA_FIXA if x > 10 else 
 # Modifica TARIFICA_FIXA
 df['TARIFA_FIXA'] = (df['TARIFA_FIXA'] / df['QUANTIDADE_PED']).round(2)
 
+# Imposto Frete que sigifnica aba IMPOSSTO * VALOR DO FRETE
+df['IMPOSTO_FRETE'] = (df['VLR_FRETE'] * (IMPOSTO / 100)).round(2)
+
 # Adiciona coluna OPERACAO
 df['OPERACAO'] = OPERACAO
 
@@ -101,7 +104,7 @@ df['PORC_TOTAL'] = df['OPERACAO'] + df['IMPOSTO'] + df['COMISSAO_PADRAO'] + df['
 df['PORC_TOTAL2'] = round(df['VLR_PEDIDO'] * (df['PORC_TOTAL'] / 100), 2)
 
 # Lucro
-df['LUCRO'] = round(df['VLR_PEDIDO'] - df['PORC_TOTAL2'] - df['TARIFA_FIXA'] - df['VLR_CUSTO'], 2)
+df['LUCRO'] = round(df['VLR_PEDIDO'] - df['PORC_TOTAL2'] - df['TARIFA_FIXA'] - df['VLR_CUSTO'] - df['IMPOSTO_FRETE'], 2)
 
 # Margem
 df['MARGEM'] = round(df['LUCRO'] / df['VLR_PEDIDO'] * 100, 2)
@@ -116,8 +119,8 @@ name_file_excel = 'margem_netshoes_' + str(date.today() - timedelta(days=1)) + '
 
 
 writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
-#df.to_excel(writer, sheet_name='NETSHOES', index=False)
-df.to_excel('teste-margem.xlsx', index=False)
+df.to_excel(writer, sheet_name='NETSHOES', index=False)
+#df.to_excel('teste-margem.xlsx', index=False)
 
 worksheet = writer.sheets['NETSHOES']
 
@@ -127,7 +130,7 @@ worksheet.auto_filter.ref = "A1:T1"
 # Congelando painel
 worksheet.freeze_panes = 'A2'
 
-#writer._save()
+writer._save()
 
 # Envia slack
 load_dotenv()
@@ -137,22 +140,22 @@ SLACK_CHANNEL_ID='C05FN0ZF0UB'
 
 message = f'NETSHOES MARGEM! :heavy_division_sign:'
 
-# # Send message
-# try:
-#     client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
-# except SlackApiError as e:
-#     print("Error sending message: {}".format(e))
+# Send message
+try:
+    client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
+except SlackApiError as e:
+    print("Error sending message: {}".format(e))
     
-# # Send file
-# try:
-#     client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
-# except SlackApiError as e:
-#     print("Error sending message: {}".format(e))
+# Send file
+try:
+    client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
+except SlackApiError as e:
+    print("Error sending message: {}".format(e))
     
-# writer.close()
+writer.close()
     
-# # Remove arquivo
-# try:
-#     os.remove(name_file_excel)
-# except Exception as e:
-#     print(e)
+# Remove arquivo
+try:
+    os.remove(name_file_excel)
+except Exception as e:
+    print(e)
