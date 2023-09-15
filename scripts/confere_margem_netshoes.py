@@ -8,6 +8,15 @@ import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
+import openpyxl
+from openpyxl.styles import PercentStyle
+
+def encontra_nome_coluna(sheet, nome_coluna):
+    numero_coluna = None
+    for coluna in sheet.iter_cols(min_col=1, max_col=sheet.max_column):
+        if coluna[0].value == nome_coluna:
+            numero_coluna = coluna[0].column
+            return numero_coluna
 
 # Filtrando Warnings
 warnings.filterwarnings('ignore')
@@ -125,6 +134,15 @@ worksheet.auto_filter.ref = "A1:V1"
 
 # Congelando painel
 worksheet.freeze_panes = 'A2'
+
+range_inicial = 2
+range_final = worksheet.max_row
+
+# Coloca porcentagem
+numero_coluna_margem = encontra_nome_coluna(worksheet, 'MARGEM')
+for row in worksheet.iter_rows(min_row=range_inicial, max_row=range_final, min_col=numero_coluna_margem, max_col=numero_coluna_margem):
+    for cell in row:
+        cell.style = PercentStyle()
 
 writer._save()
 
