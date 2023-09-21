@@ -8,8 +8,7 @@ import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
-import openpyxl
-from openpyxl.styles import PercentStyle
+from openpyxl.styles import PatternFill
 
 def encontra_nome_coluna(sheet, nome_coluna):
     numero_coluna = None
@@ -135,14 +134,29 @@ worksheet.auto_filter.ref = "A1:V1"
 # Congelando painel
 worksheet.freeze_panes = 'A2'
 
-range_inicial = 2
-range_final = worksheet.max_row
+# Definir a cor
+cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
+cor_verde = PatternFill(start_color='96C291', end_color='96C291', fill_type='solid')
+cor_branco = PatternFill(start_color='F4EEEE', end_color='F4EEEE', fill_type='solid')
 
-# Coloca porcentagem
-numero_coluna_margem = encontra_nome_coluna(worksheet, 'MARGEM')
-for row in worksheet.iter_rows(min_row=range_inicial, max_row=range_final, min_col=numero_coluna_margem, max_col=numero_coluna_margem):
-    for cell in row:
-        cell.style = PercentStyle()
+# Lista Porcentagem laranja
+celulas_laranja = ['V1', 'T1', 'S1', 'R1', 'Q1', 'P1', 'O1', 'N1']
+for celula_referencia in celulas_laranja:
+    celula = worksheet[celula_referencia]
+    celula.fill = cor_laranja
+    
+# Lista Porcentagem Verde
+celulas_verde = ['U1', 'M1', 'L1', 'I1', 'H1', 'G1', 'F1']
+for celula_referencia in celulas_verde:
+    celula = worksheet[celula_referencia]
+    celula.fill = cor_verde
+    
+
+# Lista Porcentagem Branco
+celulas_branco = ['J1', 'K1', 'E1', 'D1', 'C1', 'B1', 'A1']
+for celula_referencia in celulas_branco:
+    celula = worksheet[celula_referencia]
+    celula.fill = cor_branco
 
 writer._save()
 
