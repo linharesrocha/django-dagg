@@ -141,12 +141,11 @@ def main(file):
     df_completo['SUGESTAO'] = ''
 
     # Altera ordem
-    df_completo = df_completo[['CODID', 'COD_ML', 'SKU_MESCLADO', 'ATON_VENDAS_30', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'E_FULL', 'subtracao']]
+    df_completo = df_completo[['CODID', 'COD_ML', 'MLB_ANUNCIO', 'SKU_MESCLADO', 'ATON_VENDAS_30', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'E_FULL', 'subtracao']]
     
     # Preenche os valores vazios com 0
     df_completo['VENDAS_30'].fillna(0, inplace=True)
     df_completo['APTAS_FULL'].fillna(0, inplace=True)
-    
 
     # Escrever os dataframes em um arquivo Excel com duas abas
     output = BytesIO()
@@ -158,21 +157,21 @@ def main(file):
     worksheet = writer.sheets['ENVIO_FULL']
 
     # Adicione o meses
-    worksheet['O1'] = 'MESES'
-    worksheet['P1'] = '1'
+    worksheet['P1'] = 'MESES'
+    worksheet['Q1'] = '1'
 
     # Adiciona a formula nas linhas
-    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=9, max_col=9):
+    for row in worksheet.iter_rows(min_row=2, max_row=worksheet.max_row, min_col=10, max_col=10): # altera aqui caso adicione uma coluna
         for cell in row:
-            cell.value = f'=(D{cell.row}*$P$1)-M{cell.row}'
+            cell.value = f'=(E{cell.row}*$Q$1)-N{cell.row}'
 
     # Alterando tamanho das colunas
-    worksheet.column_dimensions['H'].width = '65.43'
-    worksheet.column_dimensions['I'].width = '14.86'
-    worksheet.column_dimensions['J'].width = '11.43'
+    worksheet.column_dimensions['I'].width = '65.43'
+    worksheet.column_dimensions['J'].width = '14.86'
+    worksheet.column_dimensions['K'].width = '11.43'
 
     # Adicionando filtros
-    worksheet.auto_filter.ref = "A1:M1"
+    worksheet.auto_filter.ref = "A1:N1"
 
     # # Filtrando valores maior 0 na coluna SUGESTAO
     # filters = worksheet.auto_filter
@@ -182,7 +181,7 @@ def main(file):
     # filters.filterColumn.append(col)
 
     # Escondendo coluna Resultado
-    worksheet.column_dimensions['M'].hidden = True
+    worksheet.column_dimensions['N'].hidden = True
 
     # # Vendo valores duplicados
     # colunas_alvo = ["B", "H"] 
