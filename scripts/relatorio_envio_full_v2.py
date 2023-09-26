@@ -142,6 +142,11 @@ def main(file):
 
     # Altera ordem
     df_completo = df_completo[['CODID', 'COD_ML', 'SKU_MESCLADO', 'ATON_VENDAS_30', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'E_FULL', 'subtracao']]
+    
+    # Preenche os valores vazios com 0
+    df_completo['VENDAS_30'].fillna(0, inplace=True)
+    df_completo['APTAS_FULL'].fillna(0, inplace=True)
+    
 
     # Escrever os dataframes em um arquivo Excel com duas abas
     output = BytesIO()
