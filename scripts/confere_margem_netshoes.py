@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from connect_to_database import get_connection
 import os
 from slack_sdk import WebClient
+import numpy as np
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 from openpyxl.styles import PatternFill
@@ -45,9 +46,11 @@ OPERACAO = 10
 IMPOSTO = 10
 
 comando = f'''
-SELECT A.CODID, A.COD_INTERNO, B.SEUPEDIDO AS PEDIDO, A.EMPRESA, A.DESCRICAOPROD AS TITULO, VLR_CUSTO, VLR_UNIT AS VLR_PEDIDO, B.VLRFRETE AS VLR_FRETE, DATA
+SELECT DISTINCT A.CODID, C.MATERIAL_ID AS CODID_KIT, A.COD_INTERNO, D.COD_INTERNO AS COD_INTERNO_KIT, COD_PEDIDO AS SKU_MKTP, B.SEUPEDIDO AS PEDIDO, A.EMPRESA, A.DESCRICAOPROD AS TITULO, D.DESCRICAO AS TITULO_KIT, A.VLR_CUSTO, VLR_UNIT AS VLR_PEDIDO, B.VLRFRETE AS VLR_FRETE, DATA, D.DESMEMBRA AS KIT
 FROM PEDIDO_MATERIAIS_ITENS_CLIENTE A
 LEFT JOIN PEDIDO_MATERIAIS_CLIENTE B ON A.PEDIDO = B.PEDIDO
+LEFT JOIN ECOM_SKU C ON A.COD_PEDIDO = C.SKU
+LEFT JOIN MATERIAIS D ON C.MATERIAL_ID = D.CODID
 WHERE B.TIPO = 'PEDIDO'
 AND B.POSICAO != 'CANCELADO'
 AND B.ORIGEM IN ('2', '3', '4')
@@ -60,9 +63,45 @@ df = pd.read_sql(comando, conexao)
 
 # Remove espaço da coluna TITULO
 df['TITULO'] = df['TITULO'].str.strip()
+df['TITULO_KIT'] = df['TITULO_KIT'].str.strip()
 df['COD_INTERNO'] = df['COD_INTERNO'].str.strip()
+df['COD_INTERNO_KIT'] = df['COD_INTERNO_KIT'].str.strip()
 df['PEDIDO'] = df['PEDIDO'].str.strip()
 
+
+is_kit_s = df['KIT'] == 'S'
+
+# Altera CODID_KIT
+df['CODID'] = np.where(is_kit_s, df['CODID_KIT'], df['CODID'])
+df.drop('CODID_KIT', axis=1, inplace=True)
+
+# Altera COD_INTERNO_KIT
+df['COD_INTERNO'] = np.where(is_kit_s, df['COD_INTERNO_KIT'], df['COD_INTERNO'])
+df.drop('COD_INTERNO_KIT', axis=1, inplace=True)
+
+# Altera TITULO_KIT
+df['TITULO'] = np.where(is_kit_s, df['TITULO_KIT'], df['TITULO'])
+df.drop('TITULO_KIT', axis=1, inplace=True)
+
+# Soma VLR_CUSTO e VLR_PEDIDO
+df['SOMA_VLR_CUSTO'] = 0
+df['SOMA_VLR_PEDIDO'] = 0
+mask_custo = (df['KIT'] == 'S')
+mask_pedido = (df['KIT'] == 'S')
+soma_custo = df[mask_custo].groupby('PEDIDO')['VLR_CUSTO'].transform('sum')
+soma_pedido = df[mask_pedido].groupby('PEDIDO')['VLR_PEDIDO'].transform('sum')
+df.loc[mask_custo, 'SOMA_VLR_CUSTO'] = soma_custo
+df.loc[mask_pedido, 'SOMA_VLR_PEDIDO'] = soma_pedido
+df['VLR_CUSTO'] = df['SOMA_VLR_CUSTO'].where(mask_custo, df['VLR_CUSTO'])
+df['VLR_PEDIDO'] = df['SOMA_VLR_PEDIDO'].where(mask_pedido, df['VLR_PEDIDO'])
+df.drop(columns=['SOMA_VLR_CUSTO', 'SOMA_VLR_PEDIDO'], inplace=True)
+
+# Removendo duplicadas
+df_s = df[df['KIT'] == 'S']
+df_s_no_duplicates = df_s.drop_duplicates()
+df = pd.concat([df[df['KIT'] != 'S'], df_s_no_duplicates])
+
+# Quantidade Pedidos
 df['QUANTIDADE_PED'] = df.groupby(['EMPRESA', 'PEDIDO'])['PEDIDO'].transform('count')
 
 # Arrendonda coluna VLR_PEDIDO para 2 casas decimais
@@ -72,7 +111,7 @@ df['VLR_PEDIDO'] = round(df['VLR_PEDIDO'], 2)
 df['VLR_TOTAL'] = df['VLR_PEDIDO'] + df['VLR_FRETE']
 
 # Coloca a coluna VLR_TOTAL depois do VLR_FRETE
-df = df[['CODID', 'COD_INTERNO', 'PEDIDO', 'EMPRESA', 'TITULO', 'VLR_CUSTO', 'VLR_PEDIDO', 'VLR_FRETE', 'VLR_TOTAL', 'DATA', 'QUANTIDADE_PED']]
+df = df[['CODID', 'COD_INTERNO', 'PEDIDO', 'EMPRESA', 'TITULO', 'VLR_CUSTO', 'VLR_PEDIDO', 'VLR_FRETE', 'VLR_TOTAL', 'DATA', 'KIT','QUANTIDADE_PED']]
 
 # Modifica VLR_FRETE
 df['VLR_FRETE'] = (df['VLR_FRETE'] / df['QUANTIDADE_PED']).round(2)
@@ -121,15 +160,13 @@ df['EMPRESA'] = df['EMPRESA'].replace(3, 'PISSTE')
 # Salve em excel com a data de ontem
 name_file_excel = 'margem_netshoes_' + str(date.today() - timedelta(days=1)) + '.xlsx'
 
-
 writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
 df.to_excel(writer, sheet_name='NETSHOES', index=False)
-# df.to_excel('teste-margem.xlsx', index=False)
 
 worksheet = writer.sheets['NETSHOES']
 
 # Adicionando filtros
-worksheet.auto_filter.ref = "A1:V1"
+worksheet.auto_filter.ref = "A1:W1"
 
 # Congelando painel
 worksheet.freeze_panes = 'A2'
@@ -140,20 +177,20 @@ cor_verde = PatternFill(start_color='96C291', end_color='96C291', fill_type='sol
 cor_branco = PatternFill(start_color='F4EEEE', end_color='F4EEEE', fill_type='solid')
 
 # Lista Porcentagem laranja
-celulas_laranja = ['V1', 'T1', 'S1', 'R1', 'Q1', 'P1', 'O1', 'N1']
+celulas_laranja = ['W1', 'U1', 'T1', 'S1', 'R1', 'Q1', 'P1', 'O1']
 for celula_referencia in celulas_laranja:
     celula = worksheet[celula_referencia]
     celula.fill = cor_laranja
     
 # Lista Porcentagem Verde
-celulas_verde = ['U1', 'M1', 'L1', 'I1', 'H1', 'G1', 'F1']
+celulas_verde = ['V1', 'N1', 'M1', 'I1', 'H1', 'G1', 'F1']
 for celula_referencia in celulas_verde:
     celula = worksheet[celula_referencia]
     celula.fill = cor_verde
     
 
 # Lista Porcentagem Branco
-celulas_branco = ['J1', 'K1', 'E1', 'D1', 'C1', 'B1', 'A1']
+celulas_branco = ['K1', 'L1', 'E1', 'D1', 'C1', 'B1', 'A1', 'J1']
 for celula_referencia in celulas_branco:
     celula = worksheet[celula_referencia]
     celula.fill = cor_branco
