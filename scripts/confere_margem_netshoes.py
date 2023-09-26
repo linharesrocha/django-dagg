@@ -141,10 +141,10 @@ df['ACRESCIMO_COMISSAO'] = df['EMPRESA'].apply(lambda x: DAGG_ACRESCIMO_COMISSAO
 df['DESCONTO_CAMPANHA'] = df['EMPRESA'].apply(lambda x: DAGG_DESCONTO_CAMPANHA if x == 1 else RED_DESCONTO_CAMPANHA if x == 2 else PISSTE_DESCONTO_CAMPANHA)
 
 # Adiciona coluna PORC_TOTAL que soma as colunas
-df['PORC_TOTAL'] = df['OPERACAO'] + df['IMPOSTO'] + df['COMISSAO_PADRAO'] + df['ACRESCIMO_COMISSAO'] - df['DESCONTO_CAMPANHA']
+df['CUSTO_PARCIAL%'] = df['OPERACAO'] + df['IMPOSTO'] + df['COMISSAO_PADRAO'] + df['ACRESCIMO_COMISSAO'] - df['DESCONTO_CAMPANHA']
 
 # Calculo resto
-df['PORC_TOTAL2'] = round(df['VLR_PEDIDO'] * (df['PORC_TOTAL'] / 100), 2)
+df['CUSTO_PARCIAL$'] = round(df['VLR_PEDIDO'] * (df['PORC_TOTAL'] / 100), 2)
 
 # Lucro
 df['LUCRO'] = round(df['VLR_PEDIDO'] - df['PORC_TOTAL2'] - df['TARIFA_FIXA'] - df['VLR_CUSTO'] - df['IMPOSTO_FRETE'], 2)
@@ -177,13 +177,13 @@ cor_verde = PatternFill(start_color='96C291', end_color='96C291', fill_type='sol
 cor_branco = PatternFill(start_color='F4EEEE', end_color='F4EEEE', fill_type='solid')
 
 # Lista Porcentagem laranja
-celulas_laranja = ['W1', 'U1', 'T1', 'S1', 'R1', 'Q1', 'P1', 'O1']
+celulas_laranja = ['W1', 'T1', 'S1', 'R1', 'Q1', 'P1', 'O1']
 for celula_referencia in celulas_laranja:
     celula = worksheet[celula_referencia]
     celula.fill = cor_laranja
     
 # Lista Porcentagem Verde
-celulas_verde = ['V1', 'N1', 'M1', 'I1', 'H1', 'G1', 'F1']
+celulas_verde = ['V1', 'U1', 'N1', 'M1', 'I1', 'H1', 'G1', 'F1']
 for celula_referencia in celulas_verde:
     celula = worksheet[celula_referencia]
     celula.fill = cor_verde
