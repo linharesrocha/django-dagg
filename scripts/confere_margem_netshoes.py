@@ -144,10 +144,10 @@ df['DESCONTO_CAMPANHA'] = df['EMPRESA'].apply(lambda x: DAGG_DESCONTO_CAMPANHA i
 df['CUSTO_PARCIAL%'] = df['OPERACAO'] + df['IMPOSTO'] + df['COMISSAO_PADRAO'] + df['ACRESCIMO_COMISSAO'] - df['DESCONTO_CAMPANHA']
 
 # Calculo resto
-df['CUSTO_PARCIAL$'] = round(df['VLR_PEDIDO'] * (df['PORC_TOTAL'] / 100), 2)
+df['CUSTO_PARCIAL$'] = round(df['VLR_PEDIDO'] * (df['CUSTO_PARCIAL%'] / 100), 2)
 
 # Lucro
-df['LUCRO'] = round(df['VLR_PEDIDO'] - df['PORC_TOTAL2'] - df['TARIFA_FIXA'] - df['VLR_CUSTO'] - df['IMPOSTO_FRETE'], 2)
+df['LUCRO'] = round(df['VLR_PEDIDO'] - df['CUSTO_PARCIAL$'] - df['TARIFA_FIXA'] - df['VLR_CUSTO'] - df['IMPOSTO_FRETE'], 2)
 
 # Margem
 df['MARGEM'] = round(df['LUCRO'] / df['VLR_PEDIDO'] * 100, 2)
