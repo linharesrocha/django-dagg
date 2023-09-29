@@ -194,6 +194,13 @@ celulas_branco = ['K1', 'L1', 'E1', 'D1', 'C1', 'B1', 'A1', 'J1']
 for celula_referencia in celulas_branco:
     celula = worksheet[celula_referencia]
     celula.fill = cor_branco
+    
+# Cria lista de Regras
+df_regras = pd.DataFrame({'Regra': ['TARIFA_FIXA', 'IMPOSTO_FRETE', 'OPERACAO', 'IMPOSTO', 'COMISSAO_PADRAO', 'ACRESCIMO_COMISSAO', 'DESCONTO_CAMPANHA', 'CUSTO_PARCIAL%', 'CUSTO_PARCIAL$', 'LUCRO', 'MARGEM'],
+                          'Descrição': ['Tarifa fixa para pedidos acima de R$10,00. Em caso de Kit a tarifa é dividida pela quantidade de itens no kit.', '', '', '', '', '', '', '', '', '', '']})
+df_regras.to_excel(writer, sheet_name='REGRAS', index=False)
+worksheet_regras = writer.sheets['REGRAS']
+
 
 writer._save()
 
