@@ -183,9 +183,27 @@
                             method="post">
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">Selecione a planilha do Full</label>
-                                <input class="form-control" type="file" name="file" id="file">
+                                <input class="form-control" type="file" name="file" id="file" required>
                             </div>
                             <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Soma Peso produtos Aton</h5>
+                        <br>
+                        <p class="card-text">1. Coluna: CODID <br>2. Coluna: QUANT</p>
+                        <form action="{% url 'excel_gerar_planilha_peso_quant' %}" enctype="multipart/form-data"
+                            method="post">
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Selecione a planilha</label>
+                                <input class="form-control" type="file" name="file" id="file" required>
+                            </div>
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary">Enviar</button>
                             {% csrf_token %}
                         </form>
                     </div>

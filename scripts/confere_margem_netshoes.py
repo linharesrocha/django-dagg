@@ -26,17 +26,17 @@ conexao = pyodbc.connect(connection)
 cursor = conexao.cursor()
 
 # DAGG
-DAGG_COMISSAO_PADRAO = 21
+DAGG_COMISSAO_PADRAO = 23
 DAGG_ACRESCIMO_COMISSAO = 6
 DAGG_DESCONTO_CAMPANHA = 6
 
 # RED PLACE
-RED_COMISSAO_PADRAO = 21
+RED_COMISSAO_PADRAO = 17
 RED_ACRESCIMO_COMISSAO = 0
 RED_DESCONTO_CAMPANHA = 6
 
 # PISSTE
-PISSTE_COMISSAO_PADRAO = 21
+PISSTE_COMISSAO_PADRAO = 17
 PISSTE_ACRESCIMO_COMISSAO = 6
 PISSTE_DESCONTO_CAMPANHA = 6
 
@@ -197,7 +197,17 @@ for celula_referencia in celulas_branco:
     
 # Cria lista de Regras
 df_regras = pd.DataFrame({'Regra': ['TARIFA_FIXA', 'IMPOSTO_FRETE', 'OPERACAO', 'IMPOSTO', 'COMISSAO_PADRAO', 'ACRESCIMO_COMISSAO', 'DESCONTO_CAMPANHA', 'CUSTO_PARCIAL%', 'CUSTO_PARCIAL$', 'LUCRO', 'MARGEM'],
-                          'Descrição': ['Tarifa fixa para pedidos acima de R$10,00. Em caso de Kit a tarifa é dividida pela quantidade de itens no kit.', '', '', '', '', '', '', '', '', '', '']})
+                          'Descrição': ['Tarifa fixa para pedidos acima de R$10,00. Em caso de Kit a tarifa é dividida pela quantidade de itens no kit.', 
+                                        '', 
+                                        '', 
+                                        '', 
+                                        '', 
+                                        '', 
+                                        '', 
+                                        '', 
+                                        '', 
+                                        '', 
+                                        '']})
 df_regras.to_excel(writer, sheet_name='REGRAS', index=False)
 worksheet_regras = writer.sheets['REGRAS']
 
