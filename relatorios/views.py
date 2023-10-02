@@ -124,16 +124,17 @@ def gerar_planilha_peso_quant(request):
     df_peso_quant = pd.read_excel(file)
     
     # Verifica se a primeira coluna se chama CODID
-    if str(df_peso_quant.columns[0]).upper() != 'CODID':
-        messages.add_message(request, constants.ERROR, 'A primeira coluna deve se chamar CODID!')
+    if str(df_peso_quant.columns[0]).upper() != 'CODID' and str(df_peso_quant.columns[0]) != 'Cód. ID':
+        messages.add_message(request, constants.ERROR, 'A primeira coluna deve se chamar "CODID" ou "Cód. ID"')
         return redirect('index-relatorios')
     
     # Verifica se a segunda coluna se chama QUANT
-    if df_peso_quant.columns[1].upper() != 'QUANT':
-        messages.add_message(request, constants.ERROR, 'A segunda coluna deve se chamar QUANT!')
+    if df_peso_quant.columns[1].upper() != 'QUANT' and str(df_peso_quant.columns[1]) != 'Quant.':
+        messages.add_message(request, constants.ERROR, 'A segunda coluna deve se chamar "QUANT" ou "Quant."')
         return redirect('index-relatorios')
     
     df_peso_quant.rename(columns={'codid': 'CODID', 'quant': 'QUANT'}, inplace=True)
+    df_peso_quant.rename(columns={'Cód. ID': 'CODID', 'Quant.': 'QUANT'}, inplace=True)
     
     # Valida se as colunas são numeros
     coluna1_sem_letras = df_peso_quant.iloc[:, 0].astype(str).str.isnumeric().all()
