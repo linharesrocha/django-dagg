@@ -99,8 +99,8 @@
                             <div class="col-5">
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text" id="inputGroup-sizing-sm">QTD</span>
-                                    <input type="number" name="qtd-codid1-kit" id="qtd-codid1-kit" min="1" step="1" value="1"
-                                        class="form-control" required>
+                                    <input type="number" name="qtd-codid1-kit" id="qtd-codid1-kit" min="1" step="1"
+                                        value="1" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -115,8 +115,8 @@
                             <div class="col-5">
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text" id="inputGroup-sizing-sm">QTD</span>
-                                    <input type="number" name="qtd-codid2-kit" id="qtd-codid2-kit" min="0" step="1" value="0"
-                                        class="form-control">
+                                    <input type="number" name="qtd-codid2-kit" id="qtd-codid2-kit" min="0" step="1"
+                                        value="0" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -131,13 +131,14 @@
                             <div class="col-5">
                                 <div class="input-group input-group-sm mb-3">
                                     <span class="input-group-text" id="inputGroup-sizing-sm">QTD</span>
-                                    <input type="number" name="qtd-codid3-kit" id="qtd-codid3-kit" min="0" step="1" value="0"
-                                        class="form-control">
+                                    <input type="number" name="qtd-codid3-kit" id="qtd-codid3-kit" min="0" step="1"
+                                        value="0" class="form-control">
                                 </div>
                             </div>
                         </div>
                         <div class="col text-center">
-                            <button style="background-color: green!important;" id="btn-cadastrar-kit" type="submit" class="btn btn-secondary">Cadastrar</button>
+                            <button style="background-color: green!important;" id="btn-cadastrar-kit" type="submit"
+                                class="btn btn-secondary">Cadastrar</button>
                         </div>
                         {% csrf_token %}
                     </form>
@@ -181,13 +182,15 @@
             <div class="card" style="width: 22rem">
                 <div class="card-body">
                     <h5 class="card-title  text-center">Copiar Atributos</h5>
-                    <p class="card-text text-center">Os atributos do primeiro CODID serão copiados para o segundo CODID</p>
+                    <p class="card-text text-center">Os atributos do primeiro CODID serão copiados para o segundo CODID
+                    </p>
                     <form action="{% url 'copiar-atributos' %}" method="post">
                         <div class="row">
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">CODID-1</span>
-                                    <input type="number" name="codid1-atributo" id="codid1-atributo" class="form-control" min="1" max="30000" required>
+                                    <input type="number" name="codid1-atributo" id="codid1-atributo"
+                                        class="form-control" min="1" max="30000" required>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +198,8 @@
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">CODID-2</span>
-                                    <input type="number" name="codid2-atributo" id="codid2-atributo" class="form-control" min="1" max="30000" required>
+                                    <input type="number" name="codid2-atributo" id="codid2-atributo"
+                                        class="form-control" min="1" max="30000" required>
                                 </div>
                             </div>
                         </div>
@@ -469,6 +473,75 @@
     </div>
     <div class="row">
         <div class="col text-center">
+            <h2>Consultar</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Consultar se MLB já vinculado</h5>
+                    <form action="{% url 'consulta-vinculacao-mlb' %}" method="post">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">MLB</span>
+                                    <input type="text" name="mlb-vinculacao" id="mlb-vinculacao" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 10px;" class="row">
+                            <div class="col">
+                                <select class="form-select" name="marketplace" required>
+                                    <option value="" disabled selected>MARKETPLACE</option>
+                                    <option value="Mercado Livre">Mercado Livre</option>
+                                    <option value="NetShoes">NetShoes</option>
+                                    <option value="Decathlon">Decathlon</option>
+                                    <option value="SkyHub">SkyHub</option>
+                                    <option value="IntegraCommerce">IntegraCommerce</option>
+                                    <option value="Shopee">Shopee</option>
+                                    <option value="CNova">CNova</option>
+                                    <option value="AliExpress">AliExpress</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: green!important; margin-bottom: 10px;" id="consultar-vinculacao" type="submit"  class="btn btn-secondary">Consultar</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">STATUS</span>
+                                    {% if status_mlb_vinculado %}
+                                    <input type="text" name="status-vinculacao" id="status-vinculacao" class="form-control" value="{{ status_mlb_vinculado }}" disabled required>
+                                    {% else %}
+                                    <input type="text" name="status-vinculacao" id="status-vinculacao" class="form-control" disabled required>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">Categoria</span>
+                                    {% if categoria %}
+                                    <textarea type="text" name="status-vinculacao" id="status-vinculacao" class="form-control" disabled required>{{ categoria }}</textarea>
+                                    {% else %}
+                                    <textarea type="text" name="status-vinculacao" id="status-vinculacao" class="form-control" disabled required></textarea>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
             <h2>Outros</h2>
         </div>
     </div>
@@ -477,23 +550,27 @@
             <div class="card" style="width: 22rem">
                 <div class="card-body">
                     <h5 class="card-title  text-center">Atualizar Aton</h5>
-                    <p class="card-text text-center" style="color: gray;">Você pode compartilhar os seus arquivos do Aton ou baixar o compartilhamento mais recente.</p>
+                    <p class="card-text text-center" style="color: gray;">Você pode compartilhar os seus arquivos do
+                        Aton ou baixar o compartilhamento mais recente.</p>
                     <form action="{%  url 'atualizar-aton' %}" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col text-center">
                                 <div class="mb-3">
                                     <label for="formFile" class="form-label">Enviar arquivos Aton</label>
-                                    <input class="form-control" type="file" id="formFile" name="formFile" accept=".exe" multiple>
-                                  </div>
-                                <button style="background-color: orange!important;" id="btn-enviar-arquivos-aton" name="btn-enviar-arquivos-aton" type="submit"
-                                class="btn btn-secondary">Enviar arquivos</button>
+                                    <input class="form-control" type="file" id="formFile" name="formFile" accept=".exe"
+                                        multiple>
+                                </div>
+                                <button style="background-color: orange!important;" id="btn-enviar-arquivos-aton"
+                                    name="btn-enviar-arquivos-aton" type="submit" class="btn btn-secondary">Enviar
+                                    arquivos</button>
                             </div>
                         </div>
                         <div style="margin-top: 30px;" class="row">
                             <div class="col text-center">
                                 <p>--------------</p>
-                                <button style="background-color: green!important;" id="btn-baixar-arquivos-aton" name="btn-baixar-arquivos-aton" type="submit"
-                                    class="btn btn-secondary">Baixar arquivos Aton</button>
+                                <button style="background-color: green!important;" id="btn-baixar-arquivos-aton"
+                                    name="btn-baixar-arquivos-aton" type="submit" class="btn btn-secondary">Baixar
+                                    arquivos Aton</button>
                             </div>
                         </div>
                         {% csrf_token %}

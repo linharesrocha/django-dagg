@@ -567,3 +567,40 @@ def atualizar_aton(request):
 
             return response
     return redirect('index-ferramentas')
+
+
+def consulta_mlb_vinculado(request):
+    if request.method == 'POST':
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        
+        mlb = str(request.POST.get('mlb-vinculacao'))
+        marketplace = str(request.POST.get('marketplace'))
+        
+        try:
+            comando = f'''
+            SELECT AUTOID, API, CATEG_MKTP_DESC, DEPARTAMENTO, PRODUTO_TIPO, CATEG_NOME, CATEG_ATON
+            FROM CATEGORIAS_MKTP A
+            LEFT JOIN ECOM_CATEGORIAS B ON A.CATEG_ATON = B.CATEG_ID
+            WHERE CATEG_ATON = '{mlb}'
+            AND API = '{marketplace}'
+            '''
+            
+            # Verifica se houve resultado
+            df = pd.read_sql(comando, conexao)
+            if len(df) <= 0:
+                return render(request, 'index-ferramentas.html', {'status_mlb_vinculado': 'NÃO ENCONTRADO!'})
+            
+            # Caso encontre, pegue a coluna CATEG_MKTP_DESC, DEPARTAMENTO, PRODUTO_TIPO, CATEG_NOME e junte em uma string
+            df = df[['CATEG_MKTP_DESC', 'DEPARTAMENTO', 'PRODUTO_TIPO', 'CATEG_NOME']]
+            df = df.drop_duplicates()
+            categ_mktp_desc = df['CATEG_MKTP_DESC'].tolist()[0]
+            departamento = df['DEPARTAMENTO'].tolist()[0]
+            produto_tipo = df['PRODUTO_TIPO'].tolist()[0]
+            categ_nome = df['CATEG_NOME'].tolist()[0]
+            categoria = f'{categ_mktp_desc} > {departamento} > {produto_tipo} > {categ_nome}'
+            
+            return render(request, 'index-ferramentas.html', {'status_mlb_vinculado': 'ENCONTRADO!', 'categoria': categoria})
+        except:
+            messages.add_message(request, constants.ERROR, 'Erro no servidor!')
+            return redirect('index-ferramentas')

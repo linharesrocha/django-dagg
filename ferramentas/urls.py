@@ -16,4 +16,5 @@ urlpatterns = [
      path('cadastrar_kit/', views.cadastrar_kit, name='cadastrar-kit'),
      path('copiar_atributos/', views.copiar_atributos, name='copiar-atributos'),
      path('atualizar_aton/', views.atualizar_aton, name='atualizar-aton'),
+     path('consulta_vinculacao_mlb/', views.consulta_mlb_vinculado, name='consulta-vinculacao-mlb'),
 ]
