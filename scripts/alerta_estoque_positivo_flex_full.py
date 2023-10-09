@@ -13,7 +13,7 @@ def slack_notificao(cod_interno, sku, prodmktp_id, estoque, index, tamanho_df):
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C030X3UMR3M'
 
-    message = f'INATIVAR FLEX! {index}/{tamanho_df} :warning:\n{cod_interno} está com {estoque} estoque!  MLB: {sku} / PRODMKTP_ID: {prodmktp_id}'
+    message = f'ATIVAR FLEX! {index}/{tamanho_df} :white_check_mark:\n{cod_interno} está com {estoque} estoque!  MLB: {sku} / PRODMKTP_ID: {prodmktp_id}'
     
     try:
         response = client.chat_postMessage(
@@ -30,14 +30,14 @@ def main():
     conexao = pyodbc.connect(connection)
 
     comando = f'''
-    SELECT A.MATERIAL_ID, C.COD_INTERNO, A.SKU, PRODMKTP_ID, A.FLEX, B.ESTOQUE, C.INATIVO
+    SELECT A.MATERIAL_ID, C.DESCRICAO, C.COD_INTERNO, A.SKU, PRODMKTP_ID, A.FLEX, B.ESTOQUE, C.INATIVO
     FROM ECOM_SKU A
     LEFT JOIN ESTOQUE_MATERIAIS B ON A.MATERIAL_ID = B.MATERIAL_ID
     LEFT JOIN MATERIAIS C ON A.MATERIAL_ID = C.CODID
-    WHERE A.FLEX = 'A'
+    WHERE A.FLEX = 'S'
     AND B.ARMAZEM = '1'
     AND C.INATIVO = 'N'
-    AND B.ESTOQUE <= '1'
+    AND B.ESTOQUE >= '1'
     AND A.FULFILLMENT = 'S'
     ORDER BY MATERIAL_ID
     '''

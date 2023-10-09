@@ -23,13 +23,10 @@ def main(file):
     dt = date.today()
     datetime_midnight = datetime.combine(dt, datetime.min.time())
     date_30 = datetime_midnight - timedelta(30)
-    print(date_30)
-    print(date_30)
-    print(date_30)
-
+    
     # Produtos Materiais
     comando = f'''
-    SELECT A.*, B.DESCRICAO, C.ESTOQUE
+    SELECT A.*,  B.COD_INTERNO, B.DESCRICAO, C.ESTOQUE
     FROM ECOM_SKU A
     LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
     LEFT JOIN ESTOQUE_MATERIAIS C ON A.MATERIAL_ID = C.MATERIAL_ID
@@ -47,7 +44,7 @@ def main(file):
     df_ecom_sku_ml['DESCRICAO'] = df_ecom_sku_ml['DESCRICAO'].str.strip()
 
     # Filtra as colunas
-    df_ecom_sku_ml = df_ecom_sku_ml[['MATERIAL_ID', 'DESCRICAO', 'SKU', 'PRODMKTP_ID', 'SKUVARIACAO_MASTER', 'ORIGEM_ID', 'ESTOQUE']]
+    df_ecom_sku_ml = df_ecom_sku_ml[['COD_INTERNO', 'DESCRICAO', 'SKU', 'PRODMKTP_ID', 'SKUVARIACAO_MASTER', 'ORIGEM_ID', 'ESTOQUE']]
 
     # Renomeia PRODMKTP_ID AS COD_ML
     df_ecom_sku_ml.rename(columns={'PRODMKTP_ID':'COD_ML'}, inplace=True)
@@ -105,8 +102,8 @@ def main(file):
     data_completo = pd.merge(df_ecom_sku_ml, data_h_30_mktp, on=['SKU_MESCLADO', 'ORIGEM_ID'], how='left')
     data_completo['QUANT'].fillna(0, inplace=True)
     data_completo.drop(columns=['SKUVARIACAO_MASTER'], axis=1, inplace=True)
-    data_completo = data_completo[['MATERIAL_ID', 'DESCRICAO', 'SKU', 'SKU_MESCLADO', 'COD_ML', 'QUANT', 'ESTOQUE']]
-    data_completo = data_completo.rename(columns={'QUANT': 'ATON_VENDAS_30', 'SKU': 'MLB_ANUNCIO', 'MATERIAL_ID':'CODID'})
+    data_completo = data_completo[['COD_INTERNO', 'DESCRICAO', 'SKU', 'SKU_MESCLADO', 'COD_ML', 'QUANT', 'ESTOQUE']]
+    data_completo = data_completo.rename(columns={'QUANT': 'ATON_VENDAS_30', 'SKU': 'MLB_ANUNCIO'})
 
     # Classificação FULL
     data_completo['E_FULL'] = data_completo['COD_ML'].apply(lambda x: 'FULL' if x != '' and x != None and x != 'null' else 'NAO FULL')
@@ -141,7 +138,7 @@ def main(file):
     df_completo['SUGESTAO'] = ''
 
     # Altera ordem
-    df_completo = df_completo[['CODID', 'COD_ML', 'MLB_ANUNCIO', 'SKU_MESCLADO', 'ATON_VENDAS_30', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'E_FULL', 'subtracao']]
+    df_completo = df_completo[['COD_INTERNO', 'COD_ML', 'MLB_ANUNCIO', 'SKU_MESCLADO', 'ATON_VENDAS_30', 'VENDAS_30', 'APTAS_FULL', 'ESTOQUE', 'DESCRICAO', 'SUGESTAO', 'ENVIO', 'TEMPO', 'E_FULL', 'subtracao']]
     
     # Preenche os valores vazios com 0
     df_completo['VENDAS_30'].fillna(0, inplace=True)
@@ -195,7 +192,7 @@ def main(file):
 
     # Congelando painel
     worksheet.freeze_panes = 'A2'
-
+    
     writer._save()
     output.seek(0)
 
