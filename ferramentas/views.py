@@ -573,9 +573,11 @@ def consulta_mlb_vinculado(request):
     if request.method == 'POST':
         connection = get_connection()
         conexao = pyodbc.connect(connection)
-        
+        cursor = conexao.cursor()
+            
         mlb = str(request.POST.get('mlb-vinculacao'))
         marketplace = str(request.POST.get('marketplace'))
+    
         
         if 'consultar-vinculacao' in request.POST:
             try:
@@ -584,7 +586,6 @@ def consulta_mlb_vinculado(request):
                 FROM CATEGORIAS_MKTP A
                 LEFT JOIN ECOM_CATEGORIAS B ON A.CATEG_ATON = B.CATEG_ID
                 WHERE CATEG_ATON = '{mlb}'
-                AND API = '{marketplace}'
                 '''
                 
                 # Verifica se houve resultado
@@ -593,48 +594,32 @@ def consulta_mlb_vinculado(request):
                     messages.add_message(request, constants.ERROR, 'Nenhuma vinculação foi encontrada!')
                     return redirect('index-ferramentas')
                 
-                # Caso encontre, pegue a coluna CATEG_MKTP_DESC, DEPARTAMENTO, PRODUTO_TIPO, CATEG_NOME e junte em uma string
-                df = df[['CATEG_MKTP_DESC', 'DEPARTAMENTO', 'PRODUTO_TIPO', 'CATEG_NOME']]
-                df = df.drop_duplicates()
-                categ_mktp_desc = df['CATEG_MKTP_DESC'].tolist()[0]
-                departamento = df['DEPARTAMENTO'].tolist()[0]
-                produto_tipo = df['PRODUTO_TIPO'].tolist()[0]
-                categ_nome = df['CATEG_NOME'].tolist()[0]
-                categoria = f'{categ_mktp_desc} > {departamento} > {produto_tipo} > {categ_nome}'
+                # Retorna o resultado para template como tabela
+                df_dict_ori = df.to_dict(orient='records')
+                df_dict = {'df_dict': df_dict_ori}
+                return render(request, 'index-ferramentas.html', df_dict)
                 
-                messages.add_message(request, constants.SUCCESS, f'{marketplace} | {mlb} - Vinculação encontrada: {categoria}')
-                return redirect('index-ferramentas')
             except:
                 messages.add_message(request, constants.ERROR, 'Erro no servidor!')
                 return redirect('index-ferramentas')
         elif 'remover-vinculacao' in request.POST:
-            try:
-                comando = f'''
-                SELECT *
-                FROM CATEGORIAS_MKTP A
-                LEFT JOIN ECOM_CATEGORIAS B ON A.CATEG_ATON = B.CATEG_ID
-                WHERE CATEG_ATON = '{mlb}'
-                AND API = '{marketplace}'
-                '''
-                
-                # Verifica quantos itens serão deletados
-                df = pd.read_sql(comando, conexao)
-                if len(df) <= 0:
-                    messages.add_message(request, constants.ERROR, 'Nenhuma vinculação foi encontrada!')
+            autoid_list = request.POST.getlist('autoid-checkbox')    
+            for autoid in autoid_list:
+                try:
+                    # Deleta
+                    comando = f'''
+                    DELETE FROM CATEGORIAS_MKTP
+                    WHERE AUTOID = '{autoid}'
+                    '''
+                    
+                    cursor.execute(comando)
+                    conexao.commit()
+                except:
+                    messages.add_message(request, constants.ERROR, f'Erro no servidor! Erro ao tentar deleta o AUTOID {autoid}')
                     return redirect('index-ferramentas')
-
-                # Deleta
-                comando = f'''
-                DELETE FROM CATEGORIAS_MKTP
-                WHERE CATEG_ATON = '{mlb}'
-                AND API = '{marketplace}'
-                '''
                 
-                messages.add_message(request, constants.SUCCESS, f'Vinculações removidas: {len(df)} - Marketplace: {marketplace} - MLB: {mlb}')
-                return redirect('index-ferramentas')
-            except:
-                messages.add_message(request, constants.ERROR, 'Erro no servidor!')
-                return redirect('index-ferramentas')
+            messages.add_message(request, constants.SUCCESS, f'{str(len(autoid_list))} Vinculações removidas!')
+            return redirect('index-ferramentas')
         else:
             messages.add_message(request, constants.ERROR, 'Erro no servidor!')
             return redirect('index-ferramentas')

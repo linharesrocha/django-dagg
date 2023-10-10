@@ -478,39 +478,78 @@
     </div>
     <div class="row">
         <div class="col">
-            <div class="card" style="width: 22rem">
+            <div class="card">
                 <div class="card-body">
                     <h5 class="card-title  text-center">Consultar Associação Categoria MLB</h5>
                     <form action="{% url 'consulta-vinculacao-mlb' %}" method="post">
                         <div class="row">
                             <div class="col">
-                                <div class="input-group input-group-sm mb-3">
+                                <div style="width: 20rem;" class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">MLB</span>
-                                    <input type="text" name="mlb-vinculacao" id="mlb-vinculacao" class="form-control" required>
+                                    <input type="text" name="mlb-vinculacao" id="mlb-vinculacao" class="form-control">
                                 </div>
                             </div>
                         </div>
-                        <div style="margin-bottom: 10px;" class="row">
+                        <!-- TABELA -->
+                        <div class="row">
                             <div class="col">
-                                <select class="form-select" name="marketplace" required>
-                                    <option value="" disabled selected>MARKETPLACE</option>
-                                    <option value="Mercado Livre">Mercado Livre</option>
-                                    <option value="NetShoes">NetShoes</option>
-                                    <option value="Decathlon">Decathlon</option>
-                                    <option value="SkyHub">SkyHub</option>
-                                    <option value="IntegraCommerce">IntegraCommerce</option>
-                                    <option value="Shopee">Shopee</option>
-                                    <option value="CNova">CNova</option>
-                                    <option value="AliExpress">AliExpress</option>
-                                </select>
+                                <div class="div" style="overflow-y: auto;">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"></th>
+                                                <th scope="col">AUTOID</th>
+                                                <th scope="col">MKTP</th>
+                                                <th scope="col">CATEG1</th>
+                                                <th scope="col">CATEG2</th>
+                                                <th scope="col">CATEG3</th>
+                                                <th scope="col">CATEG4</th>
+                                                <th scope="col">MLB</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for data in df_dict %}
+                                            <tr>
+                                                <!-- Checkbox -->
+                                                <td><input type="checkbox" class="autoid-checkbox" name="autoid-checkbox" id="autoid-checkbox" value="{{ data.AUTOID }}"></td>
+
+                                                <!-- AUTOID -->
+                                                <td>{{ data.AUTOID}}</td>
+
+                                                <!-- MKTP -->
+                                                <td>{{ data.API}} </td>
+
+                                                <!-- CATEG1 -->
+                                                <td>{{ data.CATEG_MKTP_DESC }}</td>
+
+                                                <!-- CATEG2 -->
+                                                <td>{{ data.DEPARTAMENTO}}</td>
+
+                                                <!-- CATEG3 -->
+                                                <td>{{ data.PRODUTO_TIPO}}</td>                                                
+                                                
+                                                <!-- CATEG4 -->
+                                                <td>{{ data.CATEG_NOME}}</td>
+
+                                                <!-- MLB -->
+                                                <td>{{ data.CATEG_ATON}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col text-center">
-                                <button style="background-color: green!important; margin-bottom: 10px;" name="consultar-vinculacao" id="consultar-vinculacao" type="submit"  class="btn btn-secondary">Consultar</button>
+                                <button style="background-color: green!important; margin-bottom: 10px;"
+                                    name="consultar-vinculacao" id="consultar-vinculacao" type="submit"
+                                    class="btn btn-secondary">Consultar</button>
                             </div>
                             <div class="col text-center">
-                                <button style="background-color: red!important; margin-bottom: 10px;" name="remover-vinculacao" id="remover-vinculacao" type="submit"  class="btn btn-secondary">Remover</button>
+                                <button style="background-color: red!important; margin-bottom: 10px;"
+                                    name="remover-vinculacao" id="remover-vinculacao" type="submit"
+                                    class="btn btn-secondary">Remover</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -608,11 +647,15 @@
 </script>
 
 <script>
-    var myModal = document.getElementById('myModal')
-
-    myModal.addEventListener('shown.bs.modal', function () {
-        myInput.focus()
-    })
+    try {
+        var myModal = document.getElementById('myModal')
+        myModal.addEventListener('shown.bs.modal', function () {
+            myInput.focus()
+        })
+    }
+    catch {
+        console.log('Modal não encontrado')
+    }
 </script>
 
 <script>
@@ -621,6 +664,38 @@
         inputElement.select();
         document.execCommand("copy");
     });
+</script>
+
+<script>
+    // Captura a referência para todos os checkboxes e os botões
+    var checkboxes = document.querySelectorAll('.autoid-checkbox');
+    var consultarButton = document.getElementById('consultar-vinculacao');
+    var removerButton = document.getElementById('remover-vinculacao');
+
+    // Função para verificar o estado dos checkboxes e habilitar/desabilitar os botões
+    function verificarEstadoCheckboxes() {
+        // Verifica se algum checkbox está marcado
+        var algumMarcado = false;
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                algumMarcado = true;
+            }
+        });
+
+        // Desabilita o botão 'consultar-vinculacao' se algum checkbox estiver marcado
+        consultarButton.disabled = algumMarcado;
+        
+        // Desabilita o botão 'remover-vinculacao' se nenhum checkbox estiver marcado
+        removerButton.disabled = !algumMarcado;
+    }
+
+    // Adiciona um ouvinte de evento de mudança a cada checkbox
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', verificarEstadoCheckboxes);
+    });
+
+    // Verifica o estado inicial dos checkboxes quando a página carrega
+    verificarEstadoCheckboxes();
 </script>
 
 <style>
