@@ -507,31 +507,10 @@
                         </div>
                         <div class="row">
                             <div class="col text-center">
-                                <button style="background-color: green!important; margin-bottom: 10px;" id="consultar-vinculacao" type="submit"  class="btn btn-secondary">Consultar</button>
+                                <button style="background-color: green!important; margin-bottom: 10px;" name="consultar-vinculacao" id="consultar-vinculacao" type="submit"  class="btn btn-secondary">Consultar</button>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 80px;" class="input-group-text">STATUS</span>
-                                    {% if status_mlb_vinculado %}
-                                    <input type="text" name="status-vinculacao" id="status-vinculacao" class="form-control" value="{{ status_mlb_vinculado }}" disabled required>
-                                    {% else %}
-                                    <input type="text" name="status-vinculacao" id="status-vinculacao" class="form-control" disabled required>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 80px;" class="input-group-text">Categoria</span>
-                                    {% if categoria %}
-                                    <textarea type="text" name="status-vinculacao" id="status-vinculacao" class="form-control" disabled required>{{ categoria }}</textarea>
-                                    {% else %}
-                                    <textarea type="text" name="status-vinculacao" id="status-vinculacao" class="form-control" disabled required></textarea>
-                                    {% endif %}
-                                </div>
+                            <div class="col text-center">
+                                <button style="background-color: red!important; margin-bottom: 10px;" name="remover-vinculacao" id="remover-vinculacao" type="submit"  class="btn btn-secondary">Remover</button>
                             </div>
                         </div>
                         {% csrf_token %}

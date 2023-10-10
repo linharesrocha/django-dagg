@@ -5,7 +5,18 @@ import warnings
 import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from pathlib import Path
+import sys
+import requests
+import json
 from dotenv import load_dotenv
+
+# Settings ML
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(BASE_DIR))
+from mercadolivre.scripts.config import reflash
+ACCESS_TOKEN = reflash.refreshToken()
+header = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
 
 def slack_notificao(cod_interno, sku, prodmktp_id, estoque, index, tamanho_df):
     load_dotenv()
@@ -41,13 +52,22 @@ def main():
     AND A.FULFILLMENT = 'S'
     ORDER BY MATERIAL_ID
     '''
-
+    
     df_flex = pd.read_sql(comando, conexao)
     
     df_flex['COD_INTERNO'] = df_flex['COD_INTERNO'].str.strip()
     df_flex['SKU'] = df_flex['SKU'].str.strip()
+    
 
     for index, item in df_flex.iterrows():
-        slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], int(item['ESTOQUE']), index+1, len(df_flex))
+        response = requests.get(f"https://api.mercadolibre.com/items/{item['SKU']}", headers=header).json()
+        
+        # coloca variavel em um txt com json dumps 4
+        with open('json.txt', 'w') as outfile:
+            json.dump(response, outfile, indent=4)
+        
+        
+        # slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], int(item['ESTOQUE']), index+1, len(df_flex))
+        break
         
 main()
