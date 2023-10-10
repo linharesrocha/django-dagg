@@ -586,6 +586,7 @@ def consulta_mlb_vinculado(request):
                 FROM CATEGORIAS_MKTP A
                 LEFT JOIN ECOM_CATEGORIAS B ON A.CATEG_ATON = B.CATEG_ID
                 WHERE CATEG_ATON = '{mlb}'
+                AND API != 'Cnova'
                 '''
                 
                 # Verifica se houve resultado
