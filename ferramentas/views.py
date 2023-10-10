@@ -17,12 +17,18 @@ from io import BytesIO
 import io
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from .models import ArquivoAton
+from .models import ArquivoAton, RegistroClique
 from dotenv import load_dotenv
+from django.http import JsonResponse
 
 
 def index(request):
     return render(request, 'index-ferramentas.html')
+
+def obter_data_hora_clique(request):
+    ultimo_clique = RegistroClique.objects.latest('data_hora')
+    data_hora_clique = ultimo_clique.data_hora.strftime('%d-%m-%Y %H:%M:%S')
+    return JsonResponse({'data_hora': data_hora_clique})
 
 def baixar_fotos(request):
     codid = request.POST['input-codid']
@@ -540,8 +546,11 @@ def atualizar_aton(request):
                 novo_arquivo = ArquivoAton(arquivo=arquivo_enviado)
                 novo_arquivo.save()
             
+            # Registra a hora do envio
+            data_hora_clique = RegistroClique.objects.create()
             messages.add_message(request, constants.SUCCESS, 'Arquivos enviados com sucesso!')
-            return redirect('index-ferramentas')
+            return render(request, 'index-ferramentas.html', {'Message': 'Nova data salva, atualize a página para ver a data e hora do último envio!'})
+        
         elif 'btn-baixar-arquivos-aton' in request.POST:
             # Lista de arquivos permitidos
             list_upload_check = ['Ambar.exe', 'AtonECom.exe', 'AtonPublica.exe']

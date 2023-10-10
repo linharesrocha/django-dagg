@@ -5,3 +5,6 @@ class ArquivoAton(models.Model):
 
     def __str__(self):
         return self.arquivo.name
+
+class RegistroClique(models.Model):
+    data_hora = models.DateTimeField(auto_now_add=True)

@@ -17,4 +17,5 @@ urlpatterns = [
      path('copiar_atributos/', views.copiar_atributos, name='copiar-atributos'),
      path('atualizar_aton/', views.atualizar_aton, name='atualizar-aton'),
      path('consulta_vinculacao_mlb/', views.consulta_mlb_vinculado, name='consulta-vinculacao-mlb'),
+     path('obter_data_hora_clique/', views.obter_data_hora_clique, name='obter_data_hora_clique'),
 ]

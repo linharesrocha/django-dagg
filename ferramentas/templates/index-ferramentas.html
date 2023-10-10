@@ -570,6 +570,11 @@
                     <h5 class="card-title  text-center">Atualizar Aton</h5>
                     <p class="card-text text-center" style="color: gray;">Você pode compartilhar os seus arquivos do
                         Aton ou baixar o compartilhamento mais recente.</p>
+                    {% if Message %}
+                    <p class="text-center" style="color: red;" >Data do ultimo envio: <br> <span id="data_hora_clique">{{ Message }}</span></p>
+                    {% else %}
+                    <p class="text-center" style="color: red;" >Data do ultimo envio: <br> <span id="data_hora_clique"></span></p>
+                    {% endif %}
                     <form action="{%  url 'atualizar-aton' %}" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col text-center">
@@ -696,6 +701,17 @@
 
     // Verifica o estado inicial dos checkboxes quando a página carrega
     verificarEstadoCheckboxes();
+</script>
+
+<script>
+    function obterDataHoraClique() {
+        fetch('obter_data_hora_clique/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('data_hora_clique').textContent = data.data_hora;
+            });
+    }
+    obterDataHoraClique();
 </script>
 
 <style>
