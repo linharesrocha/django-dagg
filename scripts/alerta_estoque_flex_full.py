@@ -62,12 +62,10 @@ def main():
     for index, item in df_flex.iterrows():
         response = requests.get(f"https://api.mercadolibre.com/items/{item['SKU']}", headers=header).json()
         
-        # coloca variavel em um txt com json dumps 4
-        with open('json.txt', 'w') as outfile:
-            json.dump(response, outfile, indent=4)
-        
-        
-        # slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], int(item['ESTOQUE']), index+1, len(df_flex))
-        break
-        
+        for variacoes in response['variations']:
+            if item['PRODMKTP_ID'] == variacoes['inventory_id']:
+                print(item['COD_INTERNO'], item['SKU'], variacoes['available_quantity'])
+                if variacoes['available_quantity'] > 0:
+                    slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], int(item['ESTOQUE']), index+1, len(df_flex))
+
 main()
