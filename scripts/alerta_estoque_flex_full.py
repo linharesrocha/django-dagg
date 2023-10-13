@@ -8,7 +8,6 @@ from slack_sdk.errors import SlackApiError
 from pathlib import Path
 import sys
 import requests
-import json
 from dotenv import load_dotenv
 
 # Settings ML
@@ -18,13 +17,13 @@ from mercadolivre.scripts.config import reflash
 ACCESS_TOKEN = reflash.refreshToken()
 header = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
 
-def slack_notificao(cod_interno, sku, prodmktp_id, estoque, index, tamanho_df):
+def slack_notificao(cod_interno, sku, prodmktp_id, index):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C030X3UMR3M'
 
-    message = f'INATIVAR FLEX! {index}/{tamanho_df} :warning:\n{cod_interno} está com {estoque} estoque!  MLB: {sku} / PRODMKTP_ID: {prodmktp_id}'
+    message = f'INATIVAR FLEX! {index} :warning:\n{cod_interno}!  MLB: {sku} / PRODMKTP_ID: {prodmktp_id}'
     
     try:
         response = client.chat_postMessage(
@@ -58,14 +57,14 @@ def main():
     df_flex['COD_INTERNO'] = df_flex['COD_INTERNO'].str.strip()
     df_flex['SKU'] = df_flex['SKU'].str.strip()
     
-
+    contador = 1
     for index, item in df_flex.iterrows():
         response = requests.get(f"https://api.mercadolibre.com/items/{item['SKU']}", headers=header).json()
         
         for variacoes in response['variations']:
             if item['PRODMKTP_ID'] == variacoes['inventory_id']:
-                print(item['COD_INTERNO'], item['SKU'], variacoes['available_quantity'])
                 if variacoes['available_quantity'] > 0:
-                    slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], int(item['ESTOQUE']), index+1, len(df_flex))
+                    slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], contador)
+                    contador = contador + 1
 
 main()
