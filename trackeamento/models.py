@@ -66,3 +66,7 @@ class PedidosCompra(models.Model):
     descricao = models.CharField(max_length=255)
     cod_interno = models.CharField(max_length=255)
     vlr_custo_antigo = models.FloatField(blank=True, null=True)
+    
+class UltimoProdutoCadastrado(models.Model):
+    id = models.AutoField(primary_key=True)
+    autoid = models.IntegerField()
