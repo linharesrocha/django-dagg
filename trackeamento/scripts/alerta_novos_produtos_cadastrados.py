@@ -65,7 +65,7 @@ def main():
         valor = 'R$' + str(row['VALOR2'])
         cod_interno = row['COD_INTERNO']
         
-        message = f'PRODUTO CADASTRADO! :gear:\n{cod_interno} | {mktp} | {sku} | {valor}\n {titulo}'
+        message = f'PRODUTO PUBLICADO! :arrow_upper_right:\n{cod_interno} | {mktp} | {sku} | {valor}\n {titulo}'
         
         try:
             response = client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
