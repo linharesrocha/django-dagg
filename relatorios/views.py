@@ -123,9 +123,15 @@ def gerar_planilha_peso_quant(request):
     
     df_peso_quant = pd.read_excel(file)
     
-    # Verifica se a primeira coluna se chama CODID
-    if str(df_peso_quant.columns[0]).upper() != 'CODID' and str(df_peso_quant.columns[0]) != 'Cód. ID':
-        messages.add_message(request, constants.ERROR, 'A primeira coluna deve se chamar "CODID" ou "Cód. ID"')
+    try:
+        df_peso_quant['COD_INTERNO'] = df_peso_quant['COD_INTERNO'].str.strip()
+    except:
+        messages.add_message(request, constants.ERROR, 'Erro ao ler planilha! Verifique se a primeira coluna se chama "COD_INTERNO" e a segunda coluna se chama "QUANT" ou "Quant."')
+        return redirect('index-relatorios')
+    
+    # Verifica se a primeira coluna se chama COD_INTERNO
+    if str(df_peso_quant.columns[0]).upper() != 'COD_INTERNO':
+        messages.add_message(request, constants.ERROR, 'A primeira coluna deve se chamar "COD_INTERNO"')
         return redirect('index-relatorios')
     
     # Verifica se a segunda coluna se chama QUANT
@@ -133,48 +139,49 @@ def gerar_planilha_peso_quant(request):
         messages.add_message(request, constants.ERROR, 'A segunda coluna deve se chamar "QUANT" ou "Quant."')
         return redirect('index-relatorios')
     
-    df_peso_quant.rename(columns={'codid': 'CODID', 'quant': 'QUANT'}, inplace=True)
-    df_peso_quant.rename(columns={'Cód. ID': 'CODID', 'Quant.': 'QUANT'}, inplace=True)
+    df_peso_quant.rename(columns={'COD_INTERNO': 'COD_INTERNO', 'quant': 'QUANT', 'Quant.': 'QUANT'}, inplace=True)
     
-    # Valida se as colunas são numeros
-    coluna1_sem_letras = df_peso_quant.iloc[:, 0].astype(str).str.isnumeric().all()
-    coluna2_sem_letras = df_peso_quant.iloc[:, 1].astype(str).str.isnumeric().all()
-    if not coluna1_sem_letras or not coluna2_sem_letras:
-        messages.add_message(request, constants.ERROR, 'As colunas CODID e QUANT devem ser numéricas!')
+    try:
+        # Puxa Peso
+        lista_cod_interno = df_peso_quant['COD_INTERNO'].tolist()
+        cod_interno_com_aspas = ["'" + str(cod) + "'" for cod in lista_cod_interno]
+        cod_interno_str = ', '.join(cod_interno_com_aspas)
+        warnings.filterwarnings('ignore')
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        
+        comando = f'''
+        SELECT COD_INTERNO, PESO
+        FROM MATERIAIS
+        WHERE COD_INTERNO IN ({cod_interno_str})
+        '''
+        
+        df_resultado_peso = pd.read_sql(comando, conexao)
+        df_resultado_peso['COD_INTERNO'] = df_resultado_peso['COD_INTERNO'].str.strip()
+        
+        df_peso_quant = pd.merge(df_peso_quant, df_resultado_peso, on='COD_INTERNO', how='left')
+        
+        # Multiplica coluna QUANT por PESO
+        df_peso_quant['PESO_MULT'] = df_peso_quant['QUANT'] * df_peso_quant['PESO']
+        
+        # Soma todos os pesos
+        peso_total = df_peso_quant['PESO_MULT'].sum()
+        
+        # Cria coluna para colocar peso_total mas apenas na primeira celula
+        df_peso_quant['PESO_TOTAL'] = peso_total
+        
+        excel_bytes = BytesIO()
+        df_peso_quant.to_excel(excel_bytes, index=False)
+        excel_bytes.seek(0)
+        bytes_data = excel_bytes.getvalue()
+        
+        response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="peso_quant.xlsx"'
+        return response
+    except:
+        messages.add_message(request, constants.ERROR, 'Erro ao gerar planilha!')
         return redirect('index-relatorios')
-    
-    # Puxa Peso
-    lista_codid = list(df_peso_quant.iloc[:, 0])
-    codid_str = ', '.join(map(str, lista_codid))
-    warnings.filterwarnings('ignore')
-    connection = get_connection()
-    conexao = pyodbc.connect(connection)
-    comando = f'''
-    SELECT CODID, PESO
-    FROM MATERIAIS
-    WHERE CODID IN ({codid_str})
-    '''
-    df_resultado_peso = pd.read_sql(comando, conexao)
-    df_peso_quant = pd.merge(df_peso_quant, df_resultado_peso, on='CODID', how='left')
-    
-    # Multiplica coluna QUANT por PESO
-    df_peso_quant['PESO_MULT'] = df_peso_quant['QUANT'] * df_peso_quant['PESO']
-    
-    # Soma todos os pesos
-    peso_total = df_peso_quant['PESO_MULT'].sum()
-    
-    # Cria coluna para colocar peso_total mas apenas na primeira celula
-    df_peso_quant['PESO_TOTAL'] = peso_total
-    
-    excel_bytes = BytesIO()
-    df_peso_quant.to_excel(excel_bytes, index=False)
-    excel_bytes.seek(0)
-    bytes_data = excel_bytes.getvalue()
-    
-    response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
-    response['Content-Disposition'] = f'attachment; filename="peso_quant.xlsx"'
-    return response
-    
+        
     
 
 def gerar_planilha_pedidos_dia(request):
