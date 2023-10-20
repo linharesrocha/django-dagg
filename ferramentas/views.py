@@ -4,7 +4,7 @@ from scripts import baixar_fotos_codid, remover_fotos_codid
 import tempfile
 import requests
 import zipfile
-from ferramentas.scripts import catalogo_requerido
+from ferramentas.scripts import catalogo_requerido, func_pedido_transferencia
 from django.contrib.messages import constants
 from django.contrib import messages
 import random
@@ -633,3 +633,46 @@ def consulta_mlb_vinculado(request):
         else:
             messages.add_message(request, constants.ERROR, 'Erro no servidor!')
             return redirect('index-ferramentas')
+        
+        
+def criar_pedido_transferencia(request):
+    if request.method == 'POST':
+        # Obtem os quatro valores do formulario
+        empresa_origem = str(request.POST.get('empresa-origem'))
+        empresa_destino = str(request.POST.get('empresa-destino'))
+        armazem_origem = str(request.POST.get('armazem-origem'))
+        armazem_destino = str(request.POST.get('armazem-destino'))
+        
+        # Le o arquivo xlsx
+        try:
+            file_transferencia = request.FILES['file']
+            print(file_transferencia)
+            df_pedido_transferencia = pd.read_excel(file_transferencia)
+            print(df_pedido_transferencia)
+        except Exception as e:
+            messages.add_message(request, constants.ERROR, f'Erro ao tentar ler o arquivo! {e}')
+            return redirect('index-ferramentas')
+        
+        try:
+            df_pedido_transferencia['COD_INTERNO'] = df_pedido_transferencia['COD_INTERNO'].str.strip()
+        except:
+            messages.add_message(request, constants.ERROR, 'Erro ao ler planilha! Verifique se a primeira coluna se chama "COD_INTERNO" e a segunda coluna se chama "QUANT" ou "Quant."')
+            return redirect('index-relatorios')
+        
+        # Verifica se a primeira coluna se chama COD_INTERNO
+        if str(df_pedido_transferencia.columns[0]).upper() != 'COD_INTERNO':
+            messages.add_message(request, constants.ERROR, 'A primeira coluna deve se chamar "COD_INTERNO"')
+            return redirect('index-relatorios')
+        
+        # Verifica se a segunda coluna se chama QUANT
+        if df_pedido_transferencia.columns[1].upper() != 'QUANT' and str(df_pedido_transferencia.columns[1]) != 'Quant.':
+            messages.add_message(request, constants.ERROR, 'A segunda coluna deve se chamar "QUANT" ou "Quant."')
+            return redirect('index-relatorios')
+        
+        df_pedido_transferencia.rename(columns={'quant': 'QUANT', 'Quant.': 'QUANT'}, inplace=True)
+        
+        func_pedido_transferencia.main(empresa_origem=empresa_origem, empresa_destino=empresa_destino, armazem_origem=armazem_origem, armazem_destino=armazem_destino)
+
+        
+        
+        return redirect('index-ferramentas')

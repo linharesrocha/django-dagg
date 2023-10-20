@@ -232,7 +232,100 @@
     </div>
     <div class="row">
         <div class="col">
+            <div class="card" style="width: 22rem">
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Criar Pedido de Transferência</h5>
+                    <br>
+                    <form action="{% url 'criar-pedido-transferencia' %}" method="post">
+                        <!-- EMPRESA ORIGEM -->
+                        <div style="margin-bottom: 10px;" class="row">
+                            <div class="col">
+                                <select style="background-color: #fff2da;" class="form-select" name="empresa-origem"
+                                    required>
+                                    <option value="" disabled selected>EMPRESA ORIGEM</option>
+                                    <option value="MADZ">MADZ</option>
+                                    <option value="LEAL">LEAL</option>
+                                    <option value="PISSTE">PISSTE</option>
+                                    <option value="MADZ FILIAL SP">MADZ FILIAL SP</option>
+                                </select>
+                            </div>
+                        </div>
 
+                        <!--  EMPRESA DESTINO -->
+                        <div style="margin-bottom: 10px;" class="row">
+                            <div class="col">
+                                <select style="background-color: #efffef;" class="form-select" name="empresa-destino"
+                                    required>
+                                    <option value="" disabled selected>EMPRESA DESTINO</option>
+                                    <option value="MADZ">MADZ</option>
+                                    <option value="LEAL">LEAL</option>
+                                    <option value="PISSTE">PISSTE</option>
+                                    <option value="MADZ FILIAL SP">MADZ FILIAL SP</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- ARMAZEM ORIGEM -->
+                        <div style="margin-bottom: 10px;" class="row">
+                            <div class="col">
+                                <select style="background-color: #fff2da;" class="form-select" name="armazem-origem"
+                                    required>
+                                    <option value="" disabled selected>ARMAZEM ORIGEM</option>
+                                    <option value="PRINCIPAL">PRINCIPAL</option>
+                                    <option value="FULL ML MADZ">FULL ML MADZ</option>
+                                    <option value="FULL ML LEAL">FULL ML LEAL</option>
+                                    <option value="FULL ML PISSTE">FULL ML PISSTE</option>
+                                    <option value="DEFEITOS">DEFEITOS</option>
+                                    <option value="MADZ FILIAL SP">MADZ FILIAL SP</option>
+                                    <option value="SEM ESTOQUE">SEM ESTOQUE</option>
+                                    <option value="LEAL FULL MG">LEAL FULL MG</option>
+                                    <option value="NÃO DEVOLVIDO">NÃO DEVOLVIDO</option>
+                                    <option value="MADZ FULL MG">MADZ FULL MG</option>
+                                    <option value="FULL MAGALU MADZ">FULL MAGALU MADZ</option>
+                                    <option value="FBA AMAZON">FBA AMAZON</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- ARMAZEM DESTINO -->
+                        <div style="margin-bottom: 10px;" class="row">
+                            <div class="col">
+                                <select style="background-color: #efffef;" class="form-select" name="armazem-destino"
+                                    required>
+                                    <option value="" disabled selected>ARMAZEM DESTINO</option>
+                                    <option value="PRINCIPAL">PRINCIPAL</option>
+                                    <option value="FULL ML MADZ">FULL ML MADZ</option>
+                                    <option value="FULL ML LEAL">FULL ML LEAL</option>
+                                    <option value="FULL ML PISSTE">FULL ML PISSTE</option>
+                                    <option value="DEFEITOS">DEFEITOS</option>
+                                    <option value="MADZ FILIAL SP">MADZ FILIAL SP</option>
+                                    <option value="SEM ESTOQUE">SEM ESTOQUE</option>
+                                    <option value="LEAL FULL MG">LEAL FULL MG</option>
+                                    <option value="NÃO DEVOLVIDO">NÃO DEVOLVIDO</option>
+                                    <option value="MADZ FULL MG">MADZ FULL MG</option>
+                                    <option value="FULL MAGALU MADZ">FULL MAGALU MADZ</option>
+                                    <option value="FBA AMAZON">FBA AMAZON</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="mb-3">
+                                    <p>1. Coluna: COD_INTERNO <br>
+                                        2. Coluna: QUANT</p>
+                                    <input class="form-control" type="file" name="file" id="file" accept=".xlsx, .xls"
+                                        required>
+                                </div>
+                                <button style="background-color: green!important;" id="btn-criar-pedido-transferencia"
+                                    name="btn-criar-pedido-transferencia" type="submit"
+                                    class="btn btn-secondary">Criar</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="col align-self-end">
             <div class="card" style="width: 22rem">
@@ -511,7 +604,9 @@
                                             {% for data in df_dict %}
                                             <tr>
                                                 <!-- Checkbox -->
-                                                <td><input type="checkbox" class="autoid-checkbox" name="autoid-checkbox" id="autoid-checkbox" value="{{ data.AUTOID }}"></td>
+                                                <td><input type="checkbox" class="autoid-checkbox"
+                                                        name="autoid-checkbox" id="autoid-checkbox"
+                                                        value="{{ data.AUTOID }}"></td>
 
                                                 <!-- AUTOID -->
                                                 <td>{{ data.AUTOID}}</td>
@@ -526,8 +621,8 @@
                                                 <td>{{ data.DEPARTAMENTO}}</td>
 
                                                 <!-- CATEG3 -->
-                                                <td>{{ data.PRODUTO_TIPO}}</td>                                                
-                                                
+                                                <td>{{ data.PRODUTO_TIPO}}</td>
+
                                                 <!-- NOME_MLB -->
                                                 <td>{{ data.CATEG_NOME}}</td>
 
@@ -571,9 +666,11 @@
                     <p class="card-text text-center" style="color: gray;">Você pode compartilhar os seus arquivos do
                         Aton ou baixar o compartilhamento mais recente.</p>
                     {% if Message %}
-                    <p class="text-center" style="color: red;" >Data do ultimo envio: <br> <span id="data_hora_clique">{{ Message }}</span></p>
+                    <p class="text-center" style="color: red;">Data do ultimo envio: <br> <span id="data_hora_clique">{{
+                            Message }}</span></p>
                     {% else %}
-                    <p class="text-center" style="color: red;" >Data do ultimo envio: <br> <span id="data_hora_clique"></span></p>
+                    <p class="text-center" style="color: red;">Data do ultimo envio: <br> <span
+                            id="data_hora_clique"></span></p>
                     {% endif %}
                     <form action="{%  url 'atualizar-aton' %}" method="post" enctype="multipart/form-data">
                         <div class="row">
@@ -681,7 +778,7 @@
     function verificarEstadoCheckboxes() {
         // Verifica se algum checkbox está marcado
         var algumMarcado = false;
-        checkboxes.forEach(function(checkbox) {
+        checkboxes.forEach(function (checkbox) {
             if (checkbox.checked) {
                 algumMarcado = true;
             }
@@ -689,13 +786,13 @@
 
         // Desabilita o botão 'consultar-vinculacao' se algum checkbox estiver marcado
         consultarButton.disabled = algumMarcado;
-        
+
         // Desabilita o botão 'remover-vinculacao' se nenhum checkbox estiver marcado
         removerButton.disabled = !algumMarcado;
     }
 
     // Adiciona um ouvinte de evento de mudança a cada checkbox
-    checkboxes.forEach(function(checkbox) {
+    checkboxes.forEach(function (checkbox) {
         checkbox.addEventListener('change', verificarEstadoCheckboxes);
     });
 
