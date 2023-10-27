@@ -36,7 +36,7 @@ def main():
     ultimo_produto_cadastrado = UltimoProdutoCadastrado.objects.first().autoid
     
     comando = f'''
-    SELECT A.AUTOID, B.ORIGEM_NOME, A.SKU, A.TITULO, A.VALOR2, A.COD_INTERNO
+    SELECT A.AUTOID, B.ORIGEM_NOME, A.SKU, A.TITULO, A.VALOR2, A.COD_INTERNO, SKURETORNO, A.ORIGEM_ID
     FROM PUBLICA_PRODUTO A
     LEFT JOIN ECOM_ORIGEM B ON A.ORIGEM_ID = B.ORIGEM_ID
     WHERE A.AUTOID > '{ultimo_produto_cadastrado}'
@@ -56,6 +56,7 @@ def main():
     df['SKU'] = df['SKU'].str.strip()
     df['TITULO'] = df['TITULO'].str.strip()
     df['COD_INTERNO'] = df['COD_INTERNO'].str.strip()
+    df['SKURETORNO'] = df['SKURETORNO'].str.strip()
         
     # Percorre df com iterrows
     for index, row in df.iterrows():
@@ -64,8 +65,13 @@ def main():
         titulo = row['TITULO']
         valor = 'R$' + str(row['VALOR2'])
         cod_interno = row['COD_INTERNO']
+        origem_id = str(row['ORIGEM_ID'])
         
-        message = f'PRODUTO PUBLICADO! :arrow_upper_right:\n{cod_interno} | {mktp} | {sku} | {valor}\n {titulo}'
+        if origem_id == '8' or origem_id == '9' or origem_id == '10':
+            sku_retorno = row['SKURETORNO']
+            message = f'PRODUTO PUBLICADO! :arrow_upper_right:\n{cod_interno} | {mktp} | {sku} | {sku_retorno} | {valor}\n {titulo}'
+        else:
+            message = f'PRODUTO PUBLICADO! :arrow_upper_right:\n{cod_interno} | {mktp} | {sku} | {valor}\n {titulo}'
         
         try:
             response = client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
