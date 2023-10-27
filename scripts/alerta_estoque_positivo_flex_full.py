@@ -85,18 +85,21 @@ def main():
         envia_notificacao = True
         for variacao in response['variations']:
             
-            # Coleta inventory_id
-            inventory_id = variacao['inventory_id']
-            
-            # Coleta estoque do df_all_variations baseado no inventory_id
-            estoque_principal = int(df_all_variations[df_all_variations['PRODMKTP_ID'] == inventory_id]['ESTOQUE'].values[0])
-            
-            # Coleta estoque do Full
-            estoque_full = int(variacao['available_quantity'])
-            
-            if estoque_full > 0 and estoque_principal <= 1:
-                envia_notificacao = False
-                break
+            try:
+                # Coleta inventory_id
+                inventory_id = variacao['inventory_id']
+                
+                # Coleta estoque do df_all_variations baseado no inventory_id
+                estoque_principal = int(df_all_variations[df_all_variations['PRODMKTP_ID'] == inventory_id]['ESTOQUE'].values[0])
+                
+                # Coleta estoque do Full
+                estoque_full = int(variacao['available_quantity'])
+                
+                if estoque_full > 0 and estoque_principal <= 1:
+                    envia_notificacao = False
+                    break
+            except:
+                pass
                 
         if envia_notificacao == True:
             slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], contador)
