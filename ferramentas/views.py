@@ -646,9 +646,7 @@ def criar_pedido_transferencia(request):
         # Le o arquivo xlsx
         try:
             file_transferencia = request.FILES['file']
-            print(file_transferencia)
             df_pedido_transferencia = pd.read_excel(file_transferencia)
-            print(df_pedido_transferencia)
         except Exception as e:
             messages.add_message(request, constants.ERROR, f'Erro ao tentar ler o arquivo! {e}')
             return redirect('index-ferramentas')
@@ -671,8 +669,7 @@ def criar_pedido_transferencia(request):
         
         df_pedido_transferencia.rename(columns={'quant': 'QUANT', 'Quant.': 'QUANT'}, inplace=True)
         
-        func_pedido_transferencia.main(empresa_origem=empresa_origem, empresa_destino=empresa_destino, armazem_origem=armazem_origem, armazem_destino=armazem_destino)
-
+        func_pedido_transferencia.main(empresa_origem=empresa_origem, empresa_destino=empresa_destino, armazem_origem=armazem_origem, armazem_destino=armazem_destino, df_pedido_transferencia=df_pedido_transferencia)
         
-        
+        messages.add_message(request, constants.SUCCESS, 'Pedido de transferência criado com sucesso!')
         return redirect('index-ferramentas')
