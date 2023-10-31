@@ -149,6 +149,22 @@
                         <h5 class="card-title">Dados Campanha</h5>
                         <p class="card-text">Realiza a coleta de dados de múltiplas tabelas do aton</p>
                         <form action="{% url 'excel_planilha_campanha' %}" method="post">
+                            <div style="margin-bottom: 10px;" class="row">
+                                <div class="col">
+                                    <select class="form-select" name="marketplace" required>
+                                        <option value="Tudo" selected>Todos Marketplace</option>
+                                        <option value="Mercado Livre">Mercado Livre</option>
+                                        <option value="NetShoes">NetShoes</option>
+                                        <option value="Decathlon">Decathlon</option>
+                                        <option value="SkyHub">SkyHub</option>
+                                        <option value="IntegraCommerce">IntegraCommerce</option>
+                                        <option value="Shopee">Shopee</option>
+                                        <option value="CNova">CNova</option>
+                                        <option value="AliExpress">AliExpress</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>

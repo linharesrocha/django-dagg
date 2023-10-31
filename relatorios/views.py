@@ -16,6 +16,12 @@ def index(request):
 
 def gerar_planilha_campanha(request):
     
+    # Obtem valor marketplace
+    marketplace = request.POST['marketplace']
+    
+    if marketplace == 'Tudo':
+        marketplace = None
+    
     # Criando o nome da planilha com data e hroa
     today = date.today()
     dia_atual = str(today.strftime("%Y-%m-%d"))
@@ -24,7 +30,7 @@ def gerar_planilha_campanha(request):
     nome_planilha = f'planilha-de-campanha-{dia_atual}-{hora_atual}.xlsx'
     
     # Chame a função que gera o arquvio Excel
-    arquivo_excel = planilha_campanha.main()
+    arquivo_excel = planilha_campanha.main(marketplace=marketplace)
     
     # Crie uma resposta HTTP para retornar o arquivo ao usuário
     response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')

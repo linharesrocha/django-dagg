@@ -7,27 +7,51 @@ from dotenv import load_dotenv
 from scripts.connect_to_database import get_connection
 
 
-def carrega_tabela_produtos(conexao):
-    comando = '''
-    SELECT DISTINCT
-    A.AUTOID, A.VLR_SITE2, A.VLR_SITE1, A.PRODMKTP_ID, A.SKU, A.SKUVARIACAO_MASTER, A.ATIVO, A.TIPO_ANUNCIO, A.ORIGEM_ID,
-    B.INATIVO, B.CODID, B.COD_INTERNO,  B.PAI,B.DESCRICAO, B.VLR_CUSTO, B.PESO, B.COMPRIMENTO, B.LARGURA, B.ALTURA,
-    C.ESTOQUE, 
-    D.ORIGEM_NOME,
-    E.DESCRICAO AS GRUPO,
-    F.CATEG_MKTP_DESC AS DESCRICAON02, F.PRODUTO_TIPO, F.API,
-    G.CATEG_ID, G.CATEG_NOME
-    FROM ECOM_SKU A
-    LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
-    LEFT JOIN ESTOQUE_MATERIAIS C ON B.CODID = C.MATERIAL_ID
-    LEFT JOIN ECOM_ORIGEM D ON A.ORIGEM_ID = D.ORIGEM_ID
-    LEFT JOIN GRUPO E ON B.GRUPO = E.CODIGO
-    LEFT JOIN CATEGORIAS_MKTP F  ON F.CATEG_ATON = B.ECOM_CATEGORIA AND F.API = D.API
-    LEFT JOIN ECOM_CATEGORIAS G ON G.CATEG_ID = B.ECOM_CATEGORIA
-    WHERE C.ARMAZEM = 1
-    AND B.INATIVO = 'N'
-    ORDER BY CODID
-    '''
+def carrega_tabela_produtos(conexao, marketplace):
+    if marketplace == None:
+        comando = '''
+        SELECT DISTINCT
+        A.AUTOID, A.VLR_SITE2, A.VLR_SITE1, A.PRODMKTP_ID, A.SKU, A.SKUVARIACAO_MASTER, A.ATIVO, A.TIPO_ANUNCIO, A.ORIGEM_ID,
+        B.INATIVO, B.CODID, B.COD_INTERNO,  B.PAI,B.DESCRICAO, B.VLR_CUSTO, B.PESO, B.COMPRIMENTO, B.LARGURA, B.ALTURA,
+        C.ESTOQUE, 
+        D.ORIGEM_NOME,
+        E.DESCRICAO AS GRUPO,
+        F.CATEG_MKTP_DESC AS DESCRICAON02, F.PRODUTO_TIPO, F.API,
+        G.CATEG_ID, G.CATEG_NOME
+        FROM ECOM_SKU A
+        LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
+        LEFT JOIN ESTOQUE_MATERIAIS C ON B.CODID = C.MATERIAL_ID
+        LEFT JOIN ECOM_ORIGEM D ON A.ORIGEM_ID = D.ORIGEM_ID
+        LEFT JOIN GRUPO E ON B.GRUPO = E.CODIGO
+        LEFT JOIN CATEGORIAS_MKTP F  ON F.CATEG_ATON = B.ECOM_CATEGORIA AND F.API = D.API
+        LEFT JOIN ECOM_CATEGORIAS G ON G.CATEG_ID = B.ECOM_CATEGORIA
+        WHERE C.ARMAZEM = 1
+        AND B.INATIVO = 'N'
+        ORDER BY CODID
+        '''
+    else:
+        comando = f'''
+        SELECT DISTINCT
+        A.AUTOID, A.VLR_SITE2, A.VLR_SITE1, A.PRODMKTP_ID, A.SKU, A.SKUVARIACAO_MASTER, A.ATIVO, A.TIPO_ANUNCIO, A.ORIGEM_ID,
+        B.INATIVO, B.CODID, B.COD_INTERNO,  B.PAI,B.DESCRICAO, B.VLR_CUSTO, B.PESO, B.COMPRIMENTO, B.LARGURA, B.ALTURA,
+        C.ESTOQUE, 
+        D.ORIGEM_NOME,
+        E.DESCRICAO AS GRUPO,
+        F.CATEG_MKTP_DESC AS DESCRICAON02, F.PRODUTO_TIPO, F.API,
+        G.CATEG_ID, G.CATEG_NOME
+        FROM ECOM_SKU A
+        LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
+        LEFT JOIN ESTOQUE_MATERIAIS C ON B.CODID = C.MATERIAL_ID
+        LEFT JOIN ECOM_ORIGEM D ON A.ORIGEM_ID = D.ORIGEM_ID
+        LEFT JOIN GRUPO E ON B.GRUPO = E.CODIGO
+        LEFT JOIN CATEGORIAS_MKTP F  ON F.CATEG_ATON = B.ECOM_CATEGORIA AND F.API = D.API
+        LEFT JOIN ECOM_CATEGORIAS G ON G.CATEG_ID = B.ECOM_CATEGORIA
+        WHERE C.ARMAZEM = 1
+        AND B.INATIVO = 'N'
+        AND D.API = '{marketplace}'
+        ORDER BY CODID
+        '''
+        
     data = pd.read_sql(comando, conexao)
     
     # Limpando valores com espaços vazios
@@ -47,6 +71,7 @@ def carrega_tabela_pedidos(conexao):
     ON A.PEDIDO = B.PEDIDO
     WHERE B.TIPO = 'PEDIDO'
     AND B.POSICAO != 'CANCELADO'
+    AND B.DATA >= DATEADD(DAY, -100, GETDATE());
     '''
 
     # Preenchendo pedidos
@@ -271,7 +296,7 @@ def gerar_excel(data):
     bytes_data = excel_bytes.getvalue()
     return bytes_data
 
-def main():
+def main(marketplace):
     load_dotenv()
 
     # Filtrando Warnings
@@ -289,17 +314,29 @@ def main():
     date_30 = datetime_midnight - timedelta(30)
     date_90 = datetime_midnight - timedelta(90)
 
-    data = carrega_tabela_produtos(conexao)
+    print('Step 1 - PLANILHA CAMPANHA')
+    data = carrega_tabela_produtos(conexao, marketplace)
+    print('Step 2 - PLANILHA CAMPANHA')
     data_h = carrega_tabela_pedidos(conexao)
+    print('Step 3 - PLANILHA CAMPANHA')
     data = manipula_colunas_sku_e_sku_variacao(data)
+    print('Step 4 - PLANILHA CAMPANHA')
     data = adiciona_coluna_pai(data, conexao)
+    print('Step 5 - PLANILHA CAMPANHA')
     data = adiciona_categoria_pai_magalu(data, conexao)
+    print('Step 6 - PLANILHA CAMPANHA')
     data = adiciona_entrada_estoque(data, conexao)
+    print('Step 7 - PLANILHA CAMPANHA')
     data_h = adiciona_pedidos(data_h)
+    print('Step 8 - PLANILHA CAMPANHA')
     data_h = manipula_sku_pedidos(data_h)
+    print('Step 9 - PLANILHA CAMPANHA')
     data_completo = groupby_vendas_aton(data_h, data, date_30, date_90)
+    print('Step 10 - PLANILHA CAMPANHA')
     data_completo = groupby_vendas_marketplace(data_h, data_completo, date_7, date_14, date_30, date_90)
+    print('Step 11 - PLANILHA CAMPANHA')
     data_completo = adiciona_horario(data_completo)
+    print('Step 12 - PLANILHA CAMPANHA')
     data = filtra_colunas(data_completo)
 
     bytes_data = gerar_excel(data)
