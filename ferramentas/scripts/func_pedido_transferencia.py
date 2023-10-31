@@ -60,7 +60,7 @@ def main(empresa_origem, empresa_destino, armazem_origem, armazem_destino, df_pe
         conexao.commit()
         
         
-        # Debita estoque na origem
+        # # Debita estoque na origem
         comando = f'''
         SELECT ESTOQUE
         FROM ESTOQUE_MATERIAIS
@@ -70,17 +70,17 @@ def main(empresa_origem, empresa_destino, armazem_origem, armazem_destino, df_pe
         
         estoque_atual_origem = cursor.execute(comando).fetchone()[0]
         
-        comando = f'''
-        UPDATE ESTOQUE_MATERIAIS
-        SET ESTOQUE = '{estoque_atual_origem - quant}'
-        WHERE MATERIAL_ID = '{codid}'
-        AND ARMAZEM = '{armazem_origem}'
-        '''
+        # comando = f'''
+        # UPDATE ESTOQUE_MATERIAIS
+        # SET ESTOQUE = '{estoque_atual_origem - quant}'
+        # WHERE MATERIAL_ID = '{codid}'
+        # AND ARMAZEM = '{armazem_origem}'
+        # '''
         
-        cursor.execute(comando)
-        conexao.commit()
+        # cursor.execute(comando)
+        # conexao.commit()
         
-        # Credita estoque no destino
+        # # Credita estoque no destino
         comando = f'''
         SELECT ESTOQUE
         FROM ESTOQUE_MATERIAIS
@@ -90,16 +90,35 @@ def main(empresa_origem, empresa_destino, armazem_origem, armazem_destino, df_pe
         
         estoque_atual_destino = cursor.execute(comando).fetchone()[0]
         
+        # comando = f'''
+        # UPDATE ESTOQUE_MATERIAIS
+        # SET ESTOQUE = '{estoque_atual_destino + quant}'
+        # WHERE MATERIAL_ID = '{codid}'
+        # AND ARMAZEM = '{armazem_destino}'
+        # '''
+        
+        # cursor.execute(comando)
+        # conexao.commit()
+
+        # Saida do Kardex movimentação de estoque
         comando = f'''
-        UPDATE ESTOQUE_MATERIAIS
-        SET ESTOQUE = '{estoque_atual_destino + quant}'
-        WHERE MATERIAL_ID = '{codid}'
-        AND ARMAZEM = '{armazem_destino}'
+        INSERT INTO KARDEX
+        (DOCUMENTO, DATA, TIPODOC, ES, TRANSACAO, COD_MATERIAL, ESTOQUE_ID, ESTOQUE_ATUAL, EMPRESA, ARMAZEM, QUANT, VLR_CUSTO, VLR_VENDA, DESCRITIVO, UNI_CODIGO, PA, NF_ID)
+        VALUES ('{novo_numero_pedido}', SYSDATETIME(), 'PEDTF', 'S', 'B', '{codid}', '1', '{estoque_atual_origem - quant}', '{empresa_origem}', '{armazem_origem}', '{quant}', '{vlrunit}', '{vlrunit}', 'Pedido de transferência Saída : {novo_numero_pedido}', 'UN', '239', '0')
         '''
         
         cursor.execute(comando)
         conexao.commit()
-
+        
+        # Entrada do Kardex movimentação de estoque
+        comando = f'''
+        INSERT INTO KARDEX
+        (DOCUMENTO, DATA, TIPODOC, ES, TRANSACAO, COD_MATERIAL, ESTOQUE_ID, ESTOQUE_ATUAL, EMPRESA, ARMAZEM, QUANT, VLR_CUSTO, VLR_VENDA, DESCRITIVO, UNI_CODIGO, PA, NF_ID)
+        VALUES ('{novo_numero_pedido}', SYSDATETIME(), 'PEDTF', 'E', 'B', '{codid}', '1', '{estoque_atual_destino + quant}', '{empresa_destino}', '{armazem_destino}', '{quant}', '{vlrunit}', '{vlrunit}', 'Pedido de transferência Entrada : {novo_numero_pedido}', 'UN', '239', '0')
+        '''
+        
+        cursor.execute(comando)
+        conexao.commit()
         
     # Fechar pedido
     comando = f'''
