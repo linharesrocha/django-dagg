@@ -716,7 +716,12 @@ def balanco_estoque(request):
             return response
         
         elif 'importar-balanco-produto' in request.POST:
-            file_balanco = request.FILES['formFile']
+            try:
+                file_balanco = request.FILES['formFile']
+            except:
+                messages.add_message(request, constants.ERROR, 'Erro ao tentar ler o arquivo!')
+                return redirect('index-ferramentas')
+            
             df_balanco = pd.read_excel(file_balanco)
             
             # Confere se existe a coluna CODID
@@ -740,19 +745,27 @@ def balanco_estoque(request):
                 messages.add_message(request, constants.ERROR, 'A coluna ESTOQUE_REAL não pode conter letras ou caracteres, apenas números!')
                 return redirect('index-ferramentas')
             
+            # Converte ESTOQUE_REAL para int
+            df_balanco['ESTOQUE_REAL'] = df_balanco['ESTOQUE_REAL'].astype(int)
+            
             # Itera sobre o dataframe
             for index, row in df_balanco.iterrows():
                 codid = row['CODID']
                 estoque_real = row['ESTOQUE_REAL']
                 
-                pass
+                comando = f'''
+                UPDATE ESTOQUE_MATERIAIS
+                SET ESTOQUE = '{estoque_real}'
+                WHERE ARMAZEM = '1'
+                AND MATERIAL_ID = '{codid}'
+                '''
                 
-                
+                cursor.execute(comando)
+                conexao.commit()
             
+            conexao.close()
             
-            
-            
-            
+            messages.add_message(request, constants.SUCCESS, 'Estoque atualizado com sucesso!')
             return redirect('index-ferramentas')
     
         else:
