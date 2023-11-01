@@ -683,7 +683,7 @@ def balanco_estoque(request):
             
         if 'baixar-balanco-produto' in request.POST:
             comando = f'''
-            SELECT A.COD_INTERNO, A.DESCRICAO, B.ESTOQUE AS ESTOQUE_ATON
+            SELECT A.CODID, A.COD_INTERNO, A.DESCRICAO, B.ESTOQUE AS ESTOQUE_ATON
             FROM MATERIAIS A
             LEFT JOIN ESTOQUE_MATERIAIS B ON A.CODID = B.MATERIAL_ID
             WHERE B.ARMAZEM = '1'
@@ -714,3 +714,47 @@ def balanco_estoque(request):
             response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
             response['Content-Disposition'] = f'attachment; filename="{data_formatada}-balanco.xlsx"'
             return response
+        
+        elif 'importar-balanco-produto' in request.POST:
+            file_balanco = request.FILES['formFile']
+            df_balanco = pd.read_excel(file_balanco)
+            
+            # Confere se existe a coluna CODID
+            if 'CODID' not in df_balanco.columns:
+                messages.add_message(request, constants.ERROR, 'A coluna CODID não existe!')
+                return redirect('index-ferramentas')
+            
+            # Confere se existe a coluna ESTOQUE_REAL
+            if 'ESTOQUE_REAL' not in df_balanco.columns:
+                messages.add_message(request, constants.ERROR, 'A coluna ESTOQUE_REAL não existe!')
+                return redirect('index-ferramentas')
+            
+            # Deleta o resto das colunas
+            df_balanco = df_balanco[['CODID', 'ESTOQUE_REAL']]
+            
+            # Deixa apenas as linhas que contem numero na coluna ESTOQUE_REAL
+            df_balanco = df_balanco[df_balanco['ESTOQUE_REAL'].notnull()]
+            
+            # Confere se existe string  na coluna ESTOQUE_REAL caso sim retorne
+            if df_balanco['ESTOQUE_REAL'].dtype == 'O':
+                messages.add_message(request, constants.ERROR, 'A coluna ESTOQUE_REAL não pode conter letras ou caracteres, apenas números!')
+                return redirect('index-ferramentas')
+            
+            # Itera sobre o dataframe
+            for index, row in df_balanco.iterrows():
+                codid = row['CODID']
+                estoque_real = row['ESTOQUE_REAL']
+                
+                pass
+                
+                
+            
+            
+            
+            
+            
+            return redirect('index-ferramentas')
+    
+        else:
+            messages.add_message(request, constants.ERROR, 'Erro no servidor!')
+            return redirect('index-ferramentas')

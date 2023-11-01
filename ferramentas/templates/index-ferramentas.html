@@ -490,17 +490,24 @@
                                 class="btn btn-secondary">Instruções</button>
                         </div>
                     </div>
-                    <form action="{% url 'balanco-estoque' %}" method="post">
+                    <form action="{% url 'balanco-estoque' %}" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col text-center">
                                 <button style="background-color: green!important; margin-bottom: 10px;"
                                     name="baixar-balanco-produto" id="baixar-balanco-produto" type="submit"
                                     class="btn btn-secondary">Baixar Planilha</button>
                             </div>
+                        </div>
+                        <br>
+                        <div class="row">
                             <div class="col text-center">
-                                <button style="background-color: orange!important; margin-bottom: 10px;"
-                                    name="importar-balanco-produto" id="importar-balanco-produto" type="submit"
-                                    class="btn btn-secondary">Importar Planilha</button>
+                                <div class="mb-3">
+                                    <label for="formFile" class="form-label">Importar Balanço de Produtos</label>
+                                    <input class="form-control" type="file" id="formFile" name="formFile" accept=".xlsx, .xls"
+                                        multiple>
+                                </div>
+                                <button style="background-color: orange!important;" id="importar-balanco-produto"
+                                    name="importar-balanco-produto" type="submit" class="btn btn-secondary">Atualizar Estoque</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -792,9 +799,8 @@
                 <h4>5. Baixe a planilha e faça o balanço</h4>
                 <br>
                 <h4>6. Importe a planilha</h4>
-                <p style="color: red;">Faça importação apenas dos produtos que você fez o balanço.</p>
-                <p>A primeira coluna deve se chamar COD_INTERNO</p>
-                <p>A segunda coluna deve se chamar ESTOQUE_REAL</p>
+                <p style="color: red;">Deixe em BRANCO/VAZIO os produtos que você não fez o balanço.</p>
+                <p style="color: red;">Não exclua a coluna CODID e ESTOQUE_REAL</p>
                 <h4>7. Ative o robô (sincronização de pedidos)</h4>
                 <p>Ligue novamente para o Aton para fazer a ativação da sincronização de pedidos.</p>
             </div>
