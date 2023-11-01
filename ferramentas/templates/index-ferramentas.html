@@ -475,6 +475,39 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card" style="width: 28rem">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="card-title  text-center">Balanço de Produtos</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <button style="background-color:gray!important; margin-bottom: 20px;" data-bs-toggle="modal"
+                                data-bs-target="#modalAjudaBalanco" type="submit"
+                                class="btn btn-secondary">Instruções</button>
+                        </div>
+                    </div>
+                    <form action="{% url 'balanco-estoque' %}" method="post">
+                        <div class="row">
+                            <div class="col text-center">
+                                <button style="background-color: green!important; margin-bottom: 10px;"
+                                    name="baixar-balanco-produto" id="baixar-balanco-produto" type="submit"
+                                    class="btn btn-secondary">Baixar Planilha</button>
+                            </div>
+                            <div class="col text-center">
+                                <button style="background-color: orange!important; margin-bottom: 10px;"
+                                    name="importar-balanco-produto" id="importar-balanco-produto" type="submit"
+                                    class="btn btn-secondary">Importar Planilha</button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col text-center">
@@ -724,6 +757,46 @@
                                                             'N'</p>
                                                         <hr>
                                                         <p>SELECT CODID, COD_INTERNO, DESCRICAO FROM MATERIAIS</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAjudaBalanco" tabindex="-1" aria-labelledby="modalAjudaBalancoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAjudaLabel">Instruções</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>1. Tirar pedidos</h4>
+                <p>Antes de fazer o balanço de produtos, deve-se obrigatoriamente fazer a emissão de todos os pedidos.
+                </p>
+                <h4>2. Inativar robô (sincronização de pedidos)</h4>
+                <p>Inative o robô que a todo momento faz a busca de novos pedidos no marketplace e debita o estoque.
+                    Isso pode atrapalhar o balanço!
+                    Para fazer isso você terá que ligar no Ambar X para fazer a solicitação de inativação.
+                    Contato: (011) 2087-6767</p>
+                <h4>Despacho de produtos</h4>
+                <p>Deve-se fazer o despacho no mesmo dia de todos os pedidos gerado. Não pode haver pedidos no sistema e
+                    nem na expedição, pois poderá afetar a contagem dos produtos.</p>
+                <h4>4. Verificação de produtos</h4>
+                <p>Antes de fazer o balanço de produtos, faça a verificação se existe algum produto no controle de
+                    qualidade ou no atendimento, pois os produtos que não estão no estoque, também devem ser
+                    contabilizados.</p>
+                <h4>5. Baixe a planilha e faça o balanço</h4>
+                <br>
+                <h4>6. Importe a planilha</h4>
+                <p style="color: red;">Faça importação apenas dos produtos que você fez o balanço.</p>
+                <p>A primeira coluna deve se chamar COD_INTERNO</p>
+                <p>A segunda coluna deve se chamar ESTOQUE_REAL</p>
+                <h4>7. Ative o robô (sincronização de pedidos)</h4>
+                <p>Ligue novamente para o Aton para fazer a ativação da sincronização de pedidos.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>

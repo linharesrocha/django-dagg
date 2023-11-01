@@ -673,3 +673,44 @@ def criar_pedido_transferencia(request):
         
         messages.add_message(request, constants.SUCCESS, 'Pedido de transferência criado com sucesso!')
         return redirect('index-ferramentas')
+    
+
+def balanco_estoque(request):
+    if request.method == 'POST':
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        cursor = conexao.cursor()
+            
+        if 'baixar-balanco-produto' in request.POST:
+            comando = f'''
+            SELECT A.COD_INTERNO, A.DESCRICAO, B.ESTOQUE AS ESTOQUE_ATON
+            FROM MATERIAIS A
+            LEFT JOIN ESTOQUE_MATERIAIS B ON A.CODID = B.MATERIAL_ID
+            WHERE B.ARMAZEM = '1'
+            AND A.INATIVO = 'N'
+            AND B.ESTOQUE > 0
+            AND COD_INTERNO NOT LIKE '%PAI'
+            AND DESMEMBRA = 'N'
+            AND A.GRUPO != '7'
+            ORDER BY DESCRICAO
+            '''
+            
+            df_balanco = pd.read_sql(comando, conexao)
+            df_balanco['ESTOQUE_REAL'] = None
+            df_balanco['DT_ULTIMA_CONF'] = None
+            
+            
+            # Formata para bytes
+            excel_bytes = BytesIO()
+            df_balanco.to_excel(excel_bytes, index=False)
+            excel_bytes.seek(0)
+            bytes_data = excel_bytes.getvalue()
+            
+            # Cria data atual
+            data_hoje = datetime.today()
+            data_formatada = data_hoje.strftime("%Y-%m-%d")
+
+            # Retorna
+            response = HttpResponse(bytes_data, content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = f'attachment; filename="{data_formatada}-balanco.xlsx"'
+            return response

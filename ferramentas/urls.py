@@ -19,4 +19,5 @@ urlpatterns = [
      path('consulta_vinculacao_mlb/', views.consulta_mlb_vinculado, name='consulta-vinculacao-mlb'),
      path('obter_data_hora_clique/', views.obter_data_hora_clique, name='obter_data_hora_clique'),
      path('criar_pedido_transferencia/', views.criar_pedido_transferencia, name='criar-pedido-transferencia'),
+     path('balanco_estoque/', views.balanco_estoque, name='balanco-estoque'),
 ]
