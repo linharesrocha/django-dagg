@@ -699,7 +699,17 @@ def balanco_estoque(request):
             
             df_balanco = pd.read_sql(comando, conexao)
             df_balanco['ESTOQUE_REAL'] = None
-            df_balanco['DT_ULTIMA_CONF'] = None
+            
+            # Acessa o banco de dados DataUltimoBalanco
+            try:
+                queryset = DataUltimoBalanco.objects.all()
+                df_data_ultimo_balanco = pd.DataFrame(list(queryset.values()))
+                df_balanco = pd.merge(df_balanco, df_data_ultimo_balanco, how='left', left_on='CODID', right_on='codid')
+                df_balanco.drop(columns=['codid', 'id'], inplace=True)
+                df_balanco.rename(columns={'data_e_hora': 'DT_ULTIMA_CONF'}, inplace=True)
+                df_balanco['DT_ULTIMA_CONF'] = df_balanco['DT_ULTIMA_CONF'].dt.strftime('%d-%m-%Y %H:%M:%S')
+            except:
+                df_balanco['DT_ULTIMA_CONF'] = None    
             
             
             # Formata para bytes
@@ -769,10 +779,8 @@ def balanco_estoque(request):
                     registro = DataUltimoBalanco.objects.get(codid=codid)
                     registro.data_e_hora = timezone.now()
                     registro.save()
-                    print('UM')
                 except DataUltimoBalanco.DoesNotExist:
                     DataUltimoBalanco.objects.create(codid=codid)
-                    print('DOIS')
             
             conexao.close()
             
