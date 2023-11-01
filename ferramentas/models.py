@@ -8,3 +8,7 @@ class ArquivoAton(models.Model):
 
 class RegistroClique(models.Model):
     data_hora = models.DateTimeField(auto_now_add=True)
+    
+class DataUltimoBalanco(models.Model):
+    codid = models.CharField(max_length=50)
+    data_e_hora = models.DateTimeField(auto_now_add=True)

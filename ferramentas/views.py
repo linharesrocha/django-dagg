@@ -17,9 +17,11 @@ from io import BytesIO
 import io
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from .models import ArquivoAton, RegistroClique
+from .models import ArquivoAton, RegistroClique, DataUltimoBalanco
 from dotenv import load_dotenv
 from django.http import JsonResponse
+from django.utils import timezone
+
 
 
 def index(request):
@@ -421,7 +423,7 @@ def inativar_produtos_aton(request):
             messages.add_message(request, constants.INFO, 'Erro no servidor!')
             return redirect('index-ferramentas')
     
-    messages.add_message(request, constants.SUCCESS, f'{str(contador)} CODID inativdos!')
+    messages.add_message(request, constants.SUCCESS, f'{str(contador)} CODID inativados!')
     return redirect('index-ferramentas')
 
 def cadastrar_kit(request):
@@ -762,6 +764,15 @@ def balanco_estoque(request):
                 
                 cursor.execute(comando)
                 conexao.commit()
+                
+                try:
+                    registro = DataUltimoBalanco.objects.get(codid=codid)
+                    registro.data_e_hora = timezone.now()
+                    registro.save()
+                    print('UM')
+                except DataUltimoBalanco.DoesNotExist:
+                    DataUltimoBalanco.objects.create(codid=codid)
+                    print('DOIS')
             
             conexao.close()
             
