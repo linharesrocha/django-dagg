@@ -18,6 +18,8 @@ def main(download):
     AND A.INATIVO = 'S'
     AND B.ESTOQUE > 0
     AND A.INATIVO = 'S'
+    AND COD_INTERNO NOT LIKE '%PAI'
+    AND DESMEMBRA = 'N'
     ORDER BY CODID
     '''
 
