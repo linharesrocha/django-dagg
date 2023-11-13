@@ -40,6 +40,7 @@ def main():
     FROM PUBLICA_PRODUTO A
     LEFT JOIN ECOM_ORIGEM B ON A.ORIGEM_ID = B.ORIGEM_ID
     WHERE A.AUTOID > '{ultimo_produto_cadastrado}'
+    AND A.FLAG = '1'
     '''
     
     df = pd.read_sql_query(comando, conexao)
