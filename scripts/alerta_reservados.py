@@ -27,6 +27,8 @@ def main():
     '''
     
     df_reservados = pd.read_sql_query(comando, conexao)
+    df_reservados['COD_INTERNO'] = df_reservados['COD_INTERNO'].str.strip()
+    df_reservados['DESCRICAO'] = df_reservados['DESCRICAO'].str.strip()
     
     df_reservados_filtered = df_reservados[(df_reservados['ESTOQUE'] <= 10) & (df_reservados['RESERVADOS'] >= 5)]
     
