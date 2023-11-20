@@ -61,9 +61,9 @@ def main():
         pai = row['PAI']
         
         if pai == 0:
-            message = f'PRODUTO PUBLICADO! :gear:\n{codid} | {cod_interno}\n{descricao}'
+            message = f'PRODUTO CADASTRADO NO ATON! :gear:\n{codid} | {cod_interno}\n{descricao}'
         else:
-            message = f'PRODUTO PUBLICADO! :gear:\n{codid} | {cod_interno} | PAI: {pai}\n{descricao}'
+            message = f'PRODUTO CADASTRADO NO ATON! :gear:\n{codid} | {cod_interno} | PAI: {pai}\n{descricao}'
         
         try:
             response = client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
