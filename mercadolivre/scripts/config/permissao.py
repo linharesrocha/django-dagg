@@ -5,7 +5,7 @@ import webbrowser
 from database_config import *
 
 # Url para obter Refresh Token Inicial
-url = f"https://auth.mercadolivre.com.br/authorization?response_type=code&client_id={client_id}&redirect_uri=http://localhost:8000"
+url = f"https://auth.mercadolivre.com.br/authorization?response_type=code&client_id={client_id}"
 print(url)
 # Enviando requisição e abrendo a página
 webbrowser.open(url)
