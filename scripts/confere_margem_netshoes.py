@@ -46,7 +46,7 @@ OPERACAO = 10
 IMPOSTO = 10
 
 comando = f'''
-SELECT DISTINCT A.CODID, C.MATERIAL_ID AS CODID_KIT, A.COD_INTERNO, D.COD_INTERNO AS COD_INTERNO_KIT, COD_PEDIDO AS SKU_MKTP, B.SEUPEDIDO AS PEDIDO, A.EMPRESA, A.DESCRICAOPROD AS TITULO, D.DESCRICAO AS TITULO_KIT, A.VLR_CUSTO, VLR_UNIT AS VLR_PEDIDO, B.VLRFRETE AS VLR_FRETE, DATA, D.DESMEMBRA AS KIT
+SELECT DISTINCT A.CODID, C.MATERIAL_ID AS CODID_KIT, A.COD_INTERNO, D.COD_INTERNO AS COD_INTERNO_KIT, COD_PEDIDO AS SKU_MKTP, B.SEUPEDIDO AS PEDIDO, A.EMPRESA, A.DESCRICAOPROD AS TITULO, D.DESCRICAO AS TITULO_KIT, A.VLR_CUSTO, VLR_UNIT AS VLR_PEDIDO, B.VLRFRETE AS VLR_FRETE, DATA, D.DESMEMBRA AS KIT, A.QUANT
 FROM PEDIDO_MATERIAIS_ITENS_CLIENTE A
 LEFT JOIN PEDIDO_MATERIAIS_CLIENTE B ON A.PEDIDO = B.PEDIDO
 LEFT JOIN ECOM_SKU C ON A.COD_PEDIDO = C.SKU
@@ -54,7 +54,7 @@ LEFT JOIN MATERIAIS D ON C.MATERIAL_ID = D.CODID
 WHERE B.TIPO = 'PEDIDO'
 AND B.POSICAO != 'CANCELADO'
 AND B.ORIGEM IN ('2', '3', '4')
-AND B.DATA >= DATEADD(DAY, DATEDIFF(DAY, 0, GETDATE()) - 1, 0)
+AND B.DATA >= DATEADD(DAY, DATEDIFF(DAY, 0, GETDATE()) - 6, 0)
 AND B.DATA < DATEADD(DAY, DATEDIFF(DAY, 0, GETDATE()), 0)
 ORDER BY A.EMPRESA, DATA
 '''
@@ -67,7 +67,6 @@ df['TITULO_KIT'] = df['TITULO_KIT'].str.strip()
 df['COD_INTERNO'] = df['COD_INTERNO'].str.strip()
 df['COD_INTERNO_KIT'] = df['COD_INTERNO_KIT'].str.strip()
 df['PEDIDO'] = df['PEDIDO'].str.strip()
-
 
 is_kit_s = df['KIT'] == 'S'
 
@@ -83,13 +82,13 @@ df.drop('COD_INTERNO_KIT', axis=1, inplace=True)
 df['TITULO'] = np.where(is_kit_s, df['TITULO_KIT'], df['TITULO'])
 df.drop('TITULO_KIT', axis=1, inplace=True)
 
-# Soma VLR_CUSTO e VLR_PEDIDO
+# Somando VLR_CUSTO e VLR_PEDIDO
 df['SOMA_VLR_CUSTO'] = 0
 df['SOMA_VLR_PEDIDO'] = 0
 mask_custo = (df['KIT'] == 'S')
 mask_pedido = (df['KIT'] == 'S')
-soma_custo = df[mask_custo].groupby('PEDIDO')['VLR_CUSTO'].transform('sum')
-soma_pedido = df[mask_pedido].groupby('PEDIDO')['VLR_PEDIDO'].transform('sum')
+soma_custo = df[mask_custo].groupby('PEDIDO')['VLR_CUSTO'].transform(lambda x: (x * df.loc[x.index, 'QUANT']).sum())
+soma_pedido = df[mask_pedido].groupby('PEDIDO')['VLR_PEDIDO'].transform(lambda x: (x * df.loc[x.index, 'QUANT']).sum())
 df.loc[mask_custo, 'SOMA_VLR_CUSTO'] = soma_custo
 df.loc[mask_pedido, 'SOMA_VLR_PEDIDO'] = soma_pedido
 df['VLR_CUSTO'] = df['SOMA_VLR_CUSTO'].where(mask_custo, df['VLR_CUSTO'])
@@ -218,7 +217,7 @@ writer._save()
 load_dotenv()
 
 client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-SLACK_CHANNEL_ID='C045HEE4G7L'
+SLACK_CHANNEL_ID='C05FN0ZF0UB'
 
 message = f'NETSHOES MARGEM! :heavy_division_sign:'
 
