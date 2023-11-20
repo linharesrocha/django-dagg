@@ -15,9 +15,11 @@ def refreshToken():
         "refresh_token": refresh_token_inicial,
         "redirect_uri": 'http://localhost:8000'
     }
-    
+
     # Enviando Requisição para obter o Refresh Token Temporario
     response = requests.post("https://api.mercadolibre.com/oauth/token", headers=headers, data=data).json()
     access_token = response['access_token']
     
     return access_token
+
+refreshToken()

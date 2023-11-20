@@ -6,14 +6,14 @@ from database_config import *
 
 # Url para obter Refresh Token Inicial
 url = f"https://auth.mercadolivre.com.br/authorization?response_type=code&client_id={client_id}&redirect_uri=http://localhost:8000"
-
+print(url)
 # Enviando requisição e abrendo a página
 webbrowser.open(url)
 
 # Armazena o Refresh Token
 CODE = input('Refresh Token: ').replace('http://localhost:8000/?code=', '').replace('localhost:8000/?code=', '')
 
-# Headers do Access Token 
+# Headers do Access Token
 headers = {"accept": "application/json", "content-type": "application/x-www-form-urlencoded"}
 data = {
     "grant_type": "authorization_code",
