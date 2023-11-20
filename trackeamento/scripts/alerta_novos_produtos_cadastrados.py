@@ -27,7 +27,7 @@ def main():
     
     # Slack
     load_dotenv()
-    SLACK_CHANNEL_ID='C045HEE4G7L'
+    SLACK_CHANNEL_ID='C030X3UMR3M'
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     codid, descricao, cod_interno = None, None, None
     
