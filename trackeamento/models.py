@@ -70,3 +70,7 @@ class PedidosCompra(models.Model):
 class UltimoProdutoCadastrado(models.Model):
     id = models.AutoField(primary_key=True)
     autoid = models.IntegerField()
+    
+class UltimoProdutoCadastradoAton(models.Model):
+    id = models.AutoField(primary_key=True)
+    codid = models.IntegerField()
