@@ -790,3 +790,113 @@ def balanco_estoque(request):
         else:
             messages.add_message(request, constants.ERROR, 'Erro no servidor!')
             return redirect('index-ferramentas')
+        
+
+def atualizar_info_fiscal_produtos(request):
+    if request.method == 'POST':
+        connection = get_connection()
+        conexao = pyodbc.connect(connection)
+        cursor = conexao.cursor()
+
+
+        codid = request.POST.get('codid')
+        ncm = request.POST.get('ncm')
+        origem = request.POST.get('origem')
+        cest = request.POST.get('cest')
+        tabela_imposto = request.POST.get('tabela-imposto')
+
+        # Valida se existe CODID
+        try:
+            comando = f'''
+            SELECT CODID
+            FROM MATERIAIS
+            WHERE CODID = '{codid}'
+            '''
+
+            df = pd.read_sql(comando, conexao)
+            if len(df) <= 0:
+                messages.add_message(request, constants.ERROR, 'CODID não existe no Aton!')
+                return redirect('index-ferramentas')
+        except:
+            messages.add_message(request, constants.ERROR, 'Erro no servidor!')
+            return redirect('index-ferramentas')
+        
+        # Valida se o NCM tem exatamente 8 digitos
+        if ncm != '':
+            print(ncm)
+            print(type(ncm))
+            print(len(ncm))
+            if len(ncm) != 8:
+                messages.add_message(request, constants.ERROR, 'NCM deve ter exatamente 8 digitos!')
+                return redirect('index-ferramentas')
+            try:
+                # Atualiza NCM
+                comando = f'''
+                UPDATE MATERIAIS
+                SET CLASS_FISCAL = '{ncm}'
+                WHERE CODID = '{codid}'
+                '''
+
+                cursor.execute(comando)
+                conexao.commit()
+            except:
+                messages.add_message(request, constants.ERROR, 'Erro ao atualizar NCM!')
+                return redirect('index-ferramentas')
+        
+        # Valida se a origem tem 1 digito
+        if origem != '':
+            if len(origem) != 1:
+                messages.add_message(request, constants.ERROR, 'Origem deve ter 1 digito!')
+                return redirect('index-ferramentas')
+            
+            # Atualiza ORIGEM
+            try:
+                comando = f'''
+                UPDATE MATERIAIS
+                SET ORIGEM_TRIB = '{origem}'
+                WHERE CODID = '{codid}'
+                '''
+
+                cursor.execute(comando)
+                conexao.commit()
+            except:
+                messages.add_message(request, constants.ERROR, 'Erro ao atualizar ORIGEM!')
+                return redirect('index-ferramentas')
+            
+        if cest != '':
+            if len(cest) != 7:
+                messages.add_message(request, constants.ERROR, 'CEST deve ter 7 digitos!')
+                return redirect('index-ferramentas')
+            
+            # Atualiza CEST
+            try:
+                comando = f'''
+                UPDATE MATERIAIS
+                SET CEST = '{cest}'
+                WHERE CODID = '{codid}'
+                '''
+
+                cursor.execute(comando)
+                conexao.commit()
+            except:
+                messages.add_message(request, constants.ERROR, 'Erro ao atualizar CEST!')
+                return redirect('index-ferramentas')
+        
+        # Atualiza TABELA_IMPOSTO
+        if tabela_imposto != None:
+            try:
+                comando = f'''
+                UPDATE MATERIAIS
+                SET TABELAIMPOSTO = '{tabela_imposto}'
+                WHERE CODID = '{codid}'
+                '''
+
+                cursor.execute(comando)
+                conexao.commit()
+            except:
+                messages.add_message(request, constants.ERROR, 'Erro ao atualizar TABELA_IMPOSTO!')
+                return redirect('index-ferramentas')
+
+        messages.add_message(request, constants.SUCCESS, 'Informações fiscais atualizadas com sucesso!')
+        return redirect('index-ferramentas')
+

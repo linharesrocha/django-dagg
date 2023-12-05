@@ -20,4 +20,5 @@ urlpatterns = [
      path('obter_data_hora_clique/', views.obter_data_hora_clique, name='obter_data_hora_clique'),
      path('criar_pedido_transferencia/', views.criar_pedido_transferencia, name='criar-pedido-transferencia'),
      path('balanco_estoque/', views.balanco_estoque, name='balanco-estoque'),
+     path('atualizar_info_fiscal_produtos', views.atualizar_info_fiscal_produtos, name='atualizar-info-fiscal-produtos'),
 ]
