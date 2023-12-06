@@ -521,12 +521,14 @@
             <div class="card" style="width: 22rem">
                 <div class="card-body">
                     <h5 class="card-title  text-center">Alterar Fiscal</h5>
+                    <p class="card-text text-center">Manter em branco não haverá alteração.</p>
+                    <p class="card-text text-center">Escreva 'Apagar' para remover o valor.</p>
                     <form action="{% url 'atualizar-info-fiscal-produtos' %}" method="post">
                         <div class="row">
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
-                                    <span style="width: 80px; background-color: rgb(255, 97, 97);" class="input-group-text">CODID</span>
-                                    <input type="number" name="codid" id="codid" class="form-control" required>
+                                    <span style="width: 140px; background-color: rgb(255, 97, 97);" class="input-group-text">COD_INTERNO</span>
+                                    <input type="text" name="cod_interno" id="cod_interno" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -534,7 +536,7 @@
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">NCM</span>
-                                    <input type="number" name="ncm" id="ncm" class="form-control">
+                                    <input type="text" name="ncm" id="ncm" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -542,7 +544,7 @@
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">ORIGEM</span>
-                                    <input type="number" name="origem" id="origem" class="form-control">
+                                    <input type="text" name="origem" id="origem" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -550,7 +552,7 @@
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">CEST</span>
-                                    <input type="number" name="cest" id="cest" class="form-control">
+                                    <input type="text" name="cest" id="cest" class="form-control">
                                 </div>
                             </div>
                         </div>

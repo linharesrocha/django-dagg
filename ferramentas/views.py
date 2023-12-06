@@ -799,42 +799,49 @@ def atualizar_info_fiscal_produtos(request):
         cursor = conexao.cursor()
 
 
-        codid = request.POST.get('codid')
+        cod_interno = request.POST.get('cod_interno')
         ncm = request.POST.get('ncm')
         origem = request.POST.get('origem')
         cest = request.POST.get('cest')
-        tabela_imposto = request.POST.get('tabela-imposto')
+        tabela_imposto = request.POST.get('tabela_imposto')
 
-        # Valida se existe CODID
+        # Valida se existe cod_interno
         try:
             comando = f'''
-            SELECT CODID
+            SELECT COD_INTERNO
             FROM MATERIAIS
-            WHERE CODID = '{codid}'
+            WHERE COD_INTERNO = '{cod_interno}'
             '''
 
             df = pd.read_sql(comando, conexao)
             if len(df) <= 0:
-                messages.add_message(request, constants.ERROR, 'CODID não existe no Aton!')
+                messages.add_message(request, constants.ERROR, 'COD_INTERNO não existe no Aton!')
                 return redirect('index-ferramentas')
         except:
             messages.add_message(request, constants.ERROR, 'Erro no servidor!')
             return redirect('index-ferramentas')
         
-        # Valida se o NCM tem exatamente 8 digitos
-        if ncm != '':
-            print(ncm)
-            print(type(ncm))
-            print(len(ncm))
+        # NCM
+        if str(ncm) == 'Apagar':
+            comando = f'''
+                UPDATE MATERIAIS
+                SET CLASS_FISCAL = NULL
+                WHERE COD_INTERNO = '{cod_interno}'
+                '''
+
+            cursor.execute(comando)
+            conexao.commit()
+        elif ncm != '':
             if len(ncm) != 8:
                 messages.add_message(request, constants.ERROR, 'NCM deve ter exatamente 8 digitos!')
                 return redirect('index-ferramentas')
+            
             try:
                 # Atualiza NCM
                 comando = f'''
                 UPDATE MATERIAIS
                 SET CLASS_FISCAL = '{ncm}'
-                WHERE CODID = '{codid}'
+                WHERE COD_INTERNO = '{cod_interno}'
                 '''
 
                 cursor.execute(comando)
@@ -843,8 +850,17 @@ def atualizar_info_fiscal_produtos(request):
                 messages.add_message(request, constants.ERROR, 'Erro ao atualizar NCM!')
                 return redirect('index-ferramentas')
         
-        # Valida se a origem tem 1 digito
-        if origem != '':
+        # ORIGEM
+        if str(origem) == 'Apagar':
+            comando = f'''
+                UPDATE MATERIAIS
+                SET ORIGEM_TRIB = NULL
+                WHERE COD_INTERNO = '{cod_interno}'
+                '''
+
+            cursor.execute(comando)
+            conexao.commit()
+        elif origem != '':
             if len(origem) != 1:
                 messages.add_message(request, constants.ERROR, 'Origem deve ter 1 digito!')
                 return redirect('index-ferramentas')
@@ -854,7 +870,7 @@ def atualizar_info_fiscal_produtos(request):
                 comando = f'''
                 UPDATE MATERIAIS
                 SET ORIGEM_TRIB = '{origem}'
-                WHERE CODID = '{codid}'
+                WHERE COD_INTERNO = '{cod_interno}'
                 '''
 
                 cursor.execute(comando)
@@ -862,8 +878,18 @@ def atualizar_info_fiscal_produtos(request):
             except:
                 messages.add_message(request, constants.ERROR, 'Erro ao atualizar ORIGEM!')
                 return redirect('index-ferramentas')
-            
-        if cest != '':
+        
+        # CEST
+        if str(cest) == 'Apagar':
+            comando = f'''
+                UPDATE MATERIAIS
+                SET CEST = NULL
+                WHERE COD_INTERNO = '{cod_interno}'
+                '''
+
+            cursor.execute(comando)
+            conexao.commit()
+        elif cest != '':
             if len(cest) != 7:
                 messages.add_message(request, constants.ERROR, 'CEST deve ter 7 digitos!')
                 return redirect('index-ferramentas')
@@ -873,7 +899,7 @@ def atualizar_info_fiscal_produtos(request):
                 comando = f'''
                 UPDATE MATERIAIS
                 SET CEST = '{cest}'
-                WHERE CODID = '{codid}'
+                WHERE COD_INTERNO = '{cod_interno}'
                 '''
 
                 cursor.execute(comando)
@@ -888,7 +914,7 @@ def atualizar_info_fiscal_produtos(request):
                 comando = f'''
                 UPDATE MATERIAIS
                 SET TABELAIMPOSTO = '{tabela_imposto}'
-                WHERE CODID = '{codid}'
+                WHERE COD_INTERNO = '{cod_interno}'
                 '''
 
                 cursor.execute(comando)
