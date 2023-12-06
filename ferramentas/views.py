@@ -797,33 +797,103 @@ def atualizar_info_fiscal_produtos(request):
         connection = get_connection()
         conexao = pyodbc.connect(connection)
         cursor = conexao.cursor()
+        cod_interno = request.POST.get('cod_interno')
+
+        # Valida se existe cod_interno
+        try:
+            comando = f'''
+            SELECT COD_INTERNO
+            FROM MATERIAIS
+            WHERE COD_INTERNO = '{cod_interno}'
+            '''
+
+            df = pd.read_sql(comando, conexao)
+            if len(df) <= 0:
+                messages.add_message(request, constants.ERROR, 'COD_INTERNO não existe no Aton!')
+                return redirect('index-ferramentas')
+        except:
+            messages.add_message(request, constants.ERROR, 'Erro no servidor!')
+            return redirect('index-ferramentas')
 
         if 'btn_consultar_info_fiscal' in request.POST:
-            pass
+            print('oi')
+            # Consulta NCM
+            comando = f'''
+            SELECT CLASS_FISCAL
+            FROM MATERIAIS
+            WHERE COD_INTERNO = '{cod_interno}'
+            '''
+
+            df_ncm = pd.read_sql(comando, conexao)
+            if len(df_ncm) > 0:
+                ncm = df_ncm['CLASS_FISCAL'][0]
+            else:
+                ncm = 'Vazio'
+
+            # Consulta ORIGEM
+            comando = f'''
+            SELECT ORIGEM_TRIB
+            FROM MATERIAIS
+            WHERE COD_INTERNO = '{cod_interno}'
+            '''
+
+            df_origem = pd.read_sql(comando, conexao)
+            if len(df_origem) > 0:
+                origem = df_origem['ORIGEM_TRIB'][0]
+            else:
+                origem = 'Vazio'
+
+            # Consulta CEST
+            comando = f'''
+            SELECT CEST
+            FROM MATERIAIS
+            WHERE COD_INTERNO = '{cod_interno}'
+            '''
+
+            df_cest = pd.read_sql(comando, conexao)
+            if len(df_cest) > 0:
+                cest = df_cest['CEST'][0]
+            else:
+                cest = 'Vazio'
+
+            # Consulta TABELA_IMPOSTO
+            comando = f'''
+            SELECT TABELAIMPOSTO
+            FROM MATERIAIS
+            WHERE COD_INTERNO = '{cod_interno}'
+            '''
+
+            df_tabela_imposto = pd.read_sql(comando, conexao)
+            if len(df_tabela_imposto) > 0:
+                tabela_imposto = df_tabela_imposto['TABELAIMPOSTO'][0]
+
+                if str(tabela_imposto) == '1':
+                    tabela_imposto = 'Tabela Simples'
+                elif str(tabela_imposto) == '2':
+                    tabela_imposto = 'Tabela com ST'
+            else:
+                tabela_imposto = 'Vazio'
+
+            # remove strip
+            ncm = str(ncm).strip()
+            origem = str(origem).strip()
+            cest = str(cest).strip()
+            tabela_imposto = str(tabela_imposto).strip()
+
+            return render(request, 'index-ferramentas.html', {'cod_interno': cod_interno, 'ncm': ncm, 'origem': origem, 'cest': cest, 'tabela_imposto': tabela_imposto})
 
 
         if 'btn_alterar_info_fiscal' in request.POST:
-            cod_interno = request.POST.get('cod_interno')
             ncm = request.POST.get('ncm')
             origem = request.POST.get('origem')
             cest = request.POST.get('cest')
             tabela_imposto = request.POST.get('tabela_imposto')
 
-            # Valida se existe cod_interno
-            try:
-                comando = f'''
-                SELECT COD_INTERNO
-                FROM MATERIAIS
-                WHERE COD_INTERNO = '{cod_interno}'
-                '''
+            # removee strip
+            ncm = str(ncm).strip()
+            origem = str(origem).strip()
+            cest = str(cest).strip()
 
-                df = pd.read_sql(comando, conexao)
-                if len(df) <= 0:
-                    messages.add_message(request, constants.ERROR, 'COD_INTERNO não existe no Aton!')
-                    return redirect('index-ferramentas')
-            except:
-                messages.add_message(request, constants.ERROR, 'Erro no servidor!')
-                return redirect('index-ferramentas')
             
             # NCM
             if str(ncm) == 'Apagar':

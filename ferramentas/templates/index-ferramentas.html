@@ -528,7 +528,12 @@
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 140px; background-color: rgb(255, 97, 97);" class="input-group-text">COD_INTERNO</span>
+                                    {% if cod_interno %}
+                                    <input type="text" name="cod_interno" id="cod_interno" class="form-control"
+                                        value="{{ cod_interno }}" required>
+                                    {% else %}
                                     <input type="text" name="cod_interno" id="cod_interno" class="form-control" required>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -536,7 +541,11 @@
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">NCM</span>
+                                    {% if ncm %}
+                                    <input type="text" name="ncm" id="ncm" class="form-control" value="{{ ncm }}">
+                                    {% else %}
                                     <input type="text" name="ncm" id="ncm" class="form-control">
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -544,7 +553,12 @@
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">ORIGEM</span>
+                                    {% if origem %}
+                                    <input type="text" name="origem" id="origem" class="form-control"
+                                        value="{{ origem }}">
+                                    {% else %}
                                     <input type="text" name="origem" id="origem" class="form-control">
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -552,12 +566,23 @@
                             <div class="col">
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 80px;" class="input-group-text">CEST</span>
+                                    {% if cest %}
+                                    <input type="text" name="cest" id="cest" class="form-control" value="{{ cest }}">
+                                    {% else %}
                                     <input type="text" name="cest" id="cest" class="form-control">
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
+                                {% if tabela_imposto %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 80px;" class="input-group-text">TABELA</span>
+                                    <input type="text" disabled class="form-control" value="{{ tabela_imposto }}">
+                                </div>
+                                {% endif %}
+                                
                                 <select class="form-select" name="tabela_imposto">
                                     <option value="None" disabled selected>TABELA IMPOSTO</option>
                                     <option value="1">TABELA SIMPLES</option>
@@ -569,6 +594,10 @@
                             <div class="col text-center">
                                 <button style="background-color: orange!important; margin-top: 10px;" type="submit"
                                     value="btn_alterar_info_fiscal" name="btn_alterar_info_fiscal" class="btn btn-secondary">Alterar</button>
+                            </div>
+                            <div class="col text-center">
+                                <button style="background-color: gray!important; margin-top: 10px;" type="submit"
+                                    value="btn_consultar_info_fiscal" name="btn_consultar_info_fiscal" class="btn btn-secondary">Visualizar</button>
                             </div>
                         </div>
                         {% csrf_token %}
