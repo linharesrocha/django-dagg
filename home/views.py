@@ -11,7 +11,10 @@ def index(request):
 
 
 def atualizar_site(request):
-    # faz git pull
+    # Muda para o diretório do seu projeto
+    os.chdir('/home/dagg/django-dagg')
+
+    # Faz git pull
     os.system('git pull')
     
     messages.add_message(request, messages.SUCCESS, 'Site atualizado com sucesso!')
