@@ -1,6 +1,10 @@
 import pyodbc
 import pandas as pd
 from pathlib import Path
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+from dotenv import load_dotenv
+from datetime import date
 import os
 import sys
 
@@ -82,6 +86,30 @@ def main():
     # Reordena colunas
     data = data[['COD_INTERNO', 'DESCRICAO', 'QUANT', 'ESTOQUE']]
 
-    data.to_excel('result.xlsx', index=False)
+    # data de hoje
+    today = date.today()
+    today = today.strftime("%d-%m-%Y")
+
+    name_file = f'{today}_estoque_30_analitico.xlsx'
+
+    data.to_excel(name_file, index=False)
+
+    # Envia slack
+    load_dotenv()
+
+    client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+    SLACK_CHANNEL_ID='C068SF9476W'
+    
+    # Send file
+    try:
+        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file, filename=name_file)
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+        
+    # Remove arquivo
+    try:
+        os.remove(name_file)
+    except Exception as e:
+        print(e)
 
 main()
