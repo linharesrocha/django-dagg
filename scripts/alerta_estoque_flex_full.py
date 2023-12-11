@@ -8,6 +8,7 @@ from slack_sdk.errors import SlackApiError
 from pathlib import Path
 import sys
 import requests
+import json
 from dotenv import load_dotenv
 
 # Settings ML
@@ -61,10 +62,15 @@ def main():
     for index, item in df_flex.iterrows():
         response = requests.get(f"https://api.mercadolibre.com/items/{item['SKU']}", headers=header).json()
         
-        for variacoes in response['variations']:
-            if item['PRODMKTP_ID'] == variacoes['inventory_id']:
-                if variacoes['available_quantity'] > 0:
-                    slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], contador)
-                    contador = contador + 1
+        if response['variations'] == []:
+            if response['available_quantity'] > 0:
+                slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], contador)
+                contador = contador + 1
+        else:
+            for variacoes in response['variations']:
+                if item['PRODMKTP_ID'] == variacoes['inventory_id']:
+                    if variacoes['available_quantity'] > 0:
+                        slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], contador)
+                        contador = contador + 1
 
 main()
