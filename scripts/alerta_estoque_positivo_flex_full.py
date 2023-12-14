@@ -84,17 +84,10 @@ def main():
         # Verifica se cada variação, o estoque do Full é maior que 0 e se o estoque principal é menor ou igual a 0, caso verdadeiro break caso falso envia slack
         envia_notificacao = True
         for variacao in response['variations']:
-            
             try:
-                # Coleta inventory_id
                 inventory_id = variacao['inventory_id']
-                
-                # Coleta estoque do df_all_variations baseado no inventory_id
                 estoque_principal = int(df_all_variations[df_all_variations['PRODMKTP_ID'] == inventory_id]['ESTOQUE'].values[0])
-                
-                # Coleta estoque do Full
                 estoque_full = int(variacao['available_quantity'])
-                
                 if estoque_full > 0 and estoque_principal <= 1:
                     envia_notificacao = False
                     break
