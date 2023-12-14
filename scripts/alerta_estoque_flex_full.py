@@ -63,7 +63,7 @@ def main():
         response = requests.get(f"https://api.mercadolibre.com/items/{item['SKU']}", headers=header).json()
         
         if response['variations'] == []:
-            if response['available_quantity'] > 0:
+            if item['PRODMKTP_ID'] == response['inventory_id'] and response['available_quantity'] > 0:
                 slack_notificao(item['COD_INTERNO'], item['SKU'], item['PRODMKTP_ID'], contador)
                 contador = contador + 1
         else:
