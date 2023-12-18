@@ -41,6 +41,10 @@ def main():
     data = data_materiais.loc[not_in_data_vendas, :]
     data['CHECK'] = np.nan * np.empty(len(data))
 
+    data['COD_INTERNO'] = data['COD_INTERNO'].str.strip()
+    data.drop_duplicates(subset=['COD_INTERNO'], inplace=True)
+
+
     excel_bytes = BytesIO()
     data.to_excel(excel_bytes, index=False)
     excel_bytes.seek(0)
