@@ -176,6 +176,20 @@
                         <h5 style="padding-bottom: 16px;" class="card-title">Todas Vinculações de Produtos Aton com
                             Marketplaces</h5>
                         <form action="{% url 'excel_planilha_todas_vinculacoes_marketplace_aton' %}" method="post">
+                            <div style="margin-bottom: 10px;" class="row">
+                                <div class="col">
+                                    <select class="form-select" name="marketplace" required>
+                                        <option value="Tudo" selected>Todos Marketplace</option>
+                                        <option value="Mercado Livre">Mercado Livre</option>
+                                        <option value="NetShoes">NetShoes</option>
+                                        <option value="Decathlon">Decathlon</option>
+                                        <option value="IntegraCommerce">IntegraCommerce</option>
+                                        <option value="Shopee">Shopee</option>
+                                        <option value="Amazon">Amazon</option>
+                                        <!-- <option value="VisualEcommerce">VisualEcommerce</option> -->
+                                    </select>
+                                </div>
+                            </div>
                             <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
                         </form>

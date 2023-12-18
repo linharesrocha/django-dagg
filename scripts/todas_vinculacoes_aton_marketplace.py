@@ -5,18 +5,28 @@ from io import BytesIO
 from scripts.connect_to_database import get_connection
 
 
-def main():
+def main(marketplace):
     warnings.filterwarnings('ignore')
     connection = get_connection()
     conexao = pyodbc.connect(connection)
 
-    comando = f'''
-    SELECT B.CODID, B.COD_INTERNO, B.DESCRICAO, C.ORIGEM_NOME, B.INATIVO, A.*
-    FROM ECOM_SKU A
-    LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
-    LEFT JOIN ECOM_ORIGEM C ON A.ORIGEM_ID = C.ORIGEM_ID
-    ORDER BY CODID
-    '''
+    if marketplace == None:
+        comando = f'''
+        SELECT B.CODID, B.COD_INTERNO, B.DESCRICAO, C.ORIGEM_NOME, B.INATIVO, A.*
+        FROM ECOM_SKU A
+        LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
+        LEFT JOIN ECOM_ORIGEM C ON A.ORIGEM_ID = C.ORIGEM_ID
+        ORDER BY CODID
+        '''
+    else:
+        comando = f'''
+        SELECT B.CODID, B.COD_INTERNO, B.DESCRICAO, C.ORIGEM_NOME, B.INATIVO, A.*
+        FROM ECOM_SKU A
+        LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
+        LEFT JOIN ECOM_ORIGEM C ON A.ORIGEM_ID = C.ORIGEM_ID
+        WHERE C.API = '{marketplace}'
+        ORDER BY CODID
+        '''
 
     df = pd.read_sql(comando, conexao)
     

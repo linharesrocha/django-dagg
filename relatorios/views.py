@@ -98,8 +98,12 @@ def gerar_planilha_comparativo_vendas_netshoes(request):
     
 def gerar_planilha_todas_vinculacoes_aton_marketplace(request):
     nome_planilha = f'todas_vinculacoes_aton_marketplace.xlsx'
+    marketplace = request.POST['marketplace']
+
+    if marketplace == 'Tudo':
+        marketplace = None
     
-    arquivo_excel = todas_vinculacoes_aton_marketplace.main()
+    arquivo_excel = todas_vinculacoes_aton_marketplace.main(marketplace=marketplace)
     
     # Crie uma resposta HTTP para retornar o arquivo ao usuário
     response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
