@@ -22,6 +22,11 @@ class MatchNetshoes(models.Model):
     nome_loja = models.CharField(max_length=255)
     status = models.CharField(max_length=255, null=True, blank=True)
 
+    ultima_atualizacao = models.DateTimeField(default=timezone.now)
+
+    def local_ultima_atualizacao(self):
+        return timezone.localtime(self.ultima_atualizacao)
+
 class MetricasMercadoLivre(models.Model):
     id = models.AutoField(primary_key=True)
     nome = models.CharField(blank=True, null=True, max_length=255)

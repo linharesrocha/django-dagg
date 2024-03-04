@@ -48,25 +48,27 @@
                 <th scope="col">Loja</th>
                 <th scope="col">SKU Match</th>
                 <th scope="col">Status</th>
+                <th scope="col">Ultima Att</th>
               </tr>
             </thead>
             <tbody>
-              {% for match_netshoes in posicoes_netshoes %}
+              {% for mskus_netshoes in match_netshoes %}
               <tr>
                 <!-- Titulo -->
-                <td><a style="color: #212529;" href="{% url 'item-match-netshoes' match_netshoes.sku_netshoes %}">{{ match_netshoes.nome }}</a></td>
+                <td><a style="color: #212529;">{{ mskus_netshoes.titulo_produto }}</a></td>
                 
                 <!-- Loja -->
-                <td><a style="color: #212529;"
-                    href="https://www.netshoes.com.br/busca?nsCat=Natural&q={{ match_netshoes.termo_busca }}"
-                    target="_blank">{{ match_netshoes.termo_busca }}</a></td>
+                <td><a style="color: #212529;">{{ mskus_netshoes.nome_loja }}</a></td>
 
                 <!-- SKU Netshoes Match -->
-                <td><a style="color: #212529;" href="https://www.netshoes.com.br/{{ match_netshoes.sku_netshoes }}"
-                    target="_blank">{{ match_netshoes.sku_netshoes }}</a></td>
+                <td><a style="color: #212529;" href="https://www.netshoes.com.br/{{ mskus_netshoes.sku_match }}"
+                    target="_blank">{{ mskus_netshoes.sku_match }}</a></td>
 
                 <!-- Status -->
-                <td>{{match_netshoes.ultima_atualizacao}}</td>
+                <td>{{mskus_netshoes.status}}</td>
+
+                <!-- Última atualização -->
+                <td>{{mskus_netshoes.ultima_atualizacao}}</td>
               </tr>
               {% endfor %}
             </tbody>

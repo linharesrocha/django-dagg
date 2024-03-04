@@ -11,6 +11,7 @@ urlpatterns = [
     path('posicao-netshoes/remover/', views.remover_posicao_netshoes, name='remover-posicao-netshoes'),
     path('match-netshoes/remover', views.remover_match_netshoes, name='remover-match-netshoes'),
     path('posicao-netshoes/painel/', views.painel_posicao_netshoes, name='painel-posicao-netshoes'),
+    path('match-netshoes/painel/', views.painel_match_netshoes, name='painel-match-netshoes'),
     path('posicao-netshoes/baixar-historico/', views.baixar_historico, name='baixar-historico'),
     path('posicao-netshoes/atualizar-historico/', views.atualizar_historico, name='atualizar-historico'),
     path('posicao-netshoes/painel/item/<str:sku_netshoes>', views.item_posicao_netshoes, name='item-posicao-netshoes'),

@@ -25,7 +25,24 @@ def match_netshoes(request):
     return render(request, 'trackeamento/match_netshoes/match-netshoes.html')
 
 def painel_match_netshoes(request):
-    return render(request, 'trackeamento/match_netshoes/painel-match-netshoes.html')
+    ultimos_valores = MatchNetshoes.objects.filter(
+        id__in=Subquery(
+            MatchNetshoes.objects.filter(
+                sku_match=OuterRef('sku_match')
+            ).values('sku_match').annotate(
+                ultima_id=Max('id')
+            ).values('ultima_id')
+        )
+    )
+
+    for valor in ultimos_valores:
+        valor.ultima_atualizacao = valor.ultima_atualizacao.strftime('%d/%m/%Y %H:%M')
+    
+    match_netshoes = {
+        'match_netshoes': ultimos_valores
+    }
+
+    return render(request, 'trackeamento/match_netshoes/painel-match-netshoes.html', match_netshoes)
 
 def posicao_netshoes(request):
     return render(request, 'trackeamento/netshoes/posicao-netshoes.html')
