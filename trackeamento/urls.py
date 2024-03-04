@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.index),
     path('match-netshoes/', views.match_netshoes, name='match-netshoes'),
+    path('painel-match-netshoes/', views.painel_match_netshoes, name='painel-match-netshoes'),
     path('posicao-netshoes/', views.posicao_netshoes, name='posicao-netshoes'),
     path('posicao-netshoes/cadastrar/', views.cadastrar_posicao_netshoes, name='cadastrar-posicao-netshoes'),
     path('posicao-netshoes/remover/', views.remover_posicao_netshoes, name='remover-posicao-netshoes'),

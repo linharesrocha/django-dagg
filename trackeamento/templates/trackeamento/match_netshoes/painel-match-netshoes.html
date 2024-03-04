@@ -15,14 +15,14 @@
   <link rel="stylesheet" href="{% static 'styles.css' %}">
   <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
 
-  <title>Painel Posição Netshoes</title>
+  <title>Painel Match Netshoes</title>
 </head>
 
 <body>
   <div class="container">
     <div id="header" class="row">
       <div class="col">
-        <h1 id="header-titulo"><a href="/trackeamento/posicao-netshoes">PAINEL</a></h1>
+        <h1 id="header-titulo"><a href="/trackeamento/match-netshoes">PAINEL</a></h1>
       </div>
     </div>
     <!-- Messages -->
@@ -40,76 +40,33 @@
     </div>
     <div class="row">
       <div class="col">
-        <form action="{% url 'atualizar-historico' %}" method="post">
-          {% csrf_token %}
-          <button type="submit" style="margin-bottom: 5px; background-color: orange!important;" class="btn btn-primary float-end">Atualizar</button>
-        </form>
-      </div>
-      <div class="col-1">
-        <form action="{% url 'baixar-historico' %}" method="post">
-          {% csrf_token %}
-          <button type="submit" style="margin-bottom: 5px; background-color: blue!important;" class="btn btn-primary float-end">Histórico</button>
-        </form>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
         <div class="div" style="height: 650px; overflow-y: auto;">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col"></th>
-                <th scope="col">Página</th>
-                <th scope="col">Posicao</th>
-                <th scope="col">Nome</th>
-                <th scope="col">SKU Netshoes</th>
-                <th scope="col">Termo</th>
-                <th scope="col">Ultima Att</th>
-                <th scope="col"></th>
+                <th scope="col">Título</th>
+                <th scope="col">Loja</th>
+                <th scope="col">SKU Match</th>
+                <th scope="col">Status</th>
               </tr>
             </thead>
             <tbody>
-              {% for posicao_netshoes in posicoes_netshoes %}
+              {% for match_netshoes in posicoes_netshoes %}
               <tr>
-                <!-- variacao -->
-                {% if posicao_netshoes.variacao is None %}
-                <td><span style="color: gray;">&#x25cf;</span></td>
-                {% elif posicao_netshoes.variacao == 'Piorou' %}
-                <td><span style="color: rgb(208, 0, 0);">&#9660;</span></td>
-                {% elif posicao_netshoes.variacao == 'Melhorou' %}
-                <td><span style="color: green;">&#9650;</span></td>
-                {% elif posicao_netshoes.variacao == 'Manteve' %}
-                <td><span style="color: gray;">&#x25cf;</span></td>
-                {% endif %}
-
-                <!-- Página -->
-                <th style="color: rgb(0, 0, 0);" scope="row">{{ posicao_netshoes.pagina }}</th>
-
-                <!-- Posicao -->
-                <td>{{ posicao_netshoes.posicao }}</td>
-
-                <!-- Nome -->
-                <td><a style="color: #212529;" href="{% url 'item-posicao-netshoes' posicao_netshoes.sku_netshoes %}">{{ posicao_netshoes.nome }}</a></td>
-
-                <!-- SKU Netshoes -->
-                <td><a style="color: #212529;" href="https://www.netshoes.com.br/{{ posicao_netshoes.sku_netshoes }}"
-                    target="_blank">{{ posicao_netshoes.sku_netshoes }}</a></td>
-
-                <!-- Termo -->
+                <!-- Titulo -->
+                <td><a style="color: #212529;" href="{% url 'item-match-netshoes' match_netshoes.sku_netshoes %}">{{ match_netshoes.nome }}</a></td>
+                
+                <!-- Loja -->
                 <td><a style="color: #212529;"
-                    href="https://www.netshoes.com.br/busca?nsCat=Natural&q={{ posicao_netshoes.termo_busca }}"
-                    target="_blank">{{ posicao_netshoes.termo_busca }}</a></td>
+                    href="https://www.netshoes.com.br/busca?nsCat=Natural&q={{ match_netshoes.termo_busca }}"
+                    target="_blank">{{ match_netshoes.termo_busca }}</a></td>
 
-                <!-- Última atualização -->
-                <td>{{posicao_netshoes.ultima_atualizacao}}</td>
+                <!-- SKU Netshoes Match -->
+                <td><a style="color: #212529;" href="https://www.netshoes.com.br/{{ match_netshoes.sku_netshoes }}"
+                    target="_blank">{{ match_netshoes.sku_netshoes }}</a></td>
 
-                <!-- Anúncio Concorrente -->
-                {% if posicao_netshoes.anuncio_concorrente %}
-                <td><span style="color:rgb(0, 0, 255)">&#x25cf;</span></td>
-                {% else %}
-                <td><span style="color:rgb(213, 0, 0)">&#x25cf;</span></td>
-                {% endif %}
-
+                <!-- Status -->
+                <td>{{match_netshoes.ultima_atualizacao}}</td>
               </tr>
               {% endfor %}
             </tbody>

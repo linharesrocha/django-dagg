@@ -24,6 +24,9 @@ def index(request):
 def match_netshoes(request):
     return render(request, 'trackeamento/match_netshoes/match-netshoes.html')
 
+def painel_match_netshoes(request):
+    return render(request, 'trackeamento/match_netshoes/painel-match-netshoes.html')
+
 def posicao_netshoes(request):
     return render(request, 'trackeamento/netshoes/posicao-netshoes.html')
 
