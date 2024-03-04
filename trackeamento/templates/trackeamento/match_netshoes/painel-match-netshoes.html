@@ -44,6 +44,7 @@
           <table class="table table-striped">
             <thead>
               <tr>
+                <th scope="col">Id</th>
                 <th scope="col">Título</th>
                 <th scope="col">Loja</th>
                 <th scope="col">SKU Match</th>
@@ -54,6 +55,9 @@
             <tbody>
               {% for mskus_netshoes in match_netshoes %}
               <tr>
+                <!-- ID  em negrito -->
+                <td><a style="color: #212529;"><b>{{ mskus_netshoes.id }}</b></a></td>
+
                 <!-- Titulo -->
                 <td><a style="color: #212529;">{{ mskus_netshoes.titulo_produto }}</a></td>
                 
