@@ -14,7 +14,13 @@ class PosicaoNetshoes(models.Model):
 
     def local_ultima_atualizacao(self):
         return timezone.localtime(self.ultima_atualizacao)
-    
+
+class MatchNetshoes(models.Model):
+    id = models.AutoField(primary_key=True)
+    titulo_produto = models.CharField(max_length=255)
+    sku_match = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+
 class MetricasMercadoLivre(models.Model):
     id = models.AutoField(primary_key=True)
     nome = models.CharField(blank=True, null=True, max_length=255)
