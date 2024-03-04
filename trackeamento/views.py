@@ -5,7 +5,7 @@ from django.db.models import OuterRef, Subquery, Max
 import pandas as pd
 from datetime import datetime
 from io import BytesIO
-from trackeamento.scripts import atualiza_netshoes, atualiza_mercadolivre
+from trackeamento.scripts import atualiza_netshoes, atualiza_mercadolivre, verifica_match_netshoes
 from openpyxl.styles import Alignment, PatternFill
 from django.contrib.messages import constants
 from django.contrib import messages

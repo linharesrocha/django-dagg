@@ -65,7 +65,7 @@
                     target="_blank">{{ mskus_netshoes.sku_match }}</a></td>
 
                 <!-- Status -->
-                <td>{{mskus_netshoes.status}}</td>
+                <td id="coluna_status">{{mskus_netshoes.status}}</td>
 
                 <!-- Última atualização -->
                 <td>{{mskus_netshoes.ultima_atualizacao}}</td>
@@ -79,7 +79,20 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+  </script>
+  <script>
+    // percorra cada linha da coluna status e verifique se o valor é manteve
+    // se for, pinte a linha de verde
+    // se não, pinte a linha de vermelho
+    var coluna_status = document.querySelectorAll('#coluna_status');
+    coluna_status.forEach(function (status) {
+      if (status.innerHTML === 'Manteve') {
+        status.parentElement.style.backgroundColor = '#d4edda';
+      } else if (status.innerHTML === 'Não Manteve') {
+        status.parentElement.style.backgroundColor = '#f8d7da';
+      }
+    });
+  </script>
 </body>
 
 </html>
