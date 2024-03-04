@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import PosicaoNetshoes, MetricasMercadoLivre
+from .models import PosicaoNetshoes, MetricasMercadoLivre, MatchNetshoes
 from django.db.models import OuterRef, Subquery, Max
 import pandas as pd
 from datetime import datetime
@@ -108,6 +108,26 @@ def remover_posicao_netshoes(request):
 
     messages.add_message(request, constants.SUCCESS, 'Removido com sucesso!')
     return redirect('posicao-netshoes')
+
+def remover_match_netshoes(request):
+    sku_match = request.POST['sku-netshoes-delete']
+    
+    # Verifica campo vazio
+    if sku_match == '':
+        messages.add_message(request, constants.ERROR, 'Preencha o campo vazio!')
+        return redirect('match-netshoes')
+    
+    # Verifica se existe no banco
+    my_obj = MatchNetshoes.objects.filter(sku_match=sku_match).first()
+    if my_obj is None:
+        messages.add_message(request, constants.ERROR, 'SKU não existe no banco de dados!')
+        return redirect('match-netshoes')
+    
+    # Deleta
+    MatchNetshoes.objects.filter(sku_match=sku_match).delete()
+
+    messages.add_message(request, constants.SUCCESS, 'Removido com sucesso!')
+    return redirect('match-netshoes')
 
 
 def baixar_historico(request):
