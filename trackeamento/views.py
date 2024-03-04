@@ -88,6 +88,38 @@ def cadastrar_posicao_netshoes(request):
     messages.add_message(request, constants.SUCCESS, 'Cadastrado com sucesso!')
     return redirect('posicao-netshoes')
 
+def cadastrar_match_netshoes(request):
+    titulo = request.POST['titulo-cadastro']
+    titulo = unidecode.unidecode(titulo)
+    sku_match = request.POST['sku-match-netshoes-cadastro']
+    nome_loja = request.POST['nome-loja']
+    
+    # Verifica campo vazio
+    if titulo == '' or sku_match == '' or nome_loja == '':
+        messages.add_message(request, constants.ERROR, 'Preencha os campos vazios!')
+        return redirect('match-netshoes')
+    
+    # Transforma em lower
+    sku_match = sku_match.upper()
+    sku_match = sku_match.strip()
+    
+    # Verifica se existe no banco
+    my_obj = MatchNetshoes.objects.filter(sku_match=sku_match).first()
+    if my_obj is not None:
+        messages.add_message(request, constants.ERROR, 'SKU já existe no banco de dados!')
+        return redirect('match-netshoes')
+    
+    # Cadastra
+    nova_posicao = MatchNetshoes()
+    nova_posicao.titulo_produto = titulo
+    nova_posicao.sku_match = sku_match
+    nova_posicao.nome_loja = nome_loja
+    nova_posicao.status = None   
+    nova_posicao.save()
+    
+    messages.add_message(request, constants.SUCCESS, 'Cadastrado com sucesso!')
+    return redirect('match-netshoes')
+
 
 def remover_posicao_netshoes(request):
     sku_netshoes = request.POST['sku-netshoes-delete']

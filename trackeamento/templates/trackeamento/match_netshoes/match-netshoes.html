@@ -45,27 +45,27 @@
                     <div class="card" style="width: 25rem;">
                         <div class="card-body">
                             <h5 style="margin-bottom: 20px;">Cadastro SKU Match</h5>
-                            <form action="{% url 'cadastrar-posicao-netshoes' %}" method="post">
+                            <form action="{% url 'cadastrar-match-netshoes' %}" method="post">
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 115px;" class="input-group-text"
                                         id="inputGroup-sizing-sm-name">Título</span>
-                                    <input type="text" class="form-control" id="nome-cadastro" name="nome-cadastro"
+                                    <input type="text" class="form-control" id="titulo-cadastro" name="titulo-cadastro"
                                         aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
                                         required>
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="width: 115px;" class="input-group-text"
                                         id="inputGroup-sizing-sm-search">Nome da Loja</span>
-                                    <input type="text" class="form-control" id="termo-cadastro" name="termo-cadastro"
+                                    <input type="text" class="form-control" id="nome-loja" name="nome-loja"
                                         aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
                                         required>
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <span style="background-color: rgb(255, 166, 0); font-weight: 900;"
                                         class="input-group-text" id="inputGroup-sizing-sm-sku">SKU Match</span>
-                                    <input type="text" class="form-control" id="sku-netshoes-cadastro"
-                                        name="sku-netshoes-cadastro" aria-label="Sizing example input"
+                                    <input type="text" class="form-control" id="sku-match-netshoes-cadastro"
+                                        name="sku-match-netshoes-cadastro" aria-label="Sizing example input"
                                         aria-describedby="inputGroup-sizing-sm" required>
                                 </div>
                                 <button type="submit" class="btn btn-success"

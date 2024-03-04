@@ -19,7 +19,8 @@ class MatchNetshoes(models.Model):
     id = models.AutoField(primary_key=True)
     titulo_produto = models.CharField(max_length=255)
     sku_match = models.CharField(max_length=255)
-    status = models.CharField(max_length=255)
+    nome_loja = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, null=True, blank=True)
 
 class MetricasMercadoLivre(models.Model):
     id = models.AutoField(primary_key=True)
