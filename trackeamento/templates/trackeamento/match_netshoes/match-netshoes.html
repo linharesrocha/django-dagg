@@ -1,0 +1,122 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'trackeamento/styles-trackeamento.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
+
+
+    <title>Match Netshoes</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header" class="row">
+            <div class="col">
+                <h1 id="header-titulo"><a href="/trackeamento/">MATCH NETSHOES</a></h1>
+            </div>
+        </div>
+        <!-- Messages -->
+        <div class="row">
+            <div class="col">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {{ message.tags}} alert-dismissible fade show text-center" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="card" style="width: 25rem;">
+                        <div class="card-body">
+                            <h5 style="margin-bottom: 20px;">Cadastro SKU</h5>
+                            <form action="{% url 'cadastrar-posicao-netshoes' %}" method="post">
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 115px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Nome</span>
+                                    <input type="text" class="form-control" id="nome-cadastro" name="nome-cadastro"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                                        required>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 115px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-search">Pesquisa</span>
+                                    <input type="text" class="form-control" id="termo-cadastro" name="termo-cadastro"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                                        required>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="background-color: rgb(255, 166, 0); font-weight: 900;"
+                                        class="input-group-text" id="inputGroup-sizing-sm-sku">SKU Netshoes</span>
+                                    <input type="text" class="form-control" id="sku-netshoes-cadastro"
+                                        name="sku-netshoes-cadastro" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm" required>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipo_anuncio" id="exampleRadios1"
+                                        value="dagg" checked>
+                                    <label class="form-check-label" for="exampleRadios1">Anúncio Dagg</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="tipo_anuncio" id="exampleRadios2"
+                                        value="concorrente">
+                                    <label class="form-check-label" for="exampleRadios2">
+                                        Anúncio Concorrente
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-success"
+                                    style="background-color: green!important;">Cadastrar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="card" style="width: 25rem;">
+                        <div class="card-body">
+                            <h5 style="margin-bottom: 20px; ">Remover SKU</h5>
+                            <form action="{% url 'remover-posicao-netshoes' %}" method="post">
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span class="input-group-text" id="inputGroup-sizing-sm">SKU Netshoes</span>
+                                    <input type="text" class="form-control" id="sku-netshoes-delete"
+                                        name="sku-netshoes-delete" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm" required>
+                                </div>
+                                <button style="background-color: red!important;" type="submit" class="btn btn-primary">Remover</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <h3 style="margin-top: 50px; margin-bottom: 50px;"><a href="{% url 'painel-posicao-netshoes' %}"
+                        style="color: #E84545;">PAINEL</a></h3>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

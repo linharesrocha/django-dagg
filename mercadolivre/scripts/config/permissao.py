@@ -27,7 +27,7 @@ data = {
 response = requests.post("https://api.mercadolibre.com/oauth/token", headers=headers, data=data).json()
 refresh_token = response['refresh_token']
 
-# Salva no banco de dados os Access Token
+# Salva no banco de dados os Refresh Token
 TokenMercadoLivreAPI.objects.filter(id=1).update(refresh_token_inicial=refresh_token)  
 
 print('Sucesso!')

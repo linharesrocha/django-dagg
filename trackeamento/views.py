@@ -21,6 +21,8 @@ import base64
 def index(request):
     return render(request, 'trackeamento/index.html')
 
+def match_netshoes(request):
+    return render(request, 'trackeamento/match_netshoes/match-netshoes.html')
 
 def posicao_netshoes(request):
     return render(request, 'trackeamento/netshoes/posicao-netshoes.html')
