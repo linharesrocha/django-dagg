@@ -37,9 +37,18 @@ def main():
             # Requisição
             page = requests.get(url, headers=user_agent)
             site = BeautifulSoup(page.content, "html.parser")
+
+            # Verifica indisponibilidade
+            try:
+                indisponibilidade = site.find(class_="action-buttons").find(class_="title").text.strip()
+                if indisponibilidade == 'Produto indisponível':
+                    MatchNetshoes.objects.filter(sku_match=sku_match, nome_loja=nome_loja).update(status='Indisponível', ultima_atualizacao=timezone.now())
+                    continue
+            except:
+                print('Produto Disponível')
             
             # Nome da loja em BS4
-            nome_loja_bs4 = site.find(class_="product__seller_name").span.text.strip()
+            nome_loja_bs4 = site.find(class_="product__seller_name").text.strip()
 
             # Verifica se o anúncio é da loja
             if nome_loja_bs4 == nome_loja:
