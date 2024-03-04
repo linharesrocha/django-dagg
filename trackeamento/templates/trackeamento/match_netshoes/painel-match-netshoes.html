@@ -39,6 +39,16 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-10">
+        <p style="font-weight: 600; color: green;">Cadastrados: <span id="qtd-cadastrados"></span></p>
+        <p style="font-weight: 600; color: red;">Inválidos: <span id="qtd-invalidos"></span></p>
+      </div>
+      <div class="col-2">
+        <!-- botao simples bootstrap -->
+        <a style="background-color: orange!important;" id="botao-filtro-vermelho" class="btn btn-primary">Filtrar Inválidos</a>
+      </div>
+    </div>
+    <div class="row">
       <div class="col">
         <div class="div" style="height: 650px; overflow-y: auto;">
           <table class="table table-striped">
@@ -95,6 +105,32 @@
       } else if (status.innerHTML === 'Não Manteve') {
         status.parentElement.style.backgroundColor = '#f8d7da';
       }
+    });
+  </script>
+  <script>
+    // quantidade de cadastrados
+    var qtdCadastrados = document.querySelectorAll('#coluna_status').length;
+    document.getElementById('qtd-cadastrados').innerHTML = qtdCadastrados;
+
+    // contabiliza os diferentes de "Manteve"
+    var qtdInvalidos = 0;
+    coluna_status.forEach(function (status) {
+      if (status.innerHTML !== 'Manteve') {
+        qtdInvalidos++;
+      }
+    });
+    document.getElementById('qtd-invalidos').innerHTML = qtdInvalidos;
+  </script>
+
+  <script>
+    // manter apenas colunas que são diferente do valor "Manteve"
+    document.getElementById('botao-filtro-vermelho').addEventListener('click', function () {
+      var coluna_status = document.querySelectorAll('#coluna_status');
+      coluna_status.forEach(function (status) {
+        if (status.innerHTML === 'Manteve') {
+          status.parentElement.style.display = 'none';
+        }
+      });
     });
   </script>
 </body>
