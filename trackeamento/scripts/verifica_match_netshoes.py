@@ -4,6 +4,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+def start_match_netshoes():
+    print('CRON STARTANDO SCRIPT DE VERIFICAÇÃO DE MATCH NETSHOES')
+    main()
 
 def main():
     # Django Utils
@@ -61,5 +64,3 @@ def main():
         except Exception as e:
             print(f'Erro: {e}')
             continue
-
-main()
