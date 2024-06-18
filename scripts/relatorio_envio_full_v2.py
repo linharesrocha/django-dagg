@@ -109,9 +109,52 @@ def main(file):
     data_completo['E_FULL'] = data_completo['COD_ML'].apply(lambda x: 'FULL' if x != '' and x != None and x != 'null' else 'NAO FULL')
 
     # Planilha full
-    df_ml_full = pd.read_excel(file, skiprows=3, skipfooter=1)
-    df_ml_full = df_ml_full.iloc[1:]
+    df_ml_full = pd.read_excel(file, header=12)
 
+    # ================ INICIO UPDATE MERCADO LIVRE PLANILHA FULL 17/06/2024 =================
+    # Remove a primeira coluna sem usar header
+    df_ml_full = df_ml_full.drop(df_ml_full.columns[0], axis=1)
+
+
+    # Change the naem of column Unnamed:12 to Em transferência
+    df_ml_full.rename(columns={'Unnamed: 12': 'Em transferência'}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 13': 'Devolvidas pelo comprador'}, inplace=True)
+    df_ml_full.rename(columns={'Unidades no Full': 'Aptas para venda'}, inplace=True)
+    df_ml_full.rename(columns={'   Unidades no Full': 'Aptas para venda'}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 15': 'Não aptas para venda'}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 16': '''Extraviadas 
+    (em busca)'''}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 17': 'Em revisão'}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 18': 'Vendas canceladas'}, inplace=True)
+    df_ml_full.rename(columns={'Unidades distribuidas por ação recomendada': 'Entrada pendente'}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 21': 'Boa qualidade'}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 22': 'Para impulsionar vendas'}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 23': 'Para colocar à venda'}, inplace=True)
+    df_ml_full.rename(columns={'Unnamed: 24': 'Para evitar descarte'}, inplace=True)
+    df_ml_full.rename(columns={'Entrada pendente': 'Envios pendentes de recebimento'}, inplace=True)
+
+    # tempo até o fim do estoque
+    # change the name of colym Y to Tempo até fim do estoque, use index
+    df_ml_full.rename(columns={df_ml_full.columns[24]: 'Tempo até fim do estoque'}, inplace=True)
+
+    df_ml_full.rename(columns={'Unidades que ocupan espacio en Full': 'Estoque total armazenado'}, inplace=True)
+
+    # DEBUG  TEST
+    df_ml_full['Vendas não entregues'] = 0
+    df_ml_full['Preço'] = 0
+
+    # Remove first two rows
+    df_ml_full = df_ml_full.iloc[2:]
+
+
+    # Trocaa posição da primeira e teerceira coluna sem remover as outras colunas]
+    colunas = ['Código universal', 'SKU', 'Código ML', 'ID do anúncio', 'Título do anúncio', 'Preço', 'Status do anúncio', 'Oferece Full', 'Vendas últimos 30 dias (un.)',
+                'Envios pendentes de recebimento', 'Vendas não entregues', 'Em transferência', 'Devolvidas pelo comprador', 'Não aptas para venda', 'Aptas para venda', 
+                'Tempo até fim do estoque', 'Estoque total armazenado']
+    df_ml_full = df_ml_full[colunas + [col for col in df_ml_full.columns if col not in colunas]]
+    # ================ FIM UPDATE MERCADO LIVRE PLANILHA FULL 17/06/2024 =================
+
+    df_ml_full = df_ml_full.iloc[1:]
     df_ml_full['subtracao'] = df_ml_full['Envios pendentes de recebimento'] + \
                             df_ml_full['Vendas não entregues'] + \
                             df_ml_full['Em transferência'] + \
@@ -119,6 +162,7 @@ def main(file):
                             df_ml_full['Não aptas para venda'] + \
                             df_ml_full['Aptas para venda']
     df_ml_full['subtracao'] = df_ml_full['subtracao']
+
     try:
         df_ml_full_filtrada = df_ml_full[['Código ML', 'ID do anúncio', 'Vendas últimos 30 dias (un.)', 'Aptas para venda', 'Tempo até fim do estoque ', 'subtracao']]
         nome_correto = 'Tempo até fim do estoque '
