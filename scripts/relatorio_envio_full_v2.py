@@ -153,8 +153,7 @@ def main(file):
     # ================ FIM UPDATE MERCADO LIVRE PLANILHA FULL 17/06/2024 =================
 
     df_ml_full = df_ml_full.iloc[1:]
-    df_ml_full['subtracao'] = df_ml_full['Vendas últimos 30 dias (un.)'] + \
-                            df_ml_full['Em transferência'] + \
+    df_ml_full['subtracao'] = df_ml_full['Em transferência'] + \
                             df_ml_full['Devolvidas pelo comprador'] + \
                             df_ml_full['Aptas para venda'] + \
                             df_ml_full['Não aptas para venda']
