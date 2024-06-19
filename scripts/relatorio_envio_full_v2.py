@@ -177,6 +177,9 @@ def main(file):
     # Junta as duas planilhas
     df_completo = pd.merge(data_completo, df_ml_full_filtrada, on='COD_ML', how='left')
 
+    # Remove as linhas que são inteiramentes semelhantes
+    df_completo.drop_duplicates(subset=['COD_ML'], keep='first', inplace=True)
+
     # Cria o campo de ENVIO
     df_completo['ENVIO'] = ''
     df_completo['SUGESTAO'] = ''
