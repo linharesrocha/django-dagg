@@ -295,32 +295,32 @@ def main():
 
     writer._save()
             
-# Envia slack
-# load_dotenv()
+    # Envia slack
+    load_dotenv()
 
-# client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-# SLACK_CHANNEL_ID='C05FN0ZF0UB'
+    client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+    SLACK_CHANNEL_ID='C05FN11JCUB'
 
-# message = f'NETSHOES MARGEM! :heavy_division_sign:'
+    message = f'MERCADO LIVRE MARGEM! :heavy_division_sign:'
 
-# # Send message
-# try:
-#     client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
-# except SlackApiError as e:
-#     print("Error sending message: {}".format(e))
-    
-# # Send file
-# try:
-#     client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
-# except SlackApiError as e:
-#     print("Error sending message: {}".format(e))
-    
-# writer.close()
-    
-# # Remove arquivo
-# try:
-#     os.remove(name_file_excel)
-# except Exception as e:
-#     print(e)
+    # Send message
+    try:
+        client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+        
+    # Send file
+    try:
+        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+        
+    writer.close()
+        
+    # Remove arquivo
+    try:
+        os.remove(name_file_excel)
+    except Exception as e:
+        print(e)
 
 main()
