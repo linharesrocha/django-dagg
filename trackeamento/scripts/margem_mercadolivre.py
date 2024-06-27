@@ -7,6 +7,7 @@ import os
 from datetime import datetime, timedelta, timezone
 import pandas as pd
 from slack_sdk import WebClient
+from openpyxl.styles import NamedStyle
 from slack_sdk.errors import SlackApiError
 from openpyxl.styles import Alignment, PatternFill, Font
 from openpyxl.utils import get_column_letter
@@ -56,11 +57,11 @@ def main():
     # print(response)
 
     # Get total orders
-    response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_closed.from={date_from_strf}&sort=date_desc", headers=header)
+    response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&sort=date_desc", headers=header)
     while response.status_code == 500 or response.status_code == 403:
         sleep(10)
         print('Retrying...')
-        response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_closed.from={date_from_strf}&sort=date_desc", headers=header)
+        response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&sort=date_desc", headers=header)
     response = response.json()
 
     total_orders = response['paging']['total']
@@ -101,7 +102,12 @@ def main():
                 list_hiperlink.append(hiperlink)
                 
                 # Item especifico
-                sale_fee = item['sale_fee'] * quantity_itens
+                sale_fee = item['sale_fee']
+                if sale_fee == None:
+                    sale_fee = 0
+                else:
+                    sale_fee = sale_fee * quantity_itens
+
                 mlb = item['item']['id']
                 title = item['item']['title']
                 category = item['item']['category_id']
@@ -140,11 +146,11 @@ def main():
 
         # Consulta todos os pedidos e consulta
         offset += 51
-        response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_closed.from={date_from_strf}&offset={offset}&sort=date_desc", headers=header)
+        response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&offset={offset}&sort=date_desc", headers=header)
         while response.status_code == 500 or response.status_code == 403:
             sleep(10)
             print('Retrying...')
-            response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_closed.from={date_from_strf}&offset={offset}&sort=date_desc", headers=header)
+            response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&offset={offset}&sort=date_desc", headers=header)
         response = response.json()
 
     
@@ -264,6 +270,28 @@ def main():
         link = cell.value
         if link:
             cell.value = f'=HYPERLINK("{link}", "{link}")'
+
+    # Ajustar o tamanho das colunas automaticamente
+    for column in worksheet.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        worksheet.column_dimensions[column_letter].width = adjusted_width
+
+
+    # Aplicar a formatação condicional na coluna X (coluna 24, 1-indexed)
+    cor_vermelha = PatternFill(start_color='FA8072', end_color='FA8072', fill_type='solid')
+    for row in range(2, worksheet.max_row + 1):
+        cell = worksheet.cell(row=row, column=24)  # Coluna X é a 24ª coluna (1-indexed)
+        if cell.value is not None and isinstance(cell.value, (int, float)) and cell.value < 10:
+            cell.fill = cor_vermelha
+
 
     writer._save()
             
