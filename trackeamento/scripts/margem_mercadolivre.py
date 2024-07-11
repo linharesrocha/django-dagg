@@ -53,12 +53,13 @@ def main():
 
     # teste unico pedido
     #response = requests.get(f"https://api.mercadolibre.com/orders/2000008652038690", headers=header).json()
+    # response = requests.get(f"https://api.mercadolibre.com/orders/2000008652746114", headers=header).json() # esse saiu com valor 
+    # shipping_id = response['shipping']['id']
+    # response_shipping = requests.get(f"https://api.mercadolibre.com/shipments/{shipping_id}", headers=header).json()
     # response = requests.get(f"https://api.mercadolibre.com/shipments/43556171770", headers=header).json()
-
-    # # armazena em arquivo txt dump 4
-    # with open('dump2ship.json', 'w') as f:
-    #     json.dump(response, f , indent=4)
-
+    # armazena em arquivo txt dump 4
+    # with open('dump2ship2.json', 'w') as f:
+    #     json.dump(response_shipping, f , indent=4)
     # print(response)
 
     # Get total orders
@@ -82,6 +83,11 @@ def main():
             # Settings variables
             quantity_itens = len(result['order_items'])
     
+            # shipping_cost cliente
+            shipping_id = result['shipping']['id']
+            response_shipping = requests.get(f"https://api.mercadolibre.com/shipments/{shipping_id}", headers=header).json()
+            shipping_cost_buyer = response_shipping['shipping_option']['cost']
+
             # Consulta itens
             for item in result['order_items']:
                 
@@ -92,17 +98,12 @@ def main():
                 paid_amount = result['paid_amount']
                 coupon_amount = result['coupon']['amount']
                 coupon_amount_divided = coupon_amount / quantity_itens
-                shipping_id = result['shipping']['id']
-                
-                # shipping_cost cliente
-                response_shipping = requests.get(f"https://api.mercadolibre.com/shipments/{shipping_id}", headers=header).json()
-                shipping_cost_buyer_new = response_shipping['base_cost']
-                print(f'ID: {id_order} - Shipping cost: {shipping_cost_buyer_new}')
                 
 
-                shipping_cost_buyer = 0
-                for payments in result['payments']:
-                    shipping_cost_buyer += payments['shipping_cost']
+                # Old
+                # shipping_cost_buyer = 0
+                # for payments in result['payments']:
+                #     shipping_cost_buyer += payments['shipping_cost']
 
                 # calcula 10 porcento de shipping cost
                 imposto_dez_porcento_shipping_cost_buyer = (shipping_cost_buyer * 0.1)
@@ -306,32 +307,32 @@ def main():
 
     writer._save()
             
-    # # Envia slack
-    # load_dotenv()
+    # Envia slack
+    load_dotenv()
 
-    # client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    # SLACK_CHANNEL_ID='C05FN11JCUB'
+    client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+    SLACK_CHANNEL_ID='C05FN11JCUB'
 
-    # message = f'MERCADO LIVRE MARGEM! :heavy_division_sign:'
+    message = f'MERCADO LIVRE MARGEM! :heavy_division_sign:'
 
-    # # Send message
-    # try:
-    #     client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
-    # except SlackApiError as e:
-    #     print("Error sending message: {}".format(e))
+    # Send message
+    try:
+        client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
         
-    # # Send file
-    # try:
-    #     client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
-    # except SlackApiError as e:
-    #     print("Error sending message: {}".format(e))
+    # Send file
+    try:
+        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
         
-    # writer.close()
+    writer.close()
         
-    # # Remove arquivo
-    # try:
-    #     os.remove(name_file_excel)
-    # except Exception as e:
-    #     print(e)
+    # Remove arquivo
+    try:
+        os.remove(name_file_excel)
+    except Exception as e:
+        print(e)
 
 main()
