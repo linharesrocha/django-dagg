@@ -81,11 +81,12 @@ def main(slack):
             site = BeautifulSoup(page.content, "html.parser")
             
             # Anúncios em BS4
-            anuncios = site.find_all(class_="item-desktop--3")
+            anuncios = site.find_all(class_="full-image")
 
             # Armazenando SKU Netshoes
             for anuncio in anuncios:
-                anuncios_list.append(anuncio['parent-sku'])
+                data_code = anuncio.get('data-code')
+                anuncios_list.append(data_code)
                 
         
             # Buscando a posição do anúncio
