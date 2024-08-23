@@ -557,9 +557,11 @@ def atualizar_aton(request):
             # Lista de arquivos permitidos
             list_upload_check = ['Ambar.exe', 'AtonECom.exe', 'AtonPublica.exe']
             pasta_atualizacao = os.path.join('ferramentas', 'atualizacao-aton')
+            print(pasta_atualizacao)
 
             # Verificar se os arquivos permitidos existem
             arquivos_faltantes = [arquivo for arquivo in list_upload_check if not os.path.exists(os.path.join(pasta_atualizacao, arquivo))]
+            print(arquivos_faltantes)
             if arquivos_faltantes:
                 messages.add_message(request, constants.ERROR, f'Alguns arquivos estão faltando: {", ".join(arquivos_faltantes)}')
                 return redirect('index-ferramentas')
