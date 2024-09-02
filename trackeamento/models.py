@@ -86,3 +86,25 @@ class UltimoProdutoCadastrado(models.Model):
 class UltimoProdutoCadastradoAton(models.Model):
     id = models.AutoField(primary_key=True)
     codid = models.IntegerField()
+
+class NetshoesTarifas(models.Model):
+    id = models.AutoField(primary_key=True)
+    dagg_comissao_padrao = models.IntegerField()
+    red_comissao_padrao = models.IntegerField()
+    pisste_comissao_padrao = models.IntegerField()
+    tarifa_fixa = models.IntegerField()
+    operacao = models.IntegerField()
+    imposto = models.IntegerField()
+
+    
+class DecathlonTarifas(models.Model):
+    id = models.AutoField(primary_key=True)
+    dagg_comissao_padrao = models.IntegerField()
+    operacao = models.IntegerField()
+    imposto = models.IntegerField()
+
+class CentauroTarifas(models.Model):
+    id = models.AutoField(primary_key=True)
+    dagg_comissao_padrao = models.IntegerField()
+    operacao = models.IntegerField()
+    imposto = models.IntegerField()
