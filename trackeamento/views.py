@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import PosicaoNetshoes, MetricasMercadoLivre, MatchNetshoes
+from .models import PosicaoNetshoes, MetricasMercadoLivre, MatchNetshoes, NetshoesTarifas, DecathlonTarifas, CentauroTarifas
 from django.db.models import OuterRef, Subquery, Max
 import pandas as pd
 from datetime import datetime
@@ -23,6 +23,9 @@ def index(request):
 
 def match_netshoes(request):
     return render(request, 'trackeamento/match_netshoes/match-netshoes.html')
+
+def ajuste_tarifas(request):
+    return render(request, 'trackeamento/ajuste_tarifas/ajuste_tarifas.html')
 
 def painel_match_netshoes(request):
     ultimos_valores = MatchNetshoes.objects.filter(
@@ -472,3 +475,74 @@ def baixar_historico_mercadolivre(request):
     response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename=historico_mercadolivre_{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx'
     return response
+
+
+def ajuste_tarifas_visualizar(request):
+    netshoes_tarifas = NetshoesTarifas.objects.filter(id=1).first()
+    centauro_tarifas = CentauroTarifas.objects.filter(id=1).first()
+    decathlon_tarifas = DecathlonTarifas.objects.filter(id=1).first()
+
+    return render(request, 'trackeamento/ajuste_tarifas/ajuste_tarifas.html', {'netshoes_tarifas': netshoes_tarifas, 'centauro_tarifas': centauro_tarifas, 'decathlon_tarifas': decathlon_tarifas})
+
+def atualizar_tarifa_netshoes(request):
+    netshoes_tarifas = NetshoesTarifas.objects.filter(id=1).first()
+
+    if request.POST['dagg-comissao'].isnumeric():
+        netshoes_tarifas.dagg_comissao_padrao = request.POST['dagg-comissao']
+
+    if request.POST['red-comissao'].isnumeric():
+        netshoes_tarifas.red_comissao_padrao = request.POST['red-comissao']
+
+    if request.POST['pisste-comissao'].isnumeric():
+        netshoes_tarifas.pisste_comissao_padrao = request.POST['pisste-comissao']
+
+    if request.POST['tarifa-fixa'].isnumeric():
+        netshoes_tarifas.tarifa_fixa = request.POST['tarifa-fixa']
+
+    if request.POST['operacao'].isnumeric():
+        netshoes_tarifas.operacao = request.POST['operacao']
+
+    if request.POST['imposto'].isnumeric():
+        netshoes_tarifas.imposto = request.POST['imposto']
+
+    netshoes_tarifas.save()
+
+    messages.add_message(request, constants.SUCCESS, 'Tarifas Atualizadas!')
+    return redirect('/trackeamento/ajuste-tarifas')
+
+
+
+def atualizar_tarifa_centauro(request):
+    centauro_tarifas = CentauroTarifas.objects.filter(id=1).first()
+
+    if request.POST['dagg-comissao'].isnumeric():
+        centauro_tarifas.dagg_comissao_padrao = request.POST['dagg-comissao']
+
+    if request.POST['operacao'].isnumeric():
+        centauro_tarifas.operacao = request.POST['operacao']
+    
+    if request.POST['imposto'].isnumeric():
+        centauro_tarifas.imposto = request.POST['imposto']
+    
+    centauro_tarifas.save()
+
+    messages.add_message(request, constants.SUCCESS, 'Tarifas Atualizadas!')
+    return redirect('/trackeamento/ajuste-tarifas')
+
+
+def atualizar_tarifa_decathlon(request):
+    decathlon_tarifas = DecathlonTarifas.objects.filter(id=1).first()
+
+    if request.POST['dagg-comissao'].isnumeric():
+        decathlon_tarifas.dagg_comissao_padrao = request.POST['dagg-comissao']
+
+    if request.POST['operacao'].isnumeric():
+        decathlon_tarifas.operacao = request.POST['operacao']
+    
+    if request.POST['imposto'].isnumeric():
+        decathlon_tarifas.imposto = request.POST['imposto']
+    
+    decathlon_tarifas.save()
+
+    messages.add_message(request, constants.SUCCESS, 'Tarifas Atualizadas!')
+    return redirect('/trackeamento/ajuste-tarifas')

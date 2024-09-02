@@ -4,6 +4,11 @@ from . import views
 urlpatterns = [
     path('', views.index),
     path('match-netshoes/', views.match_netshoes, name='match-netshoes'),
+    path('ajuste-tarifas/', views.ajuste_tarifas, name='ajuste-tarifas'),
+    path('ajuste-tarifas/visualizar/', views.ajuste_tarifas_visualizar, name='ajuste-tarifas-visualizar'),
+    path('ajuste-tarifas/atualizar-netshoes/', views.atualizar_tarifa_netshoes, name='atualizar-tarifa-netshoes'),
+    path('ajuste-tarifas/atualizar-decathlon/', views.atualizar_tarifa_decathlon, name='atualizar-tarifa-decathlon'),
+    path('ajuste-tarifas/atualizar-centauro/', views.atualizar_tarifa_centauro, name='atualizar-tarifa-centauro'),
     path('painel-match-netshoes/', views.painel_match_netshoes, name='painel-match-netshoes'),
     path('posicao-netshoes/', views.posicao_netshoes, name='posicao-netshoes'),
     path('posicao-netshoes/cadastrar/', views.cadastrar_posicao_netshoes, name='cadastrar-posicao-netshoes'),

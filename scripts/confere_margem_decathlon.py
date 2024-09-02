@@ -10,6 +10,19 @@ import numpy as np
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 from openpyxl.styles import PatternFill
+import django
+from pathlib import Path
+import sys
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Set up Django settings
+sys.path.append(str(BASE_DIR))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dagg.settings')
+django.setup()
+
+# Import Django models
+from trackeamento.models import DecathlonTarifas
+decathlon_tarifas = DecathlonTarifas.objects.filter(id=1).first()
 
 def encontra_nome_coluna(sheet, nome_coluna):
     numero_coluna = None
@@ -26,7 +39,7 @@ conexao = pyodbc.connect(connection)
 cursor = conexao.cursor()
 
 # DAGG
-DAGG_COMISSAO_PADRAO = 20
+DAGG_COMISSAO_PADRAO = decathlon_tarifas.dagg_comissao_padrao
 DAGG_ACRESCIMO_COMISSAO = 0
 DAGG_DESCONTO_CAMPANHA = 0
 
@@ -115,10 +128,10 @@ df['TARIFA_FIXA'] = (df['TARIFA_FIXA'] / df['QUANTIDADE_PED']).round(2)
 df['IMPOSTO_FRETE'] = (df['VLR_FRETE'] * (IMPOSTO / 100)).round(2)
 
 # Adiciona coluna OPERACAO
-df['OPERACAO'] = OPERACAO
+df['OPERACAO'] = decathlon_tarifas.operacao
 
 # Adiciona coluna IMPOSTO
-df['IMPOSTO'] = IMPOSTO
+df['IMPOSTO'] = decathlon_tarifas.imposto
 
 # Adiciona coluna COMISSAO_PADRAO mas diferenciando por empresa
 df['COMISSAO_PADRAO'] = DAGG_COMISSAO_PADRAO

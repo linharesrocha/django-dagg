@@ -10,6 +10,19 @@ import numpy as np
 from slack_sdk.errors import SlackApiError
 from dotenv import load_dotenv
 from openpyxl.styles import PatternFill
+import django
+from pathlib import Path
+import sys
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Set up Django settings
+sys.path.append(str(BASE_DIR))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dagg.settings')
+django.setup()
+
+# Import Django models
+from trackeamento.models import NetshoesTarifas
+netshoes_tarifas = NetshoesTarifas.objects.filter(id=1).first()
 
 def encontra_nome_coluna(sheet, nome_coluna):
     numero_coluna = None
@@ -26,24 +39,24 @@ conexao = pyodbc.connect(connection)
 cursor = conexao.cursor()
 
 # DAGG
-DAGG_COMISSAO_PADRAO = 21
+DAGG_COMISSAO_PADRAO = netshoes_tarifas.dagg_comissao_padrao
 DAGG_ACRESCIMO_COMISSAO = 0
 DAGG_DESCONTO_CAMPANHA = 0
 
 # RED PLACE
-RED_COMISSAO_PADRAO = 21
+RED_COMISSAO_PADRAO = netshoes_tarifas.red_comissao_padrao
 RED_ACRESCIMO_COMISSAO = 0
 RED_DESCONTO_CAMPANHA = 0
 
 # PISSTE
-PISSTE_COMISSAO_PADRAO = 18
+PISSTE_COMISSAO_PADRAO = netshoes_tarifas.pisste_comissao_padrao
 PISSTE_ACRESCIMO_COMISSAO = 0
 PISSTE_DESCONTO_CAMPANHA = 0
 
 # PADRAO
-TARIFA_FIXA = 3 # PEDIDO ACIMA DE R$10,00
-OPERACAO = 10
-IMPOSTO = 10
+TARIFA_FIXA = netshoes_tarifas.tarifa_fixa # PEDIDO ACIMA DE R$10,00
+OPERACAO = netshoes_tarifas.operacao
+IMPOSTO = netshoes_tarifas.imposto
 
 comando = f'''
 SELECT DISTINCT A.CODID, C.MATERIAL_ID AS CODID_KIT, A.COD_INTERNO, D.COD_INTERNO AS COD_INTERNO_KIT, COD_PEDIDO AS SKU_MKTP, B.SEUPEDIDO AS PEDIDO, A.EMPRESA, A.DESCRICAOPROD AS TITULO, D.DESCRICAO AS TITULO_KIT, A.VLR_CUSTO, VLR_UNIT AS VLR_PEDIDO, B.VLRFRETE AS VLR_FRETE, DATA, D.DESMEMBRA AS KIT, A.QUANT

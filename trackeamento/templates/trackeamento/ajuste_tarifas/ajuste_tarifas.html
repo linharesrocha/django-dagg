@@ -1,0 +1,304 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'trackeamento/styles-trackeamento.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'logo-vermelha.ico' %}">
+
+
+    <title>Ajuste de Tarifas</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header" class="row">
+            <div class="col">
+                <h1 id="header-titulo"><a href="/trackeamento/">AJUSTE DE TARIFAS</a></h1>
+            </div>
+        </div>
+        <!-- Messages -->
+        <div class="row">
+            <div class="col">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {{ message.tags}} alert-dismissible fade show text-center" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <h2>Visualizar</h2>
+            </div>
+        </div>
+        <form action="{% url 'ajuste-tarifas-visualizar' %}" method="post">
+            <div class="row">
+                <div class="col text-center">
+                    <div class="d-flex justify-content-center">
+                        <div class="card" style="width: 25rem;">
+                            <div class="card-body">
+                                <h5 style="margin-bottom: 20px;">Netshoes</h5>
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Dagg Comissão</span>
+                                    <input type="number" class="form-control" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm"
+                                        value="{{ netshoes_tarifas.dagg_comissao_padrao }}" disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Red Place Comissão</span>
+                                    <input type="number" class="form-control" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm"
+                                        value="{{ netshoes_tarifas.red_comissao_padrao }}" disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Pisste Comissão</span>
+                                    <input type="number" class="form-control" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm"
+                                        value="{{ netshoes_tarifas.pisste_comissao_padrao }}" disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Tarifa Fixa</span>
+                                    <input type="number" class="form-control"aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm"
+                                        value="{{ netshoes_tarifas.tarifa_fixa }}" disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Operação</span>
+                                    <input type="number" class="form-control" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm" value="{{ netshoes_tarifas.operacao }}"
+                                        disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Imposto</span>
+                                    <input type="number" class="form-control"  aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm" value="{{ netshoes_tarifas.imposto }}"
+                                        disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-center">
+                    <div class="d-flex justify-content-center">
+                        <div class="card" style="width: 25rem;">
+                            <div class="card-body">
+                                <h5 style="margin-bottom: 20px;">Centauro</h5>
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Dagg Comissão</span>
+                                    <input type="number" class="form-control" value="{{ centauro_tarifas.dagg_comissao_padrao }}"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Operação</span>
+                                    <input type="number" class="form-control" value="{{ centauro_tarifas.operacao }}"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Imposto</span>
+                                    <input type="number" class="form-control" value="{{ centauro_tarifas.imposto }}"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <div class="d-flex justify-content-center">
+                        <div class="card" style="width: 25rem;">
+                            <div class="card-body">
+                                <h5 style="margin-bottom: 20px;">Decathlon</h5>
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Dagg Comissão</span>
+                                    <input type="number" class="form-control" value="{{ decathlon_tarifas.dagg_comissao_padrao }}"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Operação</span>
+                                    <input type="number" class="form-control" value="{{ decathlon_tarifas.operacao }}"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" disabled>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Imposto</span>
+                                    <input type="number" class="form-control" value="{{ decathlon_tarifas.imposto }}"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-success"
+                        style="background-color: rgb(163, 160, 0)!important;">Visualizar</button>
+                </div>
+            </div>
+        </form>
+
+
+
+
+
+
+
+        <div class="row" style="margin-top: 60px;">
+            <div class="col text-center">
+                <h2>Atualizar (vazio para manter)</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="card" style="width: 25rem;">
+                        <div class="card-body">
+                            <h5 style="margin-bottom: 20px;">Netshoes</h5>
+                            <form action="{% url 'atualizar-tarifa-netshoes' %}" method="post">
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Dagg Comissão</span>
+                                    <input type="number" class="form-control" id="dagg-comissao" name="dagg-comissao"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Red Place Comissão</span>
+                                    <input type="number" class="form-control" id="red-comissao" name="red-comissao"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Pisste Comissão</span>
+                                    <input type="number" class="form-control" id="pisste-comissao"
+                                        name="pisste-comissao" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Tarifa Fixa</span>
+                                    <input type="number" class="form-control" id="tarifa-fixa" name="tarifa-fixa"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Operação</span>
+                                    <input type="number" class="form-control" id="operacao" name="operacao"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Imposto</span>
+                                    <input type="number" class="form-control" id="imposto" name="imposto"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <button type="submit" class="btn btn-success"
+                                    style="background-color: green!important;">Atualizar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="card" style="width: 25rem;">
+                        <div class="card-body">
+                            <h5 style="margin-bottom: 20px;">Centauro</h5>
+                            <form action="{% url 'atualizar-tarifa-centauro' %}" method="post">
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Dagg Comissão</span>
+                                    <input type="number" class="form-control" id="dagg-comissao" name="dagg-comissao"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Operação</span>
+                                    <input type="number" class="form-control" id="operacao" name="operacao"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Imposto</span>
+                                    <input type="number" class="form-control" id="imposto" name="imposto"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <button type="submit" class="btn btn-success"
+                                    style="background-color: green!important;">Atualizar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <div class="d-flex justify-content-center">
+                    <div class="card" style="width: 25rem;">
+                        <div class="card-body">
+                            <h5 style="margin-bottom: 20px;">Decathlon</h5>
+                            <form action="{% url 'atualizar-tarifa-decathlon' %}" method="post">
+                                {% csrf_token %}
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Dagg Comissão</span>
+                                    <input type="number" class="form-control" id="dagg-comissao" name="dagg-comissao"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Operação</span>
+                                    <input type="number" class="form-control" id="operacao" name="operacao"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <span style="width: 160px;" class="input-group-text"
+                                        id="inputGroup-sizing-sm-name">Imposto</span>
+                                    <input type="number" class="form-control" id="imposto" name="imposto"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                                </div>
+                                <button type="submit" class="btn btn-success"
+                                    style="background-color: green!important;">Atualizar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
