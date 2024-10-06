@@ -30,6 +30,107 @@ def encontra_nome_coluna(sheet, nome_coluna):
         if coluna[0].value == nome_coluna:
             numero_coluna = coluna[0].column
             return numero_coluna
+        
+def cria_writer_and_send(df, empresa):
+
+
+    # Salve em excel com a data de ontem
+    name_file_excel = f'margem_netshoes_{empresa.strip().lower()}' + str(date.today() - timedelta(days=1)) + '.xlsx'
+
+    writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
+    df.to_excel(writer, sheet_name=f'NETSHOES_{empresa.strip()}', index=False)
+
+    worksheet = writer.sheets[f'NETSHOES_{empresa.strip()}']
+
+    # Adicionando filtros
+    worksheet.auto_filter.ref = "A1:W1"
+
+    # Congelando painel
+    worksheet.freeze_panes = 'A2'
+
+    # Definir a cor
+    cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
+    cor_verde = PatternFill(start_color='96C291', end_color='96C291', fill_type='solid')
+    cor_branco = PatternFill(start_color='F4EEEE', end_color='F4EEEE', fill_type='solid')
+
+    # Lista Porcentagem laranja
+    celulas_laranja = ['W1', 'T1', 'S1', 'R1', 'Q1', 'P1', 'O1']
+    for celula_referencia in celulas_laranja:
+        celula = worksheet[celula_referencia]
+        celula.fill = cor_laranja
+        
+    # Lista Porcentagem Verde
+    celulas_verde = ['V1', 'U1', 'N1', 'M1', 'I1', 'H1', 'G1', 'F1']
+    for celula_referencia in celulas_verde:
+        celula = worksheet[celula_referencia]
+        celula.fill = cor_verde
+        
+
+    # Lista Porcentagem Branco
+    celulas_branco = ['K1', 'L1', 'E1', 'D1', 'C1', 'B1', 'A1', 'J1']
+    for celula_referencia in celulas_branco:
+        celula = worksheet[celula_referencia]
+        celula.fill = cor_branco
+        
+    # Cria lista de Regras
+    df_regras = pd.DataFrame({'Regra': ['TARIFA_FIXA', 'IMPOSTO_FRETE', 'OPERACAO', 'IMPOSTO', 'COMISSAO_PADRAO', 'ACRESCIMO_COMISSAO', 'DESCONTO_CAMPANHA', 'CUSTO_PARCIAL%', 'CUSTO_PARCIAL$', 'LUCRO', 'MARGEM'],
+                            'Descrição': ['Tarifa fixa para pedidos acima de R$10,00. Em caso de Kit a tarifa é dividida pela quantidade de itens no kit.', 
+                                            '', 
+                                            '', 
+                                            '', 
+                                            '', 
+                                            '', 
+                                            '', 
+                                            '', 
+                                            '', 
+                                            '', 
+                                            '']})
+    df_regras.to_excel(writer, sheet_name='REGRAS', index=False)
+    worksheet_regras = writer.sheets['REGRAS']
+
+    writer._save()
+
+    # Envia slack
+    load_dotenv()
+
+    client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
+
+
+    SLACK_CHANNEL_ID_MADZ='C05FN0ZF0UB'
+    SLACK_CHANNEL_ID_MADZ='C045HEE4G7L' #test
+    SLACK_CHANNEL_ID_PISSTE='C07R9AX04TS'
+    SLACK_CHANNEL_ID_REDPLACE = 'C07QLE8TUR1'
+
+    # verify if channel is madz
+    if empresa == 'DAGG':
+        SLACK_CHANNEL_ID = SLACK_CHANNEL_ID_MADZ
+    elif empresa == 'PISSTE':
+        SLACK_CHANNEL_ID = SLACK_CHANNEL_ID_PISSTE
+    elif empresa == 'RED PLACE':
+        SLACK_CHANNEL_ID = SLACK_CHANNEL_ID_REDPLACE
+
+
+    message = f'NETSHOES MARGEM! :heavy_division_sign:'
+
+    # Send message
+    try:
+        client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+        
+    # Send file
+    try:
+        client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
+    except SlackApiError as e:
+        print("Error sending message: {}".format(e))
+        
+    writer.close()
+        
+    # Remove arquivo
+    try:
+        os.remove(name_file_excel)
+    except Exception as e:
+        print(e)
 
 # Filtrando Warnings
 warnings.filterwarnings('ignore')
@@ -169,87 +270,12 @@ df['EMPRESA'] = df['EMPRESA'].replace(1, 'DAGG')
 df['EMPRESA'] = df['EMPRESA'].replace(2, 'RED PLACE')
 df['EMPRESA'] = df['EMPRESA'].replace(3, 'PISSTE')
 
-# Salve em excel com a data de ontem
-name_file_excel = 'margem_netshoes_' + str(date.today() - timedelta(days=1)) + '.xlsx'
+# Create 3 dataframes by EMPRESA
+df_dagg = df[df['EMPRESA'] == 'DAGG']
+df_red = df[df['EMPRESA'] == 'RED PLACE']
+df_pisste = df[df['EMPRESA'] == 'PISSTE']
 
-writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
-df.to_excel(writer, sheet_name='NETSHOES', index=False)
-
-worksheet = writer.sheets['NETSHOES']
-
-# Adicionando filtros
-worksheet.auto_filter.ref = "A1:W1"
-
-# Congelando painel
-worksheet.freeze_panes = 'A2'
-
-# Definir a cor
-cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
-cor_verde = PatternFill(start_color='96C291', end_color='96C291', fill_type='solid')
-cor_branco = PatternFill(start_color='F4EEEE', end_color='F4EEEE', fill_type='solid')
-
-# Lista Porcentagem laranja
-celulas_laranja = ['W1', 'T1', 'S1', 'R1', 'Q1', 'P1', 'O1']
-for celula_referencia in celulas_laranja:
-    celula = worksheet[celula_referencia]
-    celula.fill = cor_laranja
-    
-# Lista Porcentagem Verde
-celulas_verde = ['V1', 'U1', 'N1', 'M1', 'I1', 'H1', 'G1', 'F1']
-for celula_referencia in celulas_verde:
-    celula = worksheet[celula_referencia]
-    celula.fill = cor_verde
-    
-
-# Lista Porcentagem Branco
-celulas_branco = ['K1', 'L1', 'E1', 'D1', 'C1', 'B1', 'A1', 'J1']
-for celula_referencia in celulas_branco:
-    celula = worksheet[celula_referencia]
-    celula.fill = cor_branco
-    
-# Cria lista de Regras
-df_regras = pd.DataFrame({'Regra': ['TARIFA_FIXA', 'IMPOSTO_FRETE', 'OPERACAO', 'IMPOSTO', 'COMISSAO_PADRAO', 'ACRESCIMO_COMISSAO', 'DESCONTO_CAMPANHA', 'CUSTO_PARCIAL%', 'CUSTO_PARCIAL$', 'LUCRO', 'MARGEM'],
-                          'Descrição': ['Tarifa fixa para pedidos acima de R$10,00. Em caso de Kit a tarifa é dividida pela quantidade de itens no kit.', 
-                                        '', 
-                                        '', 
-                                        '', 
-                                        '', 
-                                        '', 
-                                        '', 
-                                        '', 
-                                        '', 
-                                        '', 
-                                        '']})
-df_regras.to_excel(writer, sheet_name='REGRAS', index=False)
-worksheet_regras = writer.sheets['REGRAS']
-
-
-writer._save()
-
-# Envia slack
-load_dotenv()
-
-client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-SLACK_CHANNEL_ID='C05FN0ZF0UB'
-
-message = f'NETSHOES MARGEM! :heavy_division_sign:'
-
-# Send message
-try:
-    client.chat_postMessage(channel=SLACK_CHANNEL_ID, text=message)
-except SlackApiError as e:
-    print("Error sending message: {}".format(e))
-    
-# Send file
-try:
-    client.files_upload_v2(channel=SLACK_CHANNEL_ID, file=name_file_excel, filename=name_file_excel)
-except SlackApiError as e:
-    print("Error sending message: {}".format(e))
-    
-writer.close()
-    
-# Remove arquivo
-try:
-    os.remove(name_file_excel)
-except Exception as e:
-    print(e)
+# Passa os 3 dataframas para função writer
+cria_writer_and_send(df_dagg, 'DAGG')
+cria_writer_and_send(df_red, 'RED PLACE')
+cria_writer_and_send(df_pisste, 'PISSTE')
