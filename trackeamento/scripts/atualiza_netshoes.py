@@ -14,11 +14,21 @@ def start_atualiza_netshoes():
     main(slack)
     
     
-def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente, pesquisa):
+def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente, pesquisa, canal):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    SLACK_CHANNEL_ID='C05FN0ZF0UB'
+    SLACK_CHANNEL_ID_MADZ='C05FN0ZF0UB'
+    SLACK_CHANNEL_ID_PISSTE='C07R9AX04TS'
+    SLACK_CHANNEL_ID_LEAL='C07QLE8TUR1'
+
+    # verify if channel is madz
+    if canal == 'MADZ':
+        SLACK_CHANNEL_ID = SLACK_CHANNEL_ID_MADZ
+    elif canal == 'PISSTE':
+        SLACK_CHANNEL_ID = SLACK_CHANNEL_ID_PISSTE
+    elif canal == 'LEAL':
+        SLACK_CHANNEL_ID = SLACK_CHANNEL_ID_LEAL
 
     if concorrente == True:
         if int(pag_antiga) > int(pag_nova):
@@ -31,7 +41,7 @@ def slack_notificao(nome, sku, pag_antiga, pag_nova, concorrente, pesquisa):
             icon = ':white_check_mark:'
         else:
             icon = ':x:'
-        concorrente = 'Anúncio Dagg'
+        concorrente = 'Anúncio Nosso'
     
     message = f'NETSHOES! {icon}\n{nome} - {sku} - {concorrente}\nPesquisa: {pesquisa}\nMudou da página {pag_antiga} para a página {pag_nova}.'
     
@@ -60,7 +70,7 @@ def main(slack):
     from bs4 import BeautifulSoup
     from django.db.models import Min
 
-    trackeamentos = PosicaoNetshoes.objects.values('termo_busca', 'sku_netshoes', 'anuncio_concorrente', 'nome').annotate(sku_min=Min('sku_netshoes'))
+    trackeamentos = PosicaoNetshoes.objects.values('termo_busca', 'sku_netshoes', 'anuncio_concorrente', 'nome', 'canal').annotate(sku_min=Min('sku_netshoes'))
     print(f'ATUALIZANDO TRACKEAMENTO DE {len(trackeamentos)} PRODUTOS NETSHOES')
 
     for indice, trackeamento in enumerate(trackeamentos):
@@ -70,6 +80,7 @@ def main(slack):
         termo_modificado = termo.replace(' ', '%20')
         sku_netshoes = trackeamento['sku_netshoes']
         sku_netshoes_modificado = sku_netshoes[:-3]
+        canal = trackeamento['canal']
         
         # Páginas
         for i in range(1, 10):
@@ -106,6 +117,7 @@ def main(slack):
         anuncio_track_novo.nome = trackeamento['nome'] 
         pagina_atual = (posicao_anuncio - 1) // 42 + 1 if posicao_anuncio else None
         anuncio_track_novo.pagina = pagina_atual
+        anuncio_track_novo.canal = canal
         
         # Atualiza variacao
         ultimo_registro_pagina = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).last().pagina
@@ -120,10 +132,11 @@ def main(slack):
             envia_notificacao = True
         else:
             anuncio_track_novo.variacao = 'Manteve'
-        
+
         # Verifica se o script foi rodado a partir do crontab e não do usuário
         if slack == True and envia_notificacao == True:
-            slack_notificao(trackeamento['nome'], sku_netshoes, ultimo_registro_pagina, pagina_atual, trackeamento['anuncio_concorrente'], termo)
+            slack_notificao(trackeamento['nome'], sku_netshoes, ultimo_registro_pagina, pagina_atual, trackeamento['anuncio_concorrente'], termo, canal)
+            print('Notificação enviada')
         
         anuncio_track_novo.save()
     
