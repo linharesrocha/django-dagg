@@ -79,17 +79,18 @@ def cadastrar_posicao_netshoes(request):
     sku_netshoes = request.POST['sku-netshoes-cadastro']
     nome = request.POST['nome-cadastro']
     tipo_anuncio = request.POST['tipo_anuncio']
+    canal = request.POST['canal']
     
     # Verifica campo vazio
-    if termo == '' or sku_netshoes == '' or nome == '':
-        messages.add_message(request, constants.ERROR, 'Preencha os campos vazios!')
+    if termo == '' or sku_netshoes == '' or nome == '' or canal == '':
+        messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
         return redirect('posicao-netshoes')
     
     # Transforma em lower
     termo = termo.lower().strip()
-    sku_netshoes = sku_netshoes.upper()
-    sku_netshoes = sku_netshoes.strip()
+    sku_netshoes = sku_netshoes.upper().strip()
     nome = nome.strip()
+    canal = canal.upper()
     
     # Verifica se existe no banco
     my_obj = PosicaoNetshoes.objects.filter(sku_netshoes=sku_netshoes).first()
@@ -98,11 +99,13 @@ def cadastrar_posicao_netshoes(request):
         return redirect('posicao-netshoes')
     
     # Cadastra
-    nova_posicao = PosicaoNetshoes()
-    nova_posicao.nome = nome
-    nova_posicao.termo_busca = termo
-    nova_posicao.sku_netshoes = sku_netshoes
-    nova_posicao.anuncio_concorrente = True if tipo_anuncio == 'concorrente' else False    
+    nova_posicao = PosicaoNetshoes(
+        nome=nome,
+        termo_busca=termo,
+        sku_netshoes=sku_netshoes,
+        anuncio_concorrente=tipo_anuncio == 'concorrente',
+        canal=canal
+    )
     nova_posicao.save()
     
     messages.add_message(request, constants.SUCCESS, 'Cadastrado com sucesso!')

@@ -10,6 +10,11 @@ class PosicaoNetshoes(models.Model):
     pagina = models.IntegerField(blank=True, null=True)
     variacao = models.CharField(max_length=20, null=True, blank=True)
     anuncio_concorrente = models.BooleanField(default=False)
+    canal = models.CharField(max_length=20, choices=[
+        ('MADZ', 'MADZ'),
+        ('LEAL', 'LEAL'),
+        ('PISSTE', 'PISSTE')
+    ], default='MADZ')
     ultima_atualizacao = models.DateTimeField(default=timezone.now)
 
     def local_ultima_atualizacao(self):
