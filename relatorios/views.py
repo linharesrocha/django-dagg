@@ -213,3 +213,17 @@ def gerar_mlbs_stats(request):
     response = HttpResponse(arquivo_excel, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = f'attachment; filename="mlbs_stats.xlsx"'
     return response
+
+def margem_netshoes_personalizada(request):
+    empresa_personalizada = request.POST['empresa_personalizada']
+    data_inicio = request.POST['data_inicial']
+    data_fim = request.POST['data_final']
+    personalizado = True
+
+    print(data_inicio, data_fim)
+
+    from scripts.confere_margem_netshoes import main
+
+    main(data_inicio, data_fim, empresa_personalizada, personalizado)
+
+    return redirect('index-relatorios')

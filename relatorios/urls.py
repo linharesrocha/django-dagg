@@ -12,4 +12,5 @@ urlpatterns = [
     path('excel_planilha_pedidos_do_dia/', views.gerar_planilha_pedidos_dia, name='excel_planilha_pedidos_do_dia'),
     path('excel_planilha_gerar_mlbs_stats/', views.gerar_mlbs_stats, name='excel_planilha_gerar_mlbs_stats'),
     path('excel_gerar_planilha_peso_quant', views.gerar_planilha_peso_quant, name='excel_gerar_planilha_peso_quant'),
+    path('margem_netshoes_personalizada/', views.margem_netshoes_personalizada, name='margem-netshoes-personalizada'),
 ]

@@ -1,9 +1,9 @@
 import pyodbc
 import pandas as pd
 import warnings
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from dotenv import load_dotenv
-from connect_to_database import get_connection
+from scripts.connect_to_database import get_connection
 import os
 from slack_sdk import WebClient
 import numpy as np
@@ -13,7 +13,6 @@ from openpyxl.styles import PatternFill
 import django
 from pathlib import Path
 import sys
-from datetime import datetime
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,9 +32,12 @@ def encontra_nome_coluna(sheet, nome_coluna):
             numero_coluna = coluna[0].column
             return numero_coluna
         
-def cria_writer_and_send(df, empresa):
+def cria_writer_and_send(df, empresa, personalizado):
     # Salve em excel com a data de ontem
-    name_file_excel = f'margem_netshoes_{empresa.strip().lower()}' + str(date.today() - timedelta(days=1)) + '.xlsx'
+    if personalizado == False:
+        name_file_excel = f'margem_netshoes_{empresa.strip().lower()}' + str(date.today() - timedelta(days=1)) + '.xlsx'
+    else:
+        name_file_excel = f'personalizado_margem_{empresa.strip()}' + str(date.today() - timedelta(days=1)) + '.xlsx'
 
     writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
     df.to_excel(writer, sheet_name=f'NETSHOES_{empresa.strip()}', index=False)
@@ -132,7 +134,7 @@ def cria_writer_and_send(df, empresa):
     except Exception as e:
         print(e)
 
-def main(inicio_data_personalizada, fim_data_personalizada):
+def main(inicio_data_personalizada, fim_data_personalizada, empresa_personalizada, personalizado):
     # Filtrando Warnings
     warnings.filterwarnings('ignore')
 
@@ -160,7 +162,7 @@ def main(inicio_data_personalizada, fim_data_personalizada):
     OPERACAO = netshoes_tarifas.operacao
     IMPOSTO = netshoes_tarifas.imposto
 
-    if inicio_data_personalizada == None and fim_data_personalizada == None:
+    if inicio_data_personalizada == None and fim_data_personalizada == None and empresa_personalizada == None and personalizado == False:
         comando = f'''
         SELECT DISTINCT A.CODID, C.MATERIAL_ID AS CODID_KIT, A.COD_INTERNO, D.COD_INTERNO AS COD_INTERNO_KIT, COD_PEDIDO AS SKU_MKTP, B.SEUPEDIDO AS PEDIDO, A.EMPRESA, A.DESCRICAOPROD AS TITULO, D.DESCRICAO AS TITULO_KIT, A.VLR_CUSTO, VLR_UNIT AS VLR_PEDIDO, B.VLRFRETE AS VLR_FRETE, DATA, D.DESMEMBRA AS KIT, A.QUANT
         FROM PEDIDO_MATERIAIS_ITENS_CLIENTE A
@@ -175,9 +177,6 @@ def main(inicio_data_personalizada, fim_data_personalizada):
         ORDER BY A.EMPRESA, DATA
         '''
     else:
-        data_inicial = datetime.datetime.strptime(inicio_data_personalizada, '%Y-%m-%d')
-        data_final = datetime.datetime.strptime(fim_data_personalizada, '%Y-%m-%d')
-
         comando = f'''
         SELECT DISTINCT A.CODID, C.MATERIAL_ID AS CODID_KIT, A.COD_INTERNO, D.COD_INTERNO AS COD_INTERNO_KIT, COD_PEDIDO AS SKU_MKTP, B.SEUPEDIDO AS PEDIDO, A.EMPRESA, A.DESCRICAOPROD AS TITULO, D.DESCRICAO AS TITULO_KIT, A.VLR_CUSTO, VLR_UNIT AS VLR_PEDIDO, B.VLRFRETE AS VLR_FRETE, DATA, D.DESMEMBRA AS KIT, A.QUANT
         FROM PEDIDO_MATERIAIS_ITENS_CLIENTE A
@@ -186,9 +185,9 @@ def main(inicio_data_personalizada, fim_data_personalizada):
         LEFT JOIN MATERIAIS D ON C.MATERIAL_ID = D.CODID
         WHERE B.TIPO = 'PEDIDO'
         AND B.POSICAO != 'CANCELADO'
-        AND B.ORIGEM IN ('2', '3', '4')
-        AND B.DATA >= '{data_inicial.strftime('%Y-%m-%d')}'
-        AND B.DATA < '{(data_final + datetime.timedelta(days=1)).strftime('%Y-%m-%d')}'
+        AND B.ORIGEM IN ('{empresa_personalizada}')
+        AND CONVERT(DATE, B.DATA) >= '{inicio_data_personalizada}'
+        AND CONVERT(DATE, B.DATA) <= '{fim_data_personalizada}'
         ORDER BY A.EMPRESA, DATA
         '''
 
@@ -289,12 +288,24 @@ def main(inicio_data_personalizada, fim_data_personalizada):
     df['EMPRESA'] = df['EMPRESA'].replace(2, 'RED PLACE')
     df['EMPRESA'] = df['EMPRESA'].replace(3, 'PISSTE')
 
-    # Create 3 dataframes by EMPRESA
-    df_dagg = df[df['EMPRESA'] == 'DAGG']
-    df_red = df[df['EMPRESA'] == 'RED PLACE']
-    df_pisste = df[df['EMPRESA'] == 'PISSTE']
+    if personalizado == False:
+        # Create 3 dataframes by EMPRESA
+        df_dagg = df[df['EMPRESA'] == 'DAGG']
+        df_red = df[df['EMPRESA'] == 'RED PLACE']
+        df_pisste = df[df['EMPRESA'] == 'PISSTE']
 
-    # Passa os 3 dataframas para função writer
-    cria_writer_and_send(df_dagg, 'DAGG')
-    cria_writer_and_send(df_red, 'RED PLACE')
-    cria_writer_and_send(df_pisste, 'PISSTE')
+        # Passa os 3 dataframas para função writer
+        cria_writer_and_send(df_dagg, 'DAGG', personalizado)
+        cria_writer_and_send(df_red, 'RED PLACE', personalizado)
+        cria_writer_and_send(df_pisste, 'PISSTE', personalizado)
+    else:
+        # verify what empresa is
+        if empresa_personalizada == '2':
+            df_dagg = df[df['EMPRESA'] == 'DAGG']
+            cria_writer_and_send(df_dagg, 'DAGG', personalizado)
+        elif empresa_personalizada == '3':
+            df_red = df[df['EMPRESA'] == 'RED PLACE']
+            cria_writer_and_send(df_red, 'RED PLACE', personalizado)
+        elif empresa_personalizada == '4':
+            df_pisste = df[df['EMPRESA'] == 'PISSTE']
+            cria_writer_and_send(df_pisste, 'PISSTE', personalizado)

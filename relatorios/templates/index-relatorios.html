@@ -128,7 +128,8 @@
                     <div class="card-body">
                         <h5 class="card-title">MLBs Inativação</h5>
                         <p class="card-text">Colunas: Nome, Visitas, Vendas, Tipo de Anúncio, Data de Criação</p>
-                        <p style="color: red;">PS: Para cada MLB, vai demorar no máximo 1 segundo a mais para gerar a planilha. Clique em Download e aguarde!</p>
+                        <p style="color: red;">PS: Para cada MLB, vai demorar no máximo 1 segundo a mais para gerar a
+                            planilha. Clique em Download e aguarde!</p>
                         <form action="{% url 'excel_planilha_gerar_mlbs_stats' %}" method="post">
                             <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
                             {% csrf_token %}
@@ -191,6 +192,38 @@
                                 </div>
                             </div>
                             <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Margem Netshoes Data Personalizada</h5>
+                        <form action="{% url 'margem-netshoes-personalizada' %}" method="post">
+                            <div style="margin-bottom: 10px;" class="row">
+                                <div class="col">
+                                    <select class="form-select" name="empresa_personalizada" required>
+                                        <option selected value="2">Dagg</option>
+                                        <option value="3">Red Place</option>
+                                        <option value="4">Pisste</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- PERÍODO PRINCIPAL -->
+                            <div class="col">
+                                <p for="data_inicial" style="font-weight: bold;">Inicio</p>
+                                <input type="date" name="data_inicial" id="data_inicial_principal" required>
+                                <p for="data_final" style="font-weight: bold; margin-top: 10px;">Fim</p>
+                                <input type="date" name="data_final" id="data_final_principal" required>
+                                <br>
+                            </div>
+
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary mt-4">Enviar Slack</button>
                             {% csrf_token %}
                         </form>
                     </div>
