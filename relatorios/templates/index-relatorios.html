@@ -229,6 +229,20 @@
                     </div>
                 </div>
             </div>
+            <div class="col-6 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Armazéns | Estoque - Valor Custo Total</h5>
+                        <form action="{% url 'armazens-estoque-valor-custo-total' %}" method="post">
+                            <div style="margin-bottom: 10px;" class="row">
+                            </div>
+
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary mt-4">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col text-center">

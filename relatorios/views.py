@@ -5,6 +5,9 @@ from datetime import datetime, date
 from django.contrib.messages import constants
 from django.contrib import messages
 from io import BytesIO
+from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.table import Table, TableStyleInfo
+from openpyxl import Workbook
 from relatorios.scripts import produtos_mlb_stats_pedro
 from scripts.connect_to_database import get_connection
 import pyodbc
@@ -227,3 +230,72 @@ def margem_netshoes_personalizada(request):
     main(data_inicio, data_fim, empresa_personalizada, personalizado)
 
     return redirect('index-relatorios')
+
+def armazens_estoque_valor_custo_total(request):
+    connection = get_connection()
+    conexao = pyodbc.connect(connection)
+    
+    # Dicionário para mapear números de armazéns para nomes de abas
+    armazem_nomes = {
+        1: "PRINCIPAL",
+        2: "FULL ML MADZ",
+        11: "FULL MAGALU MADZ",
+        12: "FBA AMAZON",
+        13: "FULL MAGALU LEAL"
+    }
+    
+    # Criar um objeto BytesIO para armazenar o arquivo Excel
+    output = BytesIO()
+    
+    # Criar um objeto Workbook
+    workbook = Workbook()
+    
+    for armazem, nome_aba in armazem_nomes.items():
+        comando = f'''
+        SELECT 
+            A.CODID, 
+            A.COD_INTERNO, 
+            A.DESCRICAO, 
+            B.ESTOQUE AS ESTOQUE_REAL, 
+            A.VLR_CUSTO,
+            A.VLR_CUSTO * B.ESTOQUE AS TOTAL_CUSTO
+        FROM MATERIAIS A
+        LEFT JOIN ESTOQUE_MATERIAIS B ON A.CODID = B.MATERIAL_ID
+        WHERE B.ARMAZEM = {armazem}
+        AND A.INATIVO = 'N'
+        AND A.COD_INTERNO NOT LIKE '%PAI'
+        AND A.DESMEMBRA = 'N'
+        ORDER BY CODID
+        '''
+        
+        df = pd.read_sql(comando, conexao)
+        
+        # Criar uma nova aba com o nome especificado
+        sheet = workbook.create_sheet(title=nome_aba)
+        
+        # Escrever os cabeçalhos
+        headers = df.columns.tolist()
+        for col, header in enumerate(headers, start=1):
+            sheet.cell(row=1, column=col, value=header)
+        
+        # Escrever os dados
+        for row, data in enumerate(df.values, start=2):
+            for col, value in enumerate(data, start=1):
+                sheet.cell(row=row, column=col, value=value)
+    
+    # Remover a planilha padrão criada pelo openpyxl
+    workbook.remove(workbook['Sheet'])
+    
+    # Salvar o workbook no objeto BytesIO
+    workbook.save(output)
+    output.seek(0)
+    
+    # Fechar a conexão
+    conexao.close()
+    
+    # Criar uma resposta HTTP com o arquivo Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=estoque_por_armazem.xlsx'
+    response.write(output.getvalue())
+    
+    return response
