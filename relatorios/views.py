@@ -6,6 +6,7 @@ from django.contrib.messages import constants
 from django.contrib import messages
 from io import BytesIO
 from openpyxl.utils import get_column_letter
+from openpyxl.styles import PatternFill
 from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl import Workbook
 from relatorios.scripts import produtos_mlb_stats_pedro
@@ -231,6 +232,19 @@ def margem_netshoes_personalizada(request):
 
     return redirect('index-relatorios')
 
+def adjust_column_width(sheet):
+    for column in sheet.columns:
+        max_length = 0
+        column_letter = get_column_letter(column[0].column)
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = (max_length + 2) * 1.2
+        sheet.column_dimensions[column_letter].width = adjusted_width
+
 def armazens_estoque_valor_custo_total(request):
     connection = get_connection()
     conexao = pyodbc.connect(connection)
@@ -249,6 +263,9 @@ def armazens_estoque_valor_custo_total(request):
     
     # Criar um objeto Workbook
     workbook = Workbook()
+    
+    # Definir a cor laranja para os cabeçalhos
+    cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
     
     for armazem, nome_aba in armazem_nomes.items():
         comando = f'''
@@ -273,15 +290,25 @@ def armazens_estoque_valor_custo_total(request):
         # Criar uma nova aba com o nome especificado
         sheet = workbook.create_sheet(title=nome_aba)
         
-        # Escrever os cabeçalhos
+        # Escrever os cabeçalhos e aplicar a cor laranja
         headers = df.columns.tolist()
         for col, header in enumerate(headers, start=1):
-            sheet.cell(row=1, column=col, value=header)
+            cell = sheet.cell(row=1, column=col, value=header)
+            cell.fill = cor_laranja
         
         # Escrever os dados
         for row, data in enumerate(df.values, start=2):
             for col, value in enumerate(data, start=1):
                 sheet.cell(row=row, column=col, value=value)
+        
+        # Ajustar a largura das colunas
+        adjust_column_width(sheet)
+        
+        # Adicionando filtros
+        sheet.auto_filter.ref = sheet.dimensions
+        
+        # Congelando painel
+        sheet.freeze_panes = 'A2'
     
     # Remover a planilha padrão criada pelo openpyxl
     workbook.remove(workbook['Sheet'])
