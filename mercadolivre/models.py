@@ -7,3 +7,10 @@ class TokenMercadoLivreAPI(models.Model):
     access_token = models.CharField(max_length=255)
     client_id = models.CharField(max_length=255)
     client_secret = models.CharField(max_length=255)
+
+class TokenMercadoLivreFitGearAPI(models.Model):
+    id = models.AutoField(primary_key=True)
+    refresh_token_inicial = models.CharField(max_length=255)
+    access_token = models.CharField(max_length=255)
+    client_id = models.CharField(max_length=255)
+    client_secret = models.CharField(max_length=255)

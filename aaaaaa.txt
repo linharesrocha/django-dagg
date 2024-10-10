@@ -1,0 +1,10 @@
+ID do aplicativo
+1420082865478440
+
+
+Chave secreta
+z2EgRi1V2mT9m5GFDRevrDWiMgr0NPGf
+
+
+URI
+https://fitgear.com.br
