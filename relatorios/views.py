@@ -267,6 +267,9 @@ def armazens_estoque_valor_custo_total(request):
     # Definir a cor laranja para os cabeçalhos
     cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
     
+    # Dicionário para armazenar os totais de cada armazém
+    resumo_armazens = {}
+    
     for armazem, nome_aba in armazem_nomes.items():
         comando = f'''
         SELECT 
@@ -309,6 +312,35 @@ def armazens_estoque_valor_custo_total(request):
         
         # Congelando painel
         sheet.freeze_panes = 'A2'
+        
+        # Calcular totais para o resumo
+        estoque_total = df['ESTOQUE_REAL'].sum()
+        valor_total = df['TOTAL_CUSTO'].sum()
+        resumo_armazens[nome_aba] = {'ESTOQUE': estoque_total, 'VALOR': valor_total}
+    
+    # Criar a aba de resumo
+    resumo_sheet = workbook.create_sheet(title="RESUMO")
+    
+    # Adicionar cabeçalhos ao resumo
+    headers_resumo = ["ARMAZEM", "ESTOQUE", "VALOR"]
+    for col, header in enumerate(headers_resumo, start=1):
+        cell = resumo_sheet.cell(row=1, column=col, value=header)
+        cell.fill = cor_laranja
+    
+    # Preencher dados do resumo
+    for row, (armazem, dados) in enumerate(resumo_armazens.items(), start=2):
+        resumo_sheet.cell(row=row, column=1, value=armazem)
+        resumo_sheet.cell(row=row, column=2, value=dados['ESTOQUE'])
+        resumo_sheet.cell(row=row, column=3, value=dados['VALOR'])
+    
+    # Ajustar a largura das colunas na aba de resumo
+    adjust_column_width(resumo_sheet)
+    
+    # Adicionar filtros à aba de resumo
+    resumo_sheet.auto_filter.ref = resumo_sheet.dimensions
+    
+    # Congelar painel na aba de resumo
+    resumo_sheet.freeze_panes = 'A2'
     
     # Remover a planilha padrão criada pelo openpyxl
     workbook.remove(workbook['Sheet'])
