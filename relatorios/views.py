@@ -270,6 +270,7 @@ def armazens_estoque_valor_custo_total(request):
     # Dicionário para armazenar os totais de cada armazém
     resumo_armazens = {}
     
+    # Criar as abas de detalhes e coletar dados para o resumo
     for armazem, nome_aba in armazem_nomes.items():
         comando = f'''
         SELECT 
@@ -318,8 +319,8 @@ def armazens_estoque_valor_custo_total(request):
         valor_total = df['TOTAL_CUSTO'].sum()
         resumo_armazens[nome_aba] = {'ESTOQUE': estoque_total, 'VALOR': valor_total}
     
-    # Criar a aba de resumo
-    resumo_sheet = workbook.create_sheet(title="DASHBOARD", index=0)
+    # Criar a aba de resumo como primeira aba
+    resumo_sheet = workbook.create_sheet(title="RESUMO", index=0)
     
     # Adicionar cabeçalhos ao resumo
     headers_resumo = ["ARMAZEM", "ESTOQUE", "VALOR"]
