@@ -285,6 +285,7 @@ def armazens_estoque_valor_custo_total(request):
         WHERE B.ARMAZEM = {armazem}
         AND A.INATIVO = 'N'
         AND A.COD_INTERNO NOT LIKE '%PAI'
+        AND A.COD_INTERNO NOT IN ('7896042027890', '7896042080451')
         AND A.DESMEMBRA = 'N'
         ORDER BY CODID
         '''
