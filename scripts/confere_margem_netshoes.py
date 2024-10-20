@@ -56,20 +56,20 @@ def cria_writer_and_send(df, empresa, personalizado):
     cor_branco = PatternFill(start_color='F4EEEE', end_color='F4EEEE', fill_type='solid')
 
     # Lista Porcentagem laranja
-    celulas_laranja = ['W1', 'T1', 'S1', 'R1', 'Q1', 'P1', 'O1']
+    celulas_laranja = ['P1', 'Q1', 'R1', 'S1', 'T1', 'U1', 'X1']
     for celula_referencia in celulas_laranja:
         celula = worksheet[celula_referencia]
         celula.fill = cor_laranja
         
     # Lista Porcentagem Verde
-    celulas_verde = ['V1', 'U1', 'N1', 'M1', 'I1', 'H1', 'G1', 'F1']
+    celulas_verde = ['G1', 'H1', 'I1', 'J1', 'N1', 'O1', 'V1', 'W1']
     for celula_referencia in celulas_verde:
         celula = worksheet[celula_referencia]
         celula.fill = cor_verde
         
 
     # Lista Porcentagem Branco
-    celulas_branco = ['K1', 'L1', 'E1', 'D1', 'C1', 'B1', 'A1', 'J1']
+    celulas_branco = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'K1', 'L1', 'M1']
     for celula_referencia in celulas_branco:
         celula = worksheet[celula_referencia]
         celula.fill = cor_branco
@@ -99,9 +99,9 @@ def cria_writer_and_send(df, empresa, personalizado):
 
 
     SLACK_CHANNEL_ID_MADZ='C05FN0ZF0UB'
-    # SLACK_CHANNEL_ID_MADZ='C045HEE4G7L' #test
     SLACK_CHANNEL_ID_PISSTE='C07R9AX04TS'
     SLACK_CHANNEL_ID_REDPLACE = 'C07QLE8TUR1'
+    # SLACK_CHANNEL_ID_MADZ='C045HEE4G7L' #test
 
     # verify if channel is madz
     if empresa == 'DAGG':
@@ -199,6 +199,7 @@ def main(inicio_data_personalizada, fim_data_personalizada, empresa_personalizad
     df['COD_INTERNO'] = df['COD_INTERNO'].str.strip()
     df['COD_INTERNO_KIT'] = df['COD_INTERNO_KIT'].str.strip()
     df['PEDIDO'] = df['PEDIDO'].str.strip()
+    df['SKU_MKTP'] = df['SKU_MKTP'].str.strip()
 
     is_kit_s = df['KIT'] == 'S'
 
@@ -242,7 +243,7 @@ def main(inicio_data_personalizada, fim_data_personalizada, empresa_personalizad
     df['VLR_TOTAL'] = df['VLR_PEDIDO'] + df['VLR_FRETE']
 
     # Coloca a coluna VLR_TOTAL depois do VLR_FRETE
-    df = df[['CODID', 'COD_INTERNO', 'PEDIDO', 'EMPRESA', 'TITULO', 'VLR_CUSTO', 'VLR_PEDIDO', 'VLR_FRETE', 'VLR_TOTAL', 'DATA', 'KIT','QUANTIDADE_PED']]
+    df = df[['CODID', 'COD_INTERNO', 'SKU_MKTP', 'PEDIDO', 'EMPRESA', 'TITULO', 'VLR_CUSTO', 'VLR_PEDIDO', 'VLR_FRETE', 'VLR_TOTAL', 'DATA', 'KIT','QUANTIDADE_PED']]
 
     # Modifica VLR_FRETE
     df['VLR_FRETE'] = (df['VLR_FRETE'] / df['QUANTIDADE_PED']).round(2)
