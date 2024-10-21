@@ -334,7 +334,7 @@ def main(inicio_data_personalizada, fim_data_personalizada, personalizado):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    SLACK_CHANNEL_ID='C045HEE4G7L'
+    SLACK_CHANNEL_ID='C07RZKMB1S4'
 
     message = f'MERCADO LIVRE MARGEM! :heavy_division_sign:'
 

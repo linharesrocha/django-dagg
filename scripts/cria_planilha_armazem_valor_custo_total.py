@@ -26,7 +26,7 @@ def slack_notificao(name_file_excel):
     load_dotenv()
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-    SLACK_CHANNEL_ID='C045HEE4G7L'
+    SLACK_CHANNEL_ID='C068SF9476W'
 
     message = f'PLANILHA DE CUSTO TOTAL [ARMAZÉNS]'
     
