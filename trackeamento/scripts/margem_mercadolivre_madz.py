@@ -47,8 +47,6 @@ def main(inicio_data_personalizada, fim_data_personalizada, personalizado):
 
     # Cria a data
     # Define o timezone como UTC
-    date_from_strf = None
-    date_to_strf = None
     if personalizado == False:
         hoje = datetime.now(timezone.utc).date()
         debito_dias = hoje - timedelta(days=1)
@@ -328,7 +326,6 @@ def main(inicio_data_personalizada, fim_data_personalizada, personalizado):
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C05FN11JCUB'
-    SLACK_CHANNEL_ID = 'C045HEE4G7L' #test
 
     message = f'MERCADO LIVRE MARGEM! :heavy_division_sign:'
 

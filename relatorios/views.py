@@ -268,6 +268,19 @@ def margem_mercadolivre_madz_personalizada(request):
 
     return redirect('index-relatorios')
 
+def margem_mercadolivre_redplace_personalizada(request):
+    data_inicio = request.POST['data_inicial']
+    data_fim = request.POST['data_final']
+    personalizado = True
+
+    print(data_inicio, data_fim, personalizado)
+
+    from trackeamento.scripts.margem_mercadolivre_redplace import main
+
+    main(data_inicio, data_fim, personalizado)
+
+    return redirect('index-relatorios')
+
 def adjust_column_width(sheet):
     for column in sheet.columns:
         max_length = 0

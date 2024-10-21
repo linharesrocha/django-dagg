@@ -293,6 +293,27 @@
                     </div>
                 </div>
             </div>
+            <div class="col-6 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Mercado Livre Red Place</h5>
+                        <form action="{% url 'margem-mercadolivre-redplace-personalizada' %}" method="post">
+
+                            <!-- PERÍODO PRINCIPAL -->
+                            <div class="col">
+                                <p for="data_inicial" style="font-weight: bold;">Inicio</p>
+                                <input type="date" name="data_inicial" id="data_inicial_principal" required>
+                                <p for="data_final" style="font-weight: bold; margin-top: 10px;">Fim</p>
+                                <input type="date" name="data_final" id="data_final_principal" required>
+                                <br>
+                            </div>
+
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary mt-4">Enviar Slack</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-6 text-center">
