@@ -3,7 +3,7 @@ import pandas as pd
 import warnings
 from datetime import date, timedelta
 from dotenv import load_dotenv
-from connect_to_database import get_connection
+from scripts.connect_to_database import get_connection
 import os
 from slack_sdk import WebClient
 import numpy as np
@@ -178,7 +178,7 @@ def main(inicio_data_personalizada, fim_data_personalizada, personalizado):
     if personalizado == False:
         name_file_excel = 'margem_decathlon_' + str(date.today() - timedelta(days=1)) + '.xlsx'
     else:
-        name_file_excel = 'margem_decathlon_' + personalizado + '.xlsx'
+        name_file_excel = 'margem_decathlon_personalizado'+ '.xlsx'
 
     writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
     df.to_excel(writer, sheet_name='decathlon', index=False)
