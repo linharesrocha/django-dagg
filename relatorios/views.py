@@ -230,7 +230,6 @@ def margem_netshoes_personalizada(request):
     return redirect('index-relatorios')
 
 def margem_decathlon_personalizada(request):
-    empresa_personalizada = request.POST['empresa_personalizada']
     data_inicio = request.POST['data_inicial']
     data_fim = request.POST['data_final']
     personalizado = True
@@ -239,7 +238,7 @@ def margem_decathlon_personalizada(request):
 
     from scripts.confere_margem_decathlon import main
 
-    main(data_inicio, data_fim, empresa_personalizada, personalizado)
+    main(data_inicio, data_fim, personalizado)
 
     return redirect('index-relatorios')
 
