@@ -10,7 +10,6 @@ from confere_margem_decathlon import main
 
 inicio_data_personalizada = None
 fim_data_personalizada = None
-empresa_personalizada = None
 personalizado = False
 
-main(inicio_data_personalizada, fim_data_personalizada, empresa_personalizada, personalizado)
+main(inicio_data_personalizada, fim_data_personalizada, personalizado)
