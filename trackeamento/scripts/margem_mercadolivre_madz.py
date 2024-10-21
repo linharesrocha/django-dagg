@@ -21,7 +21,14 @@ sys.path.append(str(BASE_DIR))
 from mercadolivre.scripts.config import reflash
 from scripts.connect_to_database import get_connection
 
-def main():
+def main(inicio_data_personalizada, fim_data_personalizada, personalizado):
+    if fim_data_personalizada is not None:
+        if isinstance(fim_data_personalizada, str):
+            fim_data_personalizada = datetime.strptime(fim_data_personalizada, "%Y-%m-%d")
+        
+        fim_data_personalizada = fim_data_personalizada + timedelta(days=1)
+        print('aumentou')
+
     ACCESS_TOKEN = reflash.refreshToken()
     header = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
 
@@ -46,28 +53,26 @@ def main():
     list_operacao = []
 
     # Cria a data
-    # Define the timezone as UTC
-    hoje = datetime.now(timezone.utc).date()
-    debito_dias = hoje - timedelta(days=1)
-    date_from_strf = debito_dias.strftime("%Y-%m-%dT00:00:00.000Z")
+    # Define o timezone como UTC
+    if personalizado == False:
+        hoje = datetime.now(timezone.utc).date()
+        debito_dias = hoje - timedelta(days=1)
+        date_from_strf = debito_dias.strftime("%Y-%m-%dT00:00:00.000Z")
+        link_get_total_orders = f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&sort=date_desc"
+    else:
+        # Converte strings para objetos de data, se necessário
+        inicio_data = datetime.strptime(inicio_data_personalizada, "%Y-%m-%d")
+        fim_data = datetime.strptime(fim_data_personalizada, "%Y-%m-%d")
+    
+    date_from_strf = inicio_data.strftime("%Y-%m-%dT00:00:00.000Z")
+    date_to_strf = fim_data.strftime("%Y-%m-%dT00:00:00.000Z")
+    link_get_total_orders = f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&order.date_created.to={date_to_strf}&sort=date_desc"
 
-    # teste unico pedido
-    #response = requests.get(f"https://api.mercadolibre.com/orders/2000008652038690", headers=header).json()
-    # response = requests.get(f"https://api.mercadolibre.com/orders/2000008652746114", headers=header).json() # esse saiu com valor 
-    # shipping_id = response['shipping']['id']
-    # response_shipping = requests.get(f"https://api.mercadolibre.com/shipments/{shipping_id}", headers=header).json()
-    # response = requests.get(f"https://api.mercadolibre.com/shipments/43556171770", headers=header).json()
-    # armazena em arquivo txt dump 4
-    # with open('dump2ship2.json', 'w') as f:
-    #     json.dump(response_shipping, f , indent=4)
-    # print(response)
-
-    # Get total orders
-    response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&sort=date_desc", headers=header)
+    response = requests.get(link_get_total_orders, headers=header)
     while response.status_code == 500 or response.status_code == 403:
         sleep(10)
         print('Retrying...')
-        response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&sort=date_desc", headers=header)
+        response = requests.get(link_get_total_orders, headers=header)
     response = response.json()
 
     total_orders = response['paging']['total']
@@ -156,13 +161,25 @@ def main():
                 list_listing_type_id.append(listing_type_id)
 
 
-        # Consulta todos os pedidos e consulta
+        # Incrementa o offset
         offset += 51
-        response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&offset={offset}&sort=date_desc", headers=header)
+
+        if personalizado == False:
+            link_get_total_orders_offset = f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&offset={offset}&sort=date_desc"
+        else:
+            # Converte strings para objetos de data
+            inicio_data = datetime.strptime(inicio_data_personalizada, "%Y-%m-%d")
+            fim_data = datetime.strptime(fim_data_personalizada, "%Y-%m-%d")
+            date_from_strf = inicio_data.strftime("%Y-%m-%dT00:00:00.000Z")
+            date_to_strf = fim_data.strftime("%Y-%m-%dT00:00:00.000Z")
+            
+            link_get_total_orders_offset = f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&order.date_created.to={date_to_strf}&offset={offset}&sort=date_desc"
+
+        response = requests.get(link_get_total_orders_offset, headers=header)
         while response.status_code == 500 or response.status_code == 403:
             sleep(10)
             print('Retrying...')
-            response = requests.get(f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&offset={offset}&sort=date_desc", headers=header)
+            response = requests.get(link_get_total_orders_offset, headers=header)
         response = response.json()
 
     
@@ -242,7 +259,10 @@ def main():
                                 'FRETE', 'FRETE 10%','DATA', 'QUANTIDADE', 'CATEGORIA', 'TIPO ANUNCIO', 'IMPOSTO', 'OPERAÇÃO', 'TAXA', 'CUPOM', 'LUCRO LIQ $', 'LUCRO LIQ %', 'LINK']]
 
     # Exporta em excel
-    name_file_excel = 'margem_mercadolivre_' + str(hoje) + '.xlsx'
+    if personalizado == False:
+        name_file_excel = 'margem_mercadolivre_' + str(hoje) + '.xlsx'
+    else:
+        name_file_excel = 'margem_mercadolivrepersonalizado.xlsx'
     writer = pd.ExcelWriter(name_file_excel, engine='openpyxl')
     df_completo.to_excel(writer, sheet_name='MERCADOLIVRE', index=False)
     worksheet = writer.sheets['MERCADOLIVRE']
@@ -312,6 +332,7 @@ def main():
 
     client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
     SLACK_CHANNEL_ID='C05FN11JCUB'
+    SLACK_CHANNEL_ID = 'C045HEE4G7L' #test
 
     message = f'MERCADO LIVRE MARGEM! :heavy_division_sign:'
 
@@ -334,5 +355,3 @@ def main():
         os.remove(name_file_excel)
     except Exception as e:
         print(e)
-
-main()

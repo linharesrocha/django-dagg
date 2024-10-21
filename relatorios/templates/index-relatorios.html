@@ -275,16 +275,8 @@
             <div class="col-6 text-center">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Mercado Livre</h5>
-                        <form action="{% url 'margem-mercadolivre-personalizada' %}" method="post">
-                            <div style="margin-bottom: 10px;" class="row">
-                                <div class="col">
-                                    <select class="form-select" name="empresa_personalizada" required>
-                                        <option selected value="2">Dagg</option>
-                                        <option value="3">Red Place</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <h5 class="card-title">Mercado Livre Madz</h5>
+                        <form action="{% url 'margem-mercadolivre-madz-personalizada' %}" method="post">
 
                             <!-- PERÍODO PRINCIPAL -->
                             <div class="col">
@@ -301,6 +293,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-6 text-center">
                 <div class="card">
                     <div class="card-body">

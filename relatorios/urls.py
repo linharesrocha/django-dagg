@@ -15,6 +15,6 @@ urlpatterns = [
     path('margem_netshoes_personalizada/', views.margem_netshoes_personalizada, name='margem-netshoes-personalizada'),
     path('margem_decathlon_personalizada/', views.margem_decathlon_personalizada, name='margem-decathlon-personalizada'),
     path('margem_centauro_personalizada/', views.margem_centauro_personalizada, name='margem-centauro-personalizada'),
-    path('margem_mercadolivre_personalizada/', views.margem_mercadolivre_personalizada, name='margem-mercadolivre-personalizada'),
+    path('margem_mercadolivre_madz_personalizada/', views.margem_mercadolivre_madz_personalizada, name='margem-mercadolivre-madz-personalizada'),
     path('armazens_estoque_valor_custo_total/', views.armazens_estoque_valor_custo_total, name='armazens-estoque-valor-custo-total'),
 ]
