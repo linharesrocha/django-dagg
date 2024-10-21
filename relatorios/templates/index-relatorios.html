@@ -202,7 +202,28 @@
             <div class="col-6 text-center">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Margem Netshoes Data Personalizada</h5>
+                        <h5 class="card-title">Armazéns | Estoque - Valor Custo Total</h5>
+                        <form action="{% url 'armazens-estoque-valor-custo-total' %}" method="post">
+                            <div style="margin-bottom: 10px;" class="row">
+                            </div>
+
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary mt-4">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <h2 style="margin-top: 25px;">Margem</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Netshoes</h5>
                         <form action="{% url 'margem-netshoes-personalizada' %}" method="post">
                             <div style="margin-bottom: 10px;" class="row">
                                 <div class="col">
@@ -232,12 +253,69 @@
             <div class="col-6 text-center">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Armazéns | Estoque - Valor Custo Total</h5>
-                        <form action="{% url 'armazens-estoque-valor-custo-total' %}" method="post">
-                            <div style="margin-bottom: 10px;" class="row">
+                        <h5 class="card-title">Centauro</h5>
+                        <form action="{% url 'margem-centauro-personalizada' %}" method="post">
+                            <!-- PERÍODO PRINCIPAL -->
+                            <div class="col">
+                                <p for="data_inicial" style="font-weight: bold;">Inicio</p>
+                                <input type="date" name="data_inicial" id="data_inicial_principal" required>
+                                <p for="data_final" style="font-weight: bold; margin-top: 10px;">Fim</p>
+                                <input type="date" name="data_final" id="data_final_principal" required>
+                                <br>
                             </div>
 
-                            <button type="submit" value="Gerar Excel" class="btn btn-secondary mt-4">Download</button>
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary mt-4">Enviar Slack</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Mercado Livre</h5>
+                        <form action="{% url 'margem-mercadolivre-personalizada' %}" method="post">
+                            <div style="margin-bottom: 10px;" class="row">
+                                <div class="col">
+                                    <select class="form-select" name="empresa_personalizada" required>
+                                        <option selected value="2">Dagg</option>
+                                        <option value="3">Red Place</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- PERÍODO PRINCIPAL -->
+                            <div class="col">
+                                <p for="data_inicial" style="font-weight: bold;">Inicio</p>
+                                <input type="date" name="data_inicial" id="data_inicial_principal" required>
+                                <p for="data_final" style="font-weight: bold; margin-top: 10px;">Fim</p>
+                                <input type="date" name="data_final" id="data_final_principal" required>
+                                <br>
+                            </div>
+
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary mt-4">Enviar Slack</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Decathlon</h5>
+                        <form action="{% url 'margem-decathlon-personalizada' %}" method="post">
+                            <!-- PERÍODO PRINCIPAL -->
+                            <div class="col">
+                                <p for="data_inicial" style="font-weight: bold;">Inicio</p>
+                                <input type="date" name="data_inicial" id="data_inicial_principal" required>
+                                <p for="data_final" style="font-weight: bold; margin-top: 10px;">Fim</p>
+                                <input type="date" name="data_final" id="data_final_principal" required>
+                                <br>
+                            </div>
+
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary mt-4">Enviar Slack</button>
                             {% csrf_token %}
                         </form>
                     </div>

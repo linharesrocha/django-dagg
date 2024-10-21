@@ -13,5 +13,8 @@ urlpatterns = [
     path('excel_planilha_gerar_mlbs_stats/', views.gerar_mlbs_stats, name='excel_planilha_gerar_mlbs_stats'),
     path('excel_gerar_planilha_peso_quant', views.gerar_planilha_peso_quant, name='excel_gerar_planilha_peso_quant'),
     path('margem_netshoes_personalizada/', views.margem_netshoes_personalizada, name='margem-netshoes-personalizada'),
+    path('margem_decathlon_personalizada/', views.margem_decathlon_personalizada, name='margem-decathlon-personalizada'),
+    path('margem_centauro_personalizada/', views.margem_centauro_personalizada, name='margem-centauro-personalizada'),
+    path('margem_mercadolivre_personalizada/', views.margem_mercadolivre_personalizada, name='margem-mercadolivre-personalizada'),
     path('armazens_estoque_valor_custo_total/', views.armazens_estoque_valor_custo_total, name='armazens-estoque-valor-custo-total'),
 ]

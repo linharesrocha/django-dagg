@@ -229,6 +229,37 @@ def margem_netshoes_personalizada(request):
 
     return redirect('index-relatorios')
 
+def margem_decathlon_personalizada(request):
+    empresa_personalizada = request.POST['empresa_personalizada']
+    data_inicio = request.POST['data_inicial']
+    data_fim = request.POST['data_final']
+    personalizado = True
+
+    print(data_inicio, data_fim)
+
+    from scripts.confere_margem_decathlon import main
+
+    main(data_inicio, data_fim, empresa_personalizada, personalizado)
+
+    return redirect('index-relatorios')
+
+def margem_centauro_personalizada(request):
+    empresa_personalizada = request.POST['empresa_personalizada']
+    data_inicio = request.POST['data_inicial']
+    data_fim = request.POST['data_final']
+    personalizado = True
+
+    print(data_inicio, data_fim)
+
+    from scripts.confere_margem_centauro import main
+
+    main(data_inicio, data_fim, empresa_personalizada, personalizado)
+
+    return redirect('index-relatorios')
+
+def margem_mercadolivre_personalizada(request):
+    return redirect('index-relatorios')
+
 def adjust_column_width(sheet):
     for column in sheet.columns:
         max_length = 0
