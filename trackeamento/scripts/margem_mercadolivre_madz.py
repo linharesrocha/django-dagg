@@ -22,13 +22,6 @@ from mercadolivre.scripts.config import reflash
 from scripts.connect_to_database import get_connection
 
 def main(inicio_data_personalizada, fim_data_personalizada, personalizado):
-    if fim_data_personalizada is not None:
-        if isinstance(fim_data_personalizada, str):
-            fim_data_personalizada = datetime.strptime(fim_data_personalizada, "%Y-%m-%d")
-        
-        fim_data_personalizada = fim_data_personalizada + timedelta(days=1)
-        print('aumentou')
-
     ACCESS_TOKEN = reflash.refreshToken()
     header = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
 
@@ -54,6 +47,8 @@ def main(inicio_data_personalizada, fim_data_personalizada, personalizado):
 
     # Cria a data
     # Define o timezone como UTC
+    date_from_strf = None
+    date_to_strf = None
     if personalizado == False:
         hoje = datetime.now(timezone.utc).date()
         debito_dias = hoje - timedelta(days=1)
@@ -62,11 +57,12 @@ def main(inicio_data_personalizada, fim_data_personalizada, personalizado):
     else:
         # Converte strings para objetos de data, se necessário
         inicio_data = datetime.strptime(inicio_data_personalizada, "%Y-%m-%d")
+        date_from_strf = inicio_data.strftime("%Y-%m-%dT00:00:00.000Z")
+        
         fim_data = datetime.strptime(fim_data_personalizada, "%Y-%m-%d")
-    
-    date_from_strf = inicio_data.strftime("%Y-%m-%dT00:00:00.000Z")
-    date_to_strf = fim_data.strftime("%Y-%m-%dT00:00:00.000Z")
-    link_get_total_orders = f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&order.date_created.to={date_to_strf}&sort=date_desc"
+        fim_data = fim_data + timedelta(days=1)
+        date_to_strf = fim_data.strftime("%Y-%m-%dT00:00:00.000Z")
+        link_get_total_orders = f"https://api.mercadolibre.com/orders/search?seller=195279505&order.status=paid&order.date_created.from={date_from_strf}&order.date_created.to={date_to_strf}&sort=date_desc"
 
     response = requests.get(link_get_total_orders, headers=header)
     while response.status_code == 500 or response.status_code == 403:
