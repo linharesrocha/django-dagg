@@ -432,6 +432,23 @@
                     </div>
                 </div>
             </div>
+            <div class="col text-center">
+                <div class="card" style="width: 18rem">
+                    <div class="card-body">
+                        <h5 class="card-title">Mercado Livre</h5>
+                        <br>
+                        <form action="{% url 'comparativo-estoque-mercadolivre' %}" enctype="multipart/form-data"
+                            method="post">
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Selecione a planilha</label>
+                                <input class="form-control" type="file" name="file" id="file" required>
+                            </div>
+                            <button type="submit" value="Gerar Excel" class="btn btn-secondary">Download</button>
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col text-center">

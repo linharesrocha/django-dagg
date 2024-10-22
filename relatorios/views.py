@@ -469,3 +469,6 @@ def comparativo_estoque_amazon(request):
     os.unlink(temp_path)
     
     return response
+
+def comparativo_estoque_mercadolivre(request):
+    return redirect('index-relatorios')

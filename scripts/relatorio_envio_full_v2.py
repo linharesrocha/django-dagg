@@ -146,7 +146,7 @@ def main(file):
     df_ml_full = df_ml_full.iloc[2:]
 
     # # Trocaa posição da primeira e teerceira coluna sem remover as outras colunas]
-    # colunas = ['Código universal', 'SKU', 'Código ML', 'ID do anúncio', 'Título do anúncio', 'Preço', 'Status do anúncio', 'Oferece Full', 'Vendas últimos 30 dias (un.)',
+    # colunas = ['Código universal', 'SKU', 'Código ML', '# Anúncio', 'Título do anúncio', 'Preço', 'Status do anúncio', 'Oferece Full', 'Vendas últimos 30 dias (un.)',
     #             'Envios pendentes de recebimento', 'Vendas não entregues', 'Em transferência', 'Devolvidas pelo comprador', 'Não aptas para venda', 'Aptas para venda', 
     #             'Tempo até fim do estoque', 'Estoque total armazenado']
     # df_ml_full = df_ml_full[colunas + [col for col in df_ml_full.columns if col not in colunas]]
@@ -161,14 +161,14 @@ def main(file):
     df_ml_full['subtracao'] = df_ml_full['subtracao']
 
     try:
-        df_ml_full_filtrada = df_ml_full[['Código ML', 'ID do anúncio', 'Vendas últimos 30 dias (un.)', 'Aptas para venda', 'Tempo até fim do estoque ', 'subtracao']]
+        df_ml_full_filtrada = df_ml_full[['Código ML', '# Anúncio', 'Vendas últimos 30 dias (un.)', 'Aptas para venda', 'Tempo até fim do estoque ', 'subtracao']]
         nome_correto = 'Tempo até fim do estoque '
     except:
-        df_ml_full_filtrada = df_ml_full[['Código ML', 'ID do anúncio', 'Vendas últimos 30 dias (un.)', 'Aptas para venda', 'Tempo até fim do estoque', 'subtracao']]
+        df_ml_full_filtrada = df_ml_full[['Código ML', '# Anúncio', 'Vendas últimos 30 dias (un.)', 'Aptas para venda', 'Tempo até fim do estoque', 'subtracao']]
         nome_correto = 'Tempo até fim do estoque'
 
     # Renomeando as colunas
-    novos_nomes_colunas = {'Código ML':'COD_ML', 'ID do anúncio':'ID_ANUNCIO', 'Vendas últimos 30 dias (un.)':'VENDAS_30', 'Aptas para venda':'APTAS_FULL', nome_correto:'TEMPO'}
+    novos_nomes_colunas = {'Código ML':'COD_ML', '# Anúncio':'ID_ANUNCIO', 'Vendas últimos 30 dias (un.)':'VENDAS_30', 'Aptas para venda':'APTAS_FULL', nome_correto:'TEMPO'}
     df_ml_full_filtrada.rename(columns=novos_nomes_colunas, inplace=True)
 
     # df_completo.to_excel('df_completo.xlsx', index=False)
