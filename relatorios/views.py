@@ -343,6 +343,7 @@ def comparativo_estoque_magalu(request):
     df_mktp = pd.read_excel(file)
     df_mktp = df_mktp[['Código referência do produto', 'À venda', 'Programado']]
     df_mktp['ESTOQUE_MKTP'] = df_mktp['À venda'] + df_mktp['Programado']
+    df_mktp = df_mktp.drop(columns=['À venda', 'Programado'])
     df_mktp.rename(columns={'Código referência do produto': 'SKU'}, inplace=True)
 
     # Produtos Materiais
@@ -370,7 +371,7 @@ def comparativo_estoque_magalu(request):
     # Cria coluna de diferença do estoque
     df['ESTOQUE_MKTP'] = df['ESTOQUE_MKTP'].fillna(0)
     df['ESTOQUE_ATON'] = df['ESTOQUE_ATON'].fillna(0)
-    df['DIFERENÇA'] = df['ESTOQUE_MKTP'] - df['ESTOQUE_ATON']
+    df['DIFERENÇA'] = df['ESTOQUE_ATON'] - df['ESTOQUE_MKTP']
 
     import tempfile
 
