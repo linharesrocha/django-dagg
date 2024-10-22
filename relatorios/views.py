@@ -328,79 +328,75 @@ def armazens_estoque_valor_custo_total(request):
 
 
 def comparativo_estoque_magalu(request):
-    try:
-        connection = get_connection()
-        conexao = pyodbc.connect(connection)
+    connection = get_connection()
+    conexao = pyodbc.connect(connection)
 
-        empresa_personalizada = request.POST['empresa_personalizada']
-        if empresa_personalizada == '23':
-            armazem = '11' # full magalu madz
-        elif empresa_personalizada == '24':
-            armazem = '13' # full magalu redplace
-        else:
-            armazem = None
+    empresa_personalizada = request.POST['empresa_personalizada']
+    if empresa_personalizada == '23':
+        armazem = '11' # full magalu madz
+    elif empresa_personalizada == '24':
+        armazem = '13' # full magalu redplace
+    else:
+        armazem = None
 
-        file = request.FILES['file']
-        df_mktp = pd.read_excel(file)
-        df_mktp = df_mktp[['Código referência do produto', 'À venda']]
-        df_mktp.rename(columns={'Código referência do produto': 'SKU', 'À venda': 'ESTOQUE_MKTP'}, inplace=True)
+    file = request.FILES['file']
+    df_mktp = pd.read_excel(file)
+    df_mktp = df_mktp[['Código referência do produto', 'À venda', 'Programado']]
+    df_mktp['ESTOQUE_MKTP'] = df_mktp['À venda'] + df_mktp['Programado']
+    df_mktp.rename(columns={'Código referência do produto': 'SKU'}, inplace=True)
 
-        # Produtos Materiais
-        comando = f'''
-        SELECT A.SKU,  B.COD_INTERNO, B.DESCRICAO, C.ESTOQUE AS ESTOQUE_ATON
-        FROM ECOM_SKU A
-        LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
-        LEFT JOIN ESTOQUE_MATERIAIS C ON A.MATERIAL_ID = C.MATERIAL_ID
-        WHERE C.ARMAZEM = {armazem}
-        AND A.ORIGEM_ID = {empresa_personalizada}
-        '''
+    # Produtos Materiais
+    comando = f'''
+    SELECT A.SKU,  B.COD_INTERNO, B.DESCRICAO, C.ESTOQUE AS ESTOQUE_ATON
+    FROM ECOM_SKU A
+    LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
+    LEFT JOIN ESTOQUE_MATERIAIS C ON A.MATERIAL_ID = C.MATERIAL_ID
+    WHERE C.ARMAZEM = {armazem}
+    AND A.ORIGEM_ID = {empresa_personalizada}
+    '''
 
-        # Carrega planilha
-        df_ecom = pd.read_sql(comando, conexao)
-        conexao.close()
+    # Carrega planilha
+    df_ecom = pd.read_sql(comando, conexao)
+    conexao.close()
 
-        # Limpando valores com espaços vazios
-        df_ecom['SKU'] = df_ecom['SKU'].str.strip()
-        df_ecom['DESCRICAO'] = df_ecom['DESCRICAO'].str.strip()
-        df_ecom['COD_INTERNO'] = df_ecom['COD_INTERNO'].str.strip()
+    # Limpando valores com espaços vazios
+    df_ecom['SKU'] = df_ecom['SKU'].str.strip()
+    df_ecom['DESCRICAO'] = df_ecom['DESCRICAO'].str.strip()
+    df_ecom['COD_INTERNO'] = df_ecom['COD_INTERNO'].str.strip()
 
-        # Merge
-        df = pd.merge(df_ecom, df_mktp, on='SKU', how='right')
+    # Merge
+    df = pd.merge(df_ecom, df_mktp, on='SKU', how='right')
 
-        # Cria coluna de diferença do estoque
-        df['ESTOQUE_MKTP'] = df['ESTOQUE_MKTP'].fillna(0)
-        df['ESTOQUE_ATON'] = df['ESTOQUE_ATON'].fillna(0)
-        df['DIFERENÇA'] = df['ESTOQUE_MKTP'] - df['ESTOQUE_ATON']
+    # Cria coluna de diferença do estoque
+    df['ESTOQUE_MKTP'] = df['ESTOQUE_MKTP'].fillna(0)
+    df['ESTOQUE_ATON'] = df['ESTOQUE_ATON'].fillna(0)
+    df['DIFERENÇA'] = df['ESTOQUE_MKTP'] - df['ESTOQUE_ATON']
 
-        import tempfile
+    import tempfile
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp:
-            temp_path = tmp.name
-            
-            with pd.ExcelWriter(temp_path, engine='openpyxl') as writer:
-                df.to_excel(writer, sheet_name='COMPARATIVO', index=False)
-                worksheet = writer.sheets['COMPARATIVO']
-                worksheet.auto_filter.ref = "A1:F1"
-                worksheet.freeze_panes = 'A2'
-                cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
-                celulas_laranja = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1']
-                for celula_referencia in celulas_laranja:
-                    celula = worksheet[celula_referencia]
-                    celula.fill = cor_laranja
-
-        # Lê o arquivo temporário e cria a response
-        with open(temp_path, 'rb') as excel_file:
-            response = HttpResponse(
-                excel_file.read(),
-                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            )
-            response['Content-Disposition'] = 'attachment; filename=comparativo_estoque.xlsx'
-
-        # Remove o arquivo temporário
-        os.unlink(temp_path)
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp:
+        temp_path = tmp.name
         
-        return response
+        with pd.ExcelWriter(temp_path, engine='openpyxl') as writer:
+            df.to_excel(writer, sheet_name='COMPARATIVO', index=False)
+            worksheet = writer.sheets['COMPARATIVO']
+            worksheet.auto_filter.ref = "A1:F1"
+            worksheet.freeze_panes = 'A2'
+            cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
+            celulas_laranja = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1']
+            for celula_referencia in celulas_laranja:
+                celula = worksheet[celula_referencia]
+                celula.fill = cor_laranja
 
-    except Exception as e:
-        print(f"Erro: {str(e)}")
-        return HttpResponse(f"Erro ao gerar relatório: {str(e)}", status=500)
+    # Lê o arquivo temporário e cria a response
+    with open(temp_path, 'rb') as excel_file:
+        response = HttpResponse(
+            excel_file.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename=comparativo_estoque.xlsx'
+
+    # Remove o arquivo temporário
+    os.unlink(temp_path)
+    
+    return response
