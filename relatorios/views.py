@@ -401,3 +401,71 @@ def comparativo_estoque_magalu(request):
     os.unlink(temp_path)
     
     return response
+
+
+def comparativo_estoque_amazon(request):
+    connection = get_connection()
+    conexao = pyodbc.connect(connection)
+
+    file = request.FILES['file']
+    df_mktp = pd.read_excel(file)
+    df_mktp = df_mktp[['seller-sku', 'Quantity Available']]
+    df_mktp['ESTOQUE_MKTP'] = df_mktp['Quantity Available']
+    df_mktp = df_mktp.drop(columns=['Quantity Available'])
+    df_mktp.rename(columns={'seller-sku': 'SKU'}, inplace=True)
+
+    # Produtos Materiais
+    comando = f'''
+    SELECT A.SKU,  B.COD_INTERNO, B.DESCRICAO, C.ESTOQUE AS ESTOQUE_ATON
+    FROM ECOM_SKU A
+    LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
+    LEFT JOIN ESTOQUE_MATERIAIS C ON A.MATERIAL_ID = C.MATERIAL_ID
+    WHERE C.ARMAZEM = '12'
+    AND A.ORIGEM_ID = '20'
+    '''
+
+    # Carrega planilha
+    df_ecom = pd.read_sql(comando, conexao)
+    conexao.close()
+
+    # Limpando valores com espaços vazios
+    df_ecom['SKU'] = df_ecom['SKU'].str.strip()
+    df_ecom['DESCRICAO'] = df_ecom['DESCRICAO'].str.strip()
+    df_ecom['COD_INTERNO'] = df_ecom['COD_INTERNO'].str.strip()
+
+    # Merge
+    df = pd.merge(df_ecom, df_mktp, on='SKU', how='right')
+
+    # Cria coluna de diferença do estoque
+    df['ESTOQUE_MKTP'] = df['ESTOQUE_MKTP'].fillna(0)
+    df['ESTOQUE_ATON'] = df['ESTOQUE_ATON'].fillna(0)
+    df['DIFERENÇA'] = df['ESTOQUE_ATON'] - df['ESTOQUE_MKTP']
+
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp:
+        temp_path = tmp.name
+        
+        with pd.ExcelWriter(temp_path, engine='openpyxl') as writer:
+            df.to_excel(writer, sheet_name='COMPARATIVO', index=False)
+            worksheet = writer.sheets['COMPARATIVO']
+            worksheet.auto_filter.ref = "A1:F1"
+            worksheet.freeze_panes = 'A2'
+            cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
+            celulas_laranja = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1']
+            for celula_referencia in celulas_laranja:
+                celula = worksheet[celula_referencia]
+                celula.fill = cor_laranja
+
+    # Lê o arquivo temporário e cria a response
+    with open(temp_path, 'rb') as excel_file:
+        response = HttpResponse(
+            excel_file.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename=comparativo_estoque.xlsx'
+
+    # Remove o arquivo temporário
+    os.unlink(temp_path)
+    
+    return response

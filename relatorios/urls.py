@@ -20,4 +20,5 @@ urlpatterns = [
     path('margem_mercadolivre_redplace_personalizada/', views.margem_mercadolivre_redplace_personalizada, name='margem-mercadolivre-redplace-personalizada'),
     path('armazens_estoque_valor_custo_total/', views.armazens_estoque_valor_custo_total, name='armazens-estoque-valor-custo-total'),
     path('comparativo_estoque_magalu/', views.comparativo_estoque_magalu, name='comparativo-estoque-magalu'),
+    path('comparativo_estoque_amazon/', views.comparativo_estoque_amazon, name='comparativo-estoque-amazon'),
 ]
