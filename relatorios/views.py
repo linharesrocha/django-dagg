@@ -471,4 +471,96 @@ def comparativo_estoque_amazon(request):
     return response
 
 def comparativo_estoque_mercadolivre(request):
-    return redirect('index-relatorios')
+    connection = get_connection()
+    conexao = pyodbc.connect(connection)
+
+    file = request.FILES['file']
+    df_mktp = pd.read_excel(file, header=12)
+    df_mktp = df_mktp.drop(df_mktp.columns[0], axis=1)
+
+    df_mktp.rename(columns={'Unnamed: 12': 'Em transferência'}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 13': 'Devolvidas pelo comprador'}, inplace=True)
+    df_mktp.rename(columns={'Unidades no Full': 'Aptas para venda'}, inplace=True)
+    df_mktp.rename(columns={'   Unidades no Full': 'Aptas para venda'}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 15': 'Não aptas para venda'}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 16': '''Extraviadas (em busca)'''}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 17': 'Em revisão'}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 18': 'Vendas canceladas'}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 21': 'Boa qualidade'}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 22': 'Para impulsionar vendas'}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 23': 'Para colocar à venda'}, inplace=True)
+    df_mktp.rename(columns={'Unnamed: 24': 'Para evitar descarte'}, inplace=True)
+    df_mktp.rename(columns={df_mktp.columns[24]: 'Tempo até fim do estoque'}, inplace=True)
+    df_mktp.rename(columns={'Unidades que ocupan espacio en Full': 'Estoque total armazenado'}, inplace=True)
+
+    colunas_a_remover = df_mktp.columns[19:24]
+    df_mktp = df_mktp.drop(columns=colunas_a_remover)
+    df_mktp = df_mktp.iloc[2:]
+    df_mktp = df_mktp.iloc[1:]
+    df_mktp['ESTOQUE_MKTP'] = df_mktp['Em transferência'] + \
+                            df_mktp['Devolvidas pelo comprador'] + \
+                            df_mktp['Aptas para venda'] + \
+                            df_mktp['Não aptas para venda']
+    
+    
+    df_mktp = df_mktp[['Código ML', 'ESTOQUE_MKTP']]
+    novos_nomes_colunas = {'Código ML':'COD_ML'}
+    df_mktp.rename(columns=novos_nomes_colunas, inplace=True)
+
+
+    # Produtos Materiais
+    comando = f'''
+    SELECT A.*,  B.COD_INTERNO, B.DESCRICAO, C.ESTOQUE AS ESTOQUE_ATON
+    FROM ECOM_SKU A
+    LEFT JOIN MATERIAIS B ON A.MATERIAL_ID = B.CODID
+    LEFT JOIN ESTOQUE_MATERIAIS C ON A.MATERIAL_ID = C.MATERIAL_ID
+    WHERE C.ARMAZEM = '2'
+    AND A.ORIGEM_ID = '8'
+    '''
+
+    # Carrega planilha
+    df_ecom = pd.read_sql(comando, conexao)
+    conexao.close()
+
+    # Limpando valores com espaços vazios
+    df_ecom['DESCRICAO'] = df_ecom['DESCRICAO'].str.strip()
+    df_ecom['COD_INTERNO'] = df_ecom['COD_INTERNO'].str.strip()
+    df_ecom = df_ecom[['COD_INTERNO', 'DESCRICAO', 'PRODMKTP_ID', 'ESTOQUE_ATON']]
+    df_ecom.rename(columns={'PRODMKTP_ID':'COD_ML'}, inplace=True)
+
+    # Merge
+    df = pd.merge(df_ecom, df_mktp, on='COD_ML', how='right')
+
+    # Cria coluna de diferença do estoque
+    df['ESTOQUE_MKTP'] = df['ESTOQUE_MKTP'].fillna(0)
+    df['ESTOQUE_ATON'] = df['ESTOQUE_ATON'].fillna(0)
+    df['DIFERENÇA'] = df['ESTOQUE_ATON'] - df['ESTOQUE_MKTP']
+
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as tmp:
+        temp_path = tmp.name
+        
+        with pd.ExcelWriter(temp_path, engine='openpyxl') as writer:
+            df.to_excel(writer, sheet_name='COMPARATIVO', index=False)
+            worksheet = writer.sheets['COMPARATIVO']
+            worksheet.auto_filter.ref = "A1:F1"
+            worksheet.freeze_panes = 'A2'
+            cor_laranja = PatternFill(start_color='F1C93B', end_color='F1C93B', fill_type='solid')
+            celulas_laranja = ['A1', 'B1', 'C1', 'D1', 'E1', 'F1']
+            for celula_referencia in celulas_laranja:
+                celula = worksheet[celula_referencia]
+                celula.fill = cor_laranja
+
+    # Lê o arquivo temporário e cria a response
+    with open(temp_path, 'rb') as excel_file:
+        response = HttpResponse(
+            excel_file.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename=comparativo_estoque.xlsx'
+
+    # Remove o arquivo temporário
+    os.unlink(temp_path)
+    
+    return response
